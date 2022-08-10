@@ -6,5 +6,7 @@ target 'Wallet' do
   use_frameworks!
 
   pod 'SwiftLint', '0.48.0'
+  pod 'R.swift'
+  pod 'SnapKit'
 
 end

@@ -1,11 +1,11 @@
 //
-//  MainCoordinator.swift
+//  AppCoordinator.swift
 //  Wallet
 //
 
 import UIKit
 
-final class MainCoordinator: Coordinator {
+final class AppCoordinator: Coordinator {
     init(navigationController: UINavigationController,
          dependencies: AppDependency = AppDependency()) {
         self.navigationController = navigationController
@@ -27,9 +27,10 @@ final class MainCoordinator: Coordinator {
     var window: UIWindow?
     
     func start() {
-        let viewModel = MainViewModel()
-        let viewController = MainViewController(viewModel: viewModel)
-        navigationController.setViewControllers([viewController], animated: false)
+        // TODO: - Check if user is logged in
+        let walletDetailsCoordinator = WalletDetailsCoordinator(navigationController: navigationController,
+                                                                dependencies: dependencies)
+        walletDetailsCoordinator.start()
     }
     
 }

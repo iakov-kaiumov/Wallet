@@ -1,6 +1,7 @@
 excluded:
   - Pods
   - .git
+  - R.generated.swift
 
 disabled_rules:
   - trailing_whitespace

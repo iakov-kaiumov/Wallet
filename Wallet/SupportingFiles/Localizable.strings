@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  Wallet
+
+  Created by Яков Каюмов on 10.08.2022.
+  
+*/
+
+
+"onboarding_title" = "Добро пожаловать в КошелОК";
+"onboarding_description" = "Тут вы сможете контролировать свои доходы и расходы";
+"onboarding_login_button" = "Войти с помощью Google";

@@ -12,7 +12,7 @@ final class OnboardingViewController: UIViewController {
     private let onboardingImage: UIImageView = UIImageView()
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
-    private var loginButton = UIButton(type: .system)
+    private var loginButton = ButtonFactory.buildGrayButton()
     
     // MARK: - Init
     init(viewModel: OnboardingViewModel) {
@@ -33,6 +33,7 @@ final class OnboardingViewController: UIViewController {
     // MARK: - Private Methods
     private func setup() {
         view.backgroundColor = .systemBackground
+        navigationController?.setNavigationBarHidden(true, animated: false)
         
         setupOnboardingImage()
         setupTitleLabel()
@@ -49,7 +50,7 @@ final class OnboardingViewController: UIViewController {
             $0.height.equalTo(341)
         }
         
-        onboardingImage.image = UIImage(named: "OnboardingImage")
+        onboardingImage.image = R.image.onboardingImage()
     }
     
     private func setupTitleLabel() {
@@ -60,7 +61,7 @@ final class OnboardingViewController: UIViewController {
             $0.top.equalTo(onboardingImage.snp.bottom).offset(24)
         }
         
-        titleLabel.text = NSLocalizedString("onboarding_title", comment: "")
+        titleLabel.text = R.string.localizable.onboarding_title()
         titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         titleLabel.numberOfLines = 0
     }
@@ -73,7 +74,7 @@ final class OnboardingViewController: UIViewController {
             $0.top.equalTo(titleLabel.snp.bottom).offset(8)
         }
         
-        descriptionLabel.text = NSLocalizedString("onboarding_description", comment: "")
+        descriptionLabel.text = R.string.localizable.onboarding_description()
         descriptionLabel.font = UIFont.systemFont(ofSize: 17)
         descriptionLabel.numberOfLines = 0
     }
@@ -85,20 +86,7 @@ final class OnboardingViewController: UIViewController {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
         }
-        ButtonConfigure.configureGrayButton(loginButton)
-        let title = NSLocalizedString("onboarding_login_button", comment: "")
+        let title = R.string.localizable.onboarding_login_button()
         loginButton.setTitle(title, for: .normal)
-    }
-}
-
-class ButtonConfigure {
-    static func configureGrayButton(_ button: UIButton) {
-        button.snp.makeConstraints {
-            $0.height.equalTo(56)
-        }
-        button.layer.cornerRadius = 16
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
-        button.backgroundColor = UIColor(named: "LoginButton")
-        button.setTitleColor(.white, for: .normal)
     }
 }

@@ -23,6 +23,7 @@
 		76CDC24C28A3ED7900B01FEE /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CDC24B28A3ED7900B01FEE /* OnboardingViewModel.swift */; };
 		76CDC24E28A3F1B300B01FEE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76CDC24D28A3F1B300B01FEE /* Localizable.strings */; };
 		76CDC25128A3FB0900B01FEE /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76CDC25028A3FB0900B01FEE /* Colors.xcassets */; };
+		76CDC25328A40C8700B01FEE /* ButtonFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CDC25228A40C8700B01FEE /* ButtonFactory.swift */; };
 		B8D42383EFE3F83AF7DEC916 /* Pods_Wallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A84D4897DE1B568819F927D /* Pods_Wallet.framework */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +48,7 @@
 		76CDC24B28A3ED7900B01FEE /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		76CDC24D28A3F1B300B01FEE /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		76CDC25028A3FB0900B01FEE /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
+		76CDC25228A40C8700B01FEE /* ButtonFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonFactory.swift; sourceTree = "<group>"; };
 		F5B7635821AADD5375E7C352 /* Pods-Wallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wallet.debug.xcconfig"; path = "Target Support Files/Pods-Wallet/Pods-Wallet.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -103,6 +105,7 @@
 		3A2B6D8828A3DF9D004DDFBA /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				76CDC25228A40C8700B01FEE /* ButtonFactory.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -110,9 +113,8 @@
 		3A2B6D8928A3DFAE004DDFBA /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				76CDC24428A3EBE400B01FEE /* Onboarding */,
-				3A2B6D8B28A3DFDD004DDFBA /* Main */,
 				3A2B6D9028A3E0AF004DDFBA /* AppCoordinator.swift */,
+				76CDC24428A3EBE400B01FEE /* Onboarding */,
 				3A2B6D9D28A3ED9F004DDFBA /* WalletDetails */,
 			);
 			path = Scenes;
@@ -406,10 +408,10 @@
 				3A2B6D9128A3E0AF004DDFBA /* AppCoordinator.swift in Sources */,
 				3A2B6D9F28A3EDF7004DDFBA /* WalletDetailsCoordinator.swift in Sources */,
 				76CDC24728A3EBFE00B01FEE /* OnboardingViewController.swift in Sources */,
+				76CDC25328A40C8700B01FEE /* ButtonFactory.swift in Sources */,
 				76CDC24928A3ED3700B01FEE /* OnboardingCoordinator.swift in Sources */,
 				76CDC24C28A3ED7900B01FEE /* OnboardingViewModel.swift in Sources */,
-				3A2B6D9128A3E0AF004DDFBA /* MainCoordinator.swift in Sources */,
-				3A2B6D9A28A3E4A4004DDFBA /* MainViewController.swift in Sources */,
+				3A2B6D9128A3E0AF004DDFBA /* AppCoordinator.swift in Sources */,
 				68F646EB289D3BAE00DAAE91 /* SceneDelegate.swift in Sources */,
 				3A2B6D8F28A3E013004DDFBA /* Coordinator.swift in Sources */,
 			);

@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  Wallet
+  
+*/
+
+
+"onboarding_title" = "Добро пожаловать в КошелОК";
+"onboarding_description" = "Тут вы сможете контролировать свои доходы и расходы";
+"onboarding_login_button" = "Войти с помощью Google";

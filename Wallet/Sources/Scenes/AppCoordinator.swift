@@ -31,9 +31,6 @@ final class AppCoordinator: Coordinator {
         let walletDetailsCoordinator = WalletDetailsCoordinator(navigationController: navigationController,
                                                                 dependencies: dependencies)
         walletDetailsCoordinator.start()
-        
-//        let onboardingCoordinator = OnboardingCoordinator(navigationController: navigationController)
-//        onboardingCoordinator.start()
     }
     
 }

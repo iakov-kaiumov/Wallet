@@ -28,9 +28,9 @@ final class AppCoordinator: Coordinator {
     
     func start() {
         // TODO: - Check if user is logged in
-        let walletDetailsCoordinator = WalletDetailsCoordinator(navigationController: navigationController,
+        let walletsCoordinator = WalletsCoordinator(navigationController: navigationController,
                                                                 dependencies: dependencies)
-        walletDetailsCoordinator.start()
+        walletsCoordinator.start()
     }
     
 }

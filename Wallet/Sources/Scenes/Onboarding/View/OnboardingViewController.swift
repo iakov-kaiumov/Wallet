@@ -12,7 +12,7 @@ final class OnboardingViewController: UIViewController {
     private let onboardingImage: UIImageView = UIImageView()
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
-    private var loginButton = ButtonFactory.buildGrayButton()
+    private let loginButton = ButtonFactory.makeGrayButton()
     
     // MARK: - Init
     init(viewModel: OnboardingViewModel) {

@@ -15,7 +15,6 @@ final class OnboardingCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     var dependencies: AppDependency
-    var window: UIWindow?
     
     func start() {
         let viewModel = OnboardingViewModel()

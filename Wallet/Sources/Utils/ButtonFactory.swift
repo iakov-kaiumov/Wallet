@@ -2,14 +2,12 @@
 //  ButtonFactory.swift
 //  Wallet
 //
-//  Created by Яков Каюмов on 10.08.2022.
-//
 
 import Foundation
 import UIKit
 
 class ButtonFactory {
-    static func buildGrayButton() -> UIButton {
+    static func makeGrayButton() -> UIButton {
         let button = UIButton(type: .system)
         button.snp.makeConstraints {
             $0.height.equalTo(56)

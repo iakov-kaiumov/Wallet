@@ -2,11 +2,11 @@ name: Wallet
 
 options:
   bundleIdPrefix: ru.tinkoff
-  xcodeVersion: '13.4.1'
-  deploymentTarget: '13.0'
+  xcodeVersion: 13.3.1
+  deploymentTarget:
+    iOS: '13.0'
   groupSortPosition: top
   generateEmptyDirectories: true
-  minimumXcodeGenVersion: '2.31.0'
 
 configs:
     Develop: debug

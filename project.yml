@@ -2,7 +2,7 @@ name: Wallet
 
 options:
   bundleIdPrefix: ru.tinkoff
-  xcodeVersion: '13.3.1'
+  xcodeVersion: '13.4.1'
   deploymentTarget: '13.0'
   groupSortPosition: top
   generateEmptyDirectories: true
@@ -24,10 +24,10 @@ targets:
     sources:
        - Wallet
     postCompileScripts:
-      - script: "if test -d \"/opt/homebrew/bin/\"; then\nPATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n"
+      - script: "if which \"${PODS_ROOT}/SwiftLint/swiftlint\" > /dev/null; then\n\"${PODS_ROOT}/SwiftLint/swiftlint\"\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi"
         name: SwiftLint
     preBuildScripts:
-    - script: "if test -d \"/opt/homebrew/bin/\"; then\nPATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\nexport PATH\n\nif which rswift >/dev/null; then\n  rswift generate \"$SRCROOT/$TARGET_NAME/SupportingFiles/R.generated.swift\"\nelse\n  echo \"error: R.swift not installed; run 'mint bootstrap' to install\"\n  return -1\nfi\n"
+    - script: "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/$TARGET_NAME/SupportingFiles/R.generated.swift\""
       name: R.Swift
       inputFiles:
       - "$TEMP_DIR/rswift-lastrun"

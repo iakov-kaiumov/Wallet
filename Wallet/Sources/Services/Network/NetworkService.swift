@@ -25,9 +25,9 @@ class NetworkService {
     static func fetchModel<T: Decodable>(
         _ type: T.Type,
         request: URLRequest,
-        completion: @escaping (_ result: Result<T, NetworkError>) -> ()
+        completion: @escaping (_ result: Result<T, NetworkError>) -> Void
     ) {
-        fetchData(type, request: request) { result in
+        fetchData(request: request) { result in
             switch result {
             case .failure(let error):
                 completion(.failure(error))
@@ -42,10 +42,9 @@ class NetworkService {
         }
     }
     
-    static func fetchData<T: Decodable>(
-        _ type: T.Type,
+    static func fetchData(
         request: URLRequest,
-        completion: @escaping (_ result: Result<Data, NetworkError>) -> ()
+        completion: @escaping (_ result: Result<Data, NetworkError>) -> Void
     ) {
         URLSession(configuration: .ephemeral).dataTask(with: request as URLRequest) { data, response, error in
             

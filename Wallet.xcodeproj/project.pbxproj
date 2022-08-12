@@ -31,6 +31,8 @@
 		76CDC25F28A4E4C700B01FEE /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CDC25E28A4E4C700B01FEE /* NetworkService.swift */; };
 		76CDC26128A4E4F500B01FEE /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CDC26028A4E4F500B01FEE /* NetworkError.swift */; };
 		76CDC26428A4E8D300B01FEE /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CDC26328A4E8D300B01FEE /* StringExtensions.swift */; };
+		76CDC29528A6301C00B01FEE /* WalletEditCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CDC29428A6301C00B01FEE /* WalletEditCoordinator.swift */; };
+		76CDC29728A6303700B01FEE /* WalletEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CDC29628A6303700B01FEE /* WalletEditViewController.swift */; };
 		B8D42383EFE3F83AF7DEC916 /* Pods_Wallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A84D4897DE1B568819F927D /* Pods_Wallet.framework */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +65,8 @@
 		76CDC25E28A4E4C700B01FEE /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		76CDC26028A4E4F500B01FEE /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		76CDC26328A4E8D300B01FEE /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		76CDC29428A6301C00B01FEE /* WalletEditCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEditCoordinator.swift; sourceTree = "<group>"; };
+		76CDC29628A6303700B01FEE /* WalletEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEditViewController.swift; sourceTree = "<group>"; };
 		F5B7635821AADD5375E7C352 /* Pods-Wallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wallet.debug.xcconfig"; path = "Target Support Files/Pods-Wallet/Pods-Wallet.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -129,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				3A2B6D9028A3E0AF004DDFBA /* AppCoordinator.swift */,
+				76CDC29128A62FF900B01FEE /* WalletEdit */,
 				76CDC24428A3EBE400B01FEE /* Onboarding */,
 				3A2B6D9D28A3ED9F004DDFBA /* WalletDetails */,
 			);
@@ -271,6 +276,31 @@
 				76CDC26028A4E4F500B01FEE /* NetworkError.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		76CDC29128A62FF900B01FEE /* WalletEdit */ = {
+			isa = PBXGroup;
+			children = (
+				76CDC29328A6300C00B01FEE /* View */,
+				76CDC29228A6300200B01FEE /* ViewModel */,
+				76CDC29428A6301C00B01FEE /* WalletEditCoordinator.swift */,
+			);
+			path = WalletEdit;
+			sourceTree = "<group>";
+		};
+		76CDC29228A6300200B01FEE /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		76CDC29328A6300C00B01FEE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				76CDC29628A6303700B01FEE /* WalletEditViewController.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -436,11 +466,13 @@
 				68F646E9289D3BAE00DAAE91 /* AppDelegate.swift in Sources */,
 				76CDC25928A4170900B01FEE /* OperationModel.swift in Sources */,
 				3A2B6D9528A3E129004DDFBA /* AppDependency.swift in Sources */,
+				76CDC29528A6301C00B01FEE /* WalletEditCoordinator.swift in Sources */,
 				76CDC25B28A4171D00B01FEE /* PersonModel.swift in Sources */,
 				3A2B6D9128A3E0AF004DDFBA /* AppCoordinator.swift in Sources */,
 				3A2B6D9F28A3EDF7004DDFBA /* WalletDetailsCoordinator.swift in Sources */,
 				76CDC26128A4E4F500B01FEE /* NetworkError.swift in Sources */,
 				76CDC24728A3EBFE00B01FEE /* OnboardingViewController.swift in Sources */,
+				76CDC29728A6303700B01FEE /* WalletEditViewController.swift in Sources */,
 				76CDC25328A40C8700B01FEE /* ButtonFactory.swift in Sources */,
 				76CDC24928A3ED3700B01FEE /* OnboardingCoordinator.swift in Sources */,
 				76CDC25528A416EF00B01FEE /* WalletModel.swift in Sources */,

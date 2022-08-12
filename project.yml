@@ -1,0 +1,55 @@
+name: Wallet
+
+options:
+  bundleIdPrefix: ru.tinkoff
+  xcodeVersion: 13.3.1
+  deploymentTarget:
+    iOS: '13.0'
+  groupSortPosition: top
+  generateEmptyDirectories: true
+
+configs:
+    Develop: debug
+    Enterprise: release
+
+targets:
+  Wallet:
+    type: application
+    platform: iOS
+    settings:
+      base:
+        MARKETING_VERSION: 1.0.0
+        CURRENT_PROJECT_VERSION: 1
+        TARGETED_DEVICE_FAMILY: 1
+    sources:
+       - Wallet
+    postCompileScripts:
+      - script: "if which \"${PODS_ROOT}/SwiftLint/swiftlint\" > /dev/null; then\n\"${PODS_ROOT}/SwiftLint/swiftlint\"\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi"
+        name: SwiftLint
+    preBuildScripts:
+    - script: "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/$TARGET_NAME/SupportingFiles/R.generated.swift\""
+      name: R.Swift
+      inputFiles:
+      - "$TEMP_DIR/rswift-lastrun"
+      outputFiles:
+      - "$SRCROOT/$TARGET_NAME/SupportingFiles/R.generated.swift"
+    postBuildScripts:
+    - script: |
+        TAGS="TODO:|FIXME:"
+        echo "searching ${SRCROOT} for ${TAGS}"
+        find "${SRCROOT}" \( -name "*.swift" \) \( -not -path "*/Pods/*" \) -print0 | xargs -0 egrep --with-filename --line-number --only-matching "($TAGS).*\$" | perl -p -e "s/($TAGS)/ warning: \$1/"
+      name: Highlight TODOs and FIXMEs
+
+schemes:
+    Wallet:
+        build:
+            targets:
+                Wallet: Wallet
+        run:
+            config: Develop
+        profile:
+            config: Develop
+        analyze:
+            config: Develop
+        archieve:
+            config: Enterprise

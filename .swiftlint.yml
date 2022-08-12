@@ -1,7 +1,7 @@
 excluded:
   - Pods
   - .git
-  - R.generated.swift
+  - Wallet/SupportingFiles/R.generated.swift
 
 disabled_rules:
   - trailing_whitespace

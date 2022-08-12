@@ -5,21 +5,42 @@
 
 import Foundation
 
+protocol CurrenciesViewModelDelegate: AnyObject {
+    func currenciesViewModelCloseButtonDidTap()
+    
+    func currenciesViewModelValueChanged(_ value: CurrencyType?)
+}
+
 class CurrenciesViewModel {
     
     private let mainCurrencies: [CurrencyType] = [.RUB, .USD, .EUR]
     
-    private var allCurrencies: [CurrencyType] = []
+    private let allCurrencies: [CurrencyType] = CurrencyType.allCases
     
-    var currencies: [CurrencyType] = []
+    var currencies: [CurrencyType] = [.RUB, .USD, .EUR]
     
-    var chosenIndex: Int?
+    var chosenIndex: Int? {
+        didSet {
+            if let chosenIndex = chosenIndex {
+                let type = allCurrencies[chosenIndex]
+                delegate?.currenciesViewModelValueChanged(type)
+            } else {
+                delegate?.currenciesViewModelValueChanged(nil)
+            }
+        }
+    }
     
     var isShortMode: Bool = true
     
     var onDataInserted: ((_ at: [IndexPath]) -> Void)?
     
     var onDataDeleted: ((_ at: [IndexPath]) -> Void)?
+    
+    weak var delegate: CurrenciesViewModelDelegate?
+    
+    func setCurrentCurrency(_ value: CurrencyType) {
+        chosenIndex = allCurrencies.firstIndex(of: value)
+    }
     
     func toggleState() {
         isShortMode.toggle()
@@ -36,11 +57,18 @@ class CurrenciesViewModel {
             currencies = allCurrencies
             onDataInserted?(changedAt)
         }
-        
     }
     
-    func loadTestData() {
-        allCurrencies = CurrencyType.allCases
-        currencies = mainCurrencies
+    func closeButtonDidTap() {
+        delegate?.currenciesViewModelCloseButtonDidTap()
+    }
+    
+    func nextButtonDidTap() {
+        if let chosenIndex = chosenIndex {
+            let type = allCurrencies[chosenIndex]
+            delegate?.currenciesViewModelValueChanged(type)
+        } else {
+            delegate?.currenciesViewModelValueChanged(nil)
+        }
     }
 }

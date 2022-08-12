@@ -1,11 +1,11 @@
 //
-//  CurrenciesCoordinator.swift
+//  TextInputCoordinator.swift
 //  Wallet
 //
 
 import UIKit
 
-final class CurrenciesCoordinator: Coordinator {
+final class TextInputCoordinator: Coordinator {
     init(navigationController: UINavigationController,
          dependencies: AppDependency = AppDependency()) {
         self.navigationController = navigationController
@@ -17,8 +17,8 @@ final class CurrenciesCoordinator: Coordinator {
     var dependencies: AppDependency
     
     func start() {
-        let viewModel = CurrenciesViewModel()
-        let viewController = CurrenciesViewController(viewModel: viewModel)
-        navigationController.pushViewController(viewController, animated: true)
+        let viewModel = TextInputViewModel.walletName()
+        let controller = TextInputViewController(viewModel: viewModel)
+        navigationController.pushViewController(controller, animated: true)
     }
 }

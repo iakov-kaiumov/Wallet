@@ -10,6 +10,8 @@ import SnapKit
 final class CurrenciesViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: CurrenciesViewModel
+    
+    private let nextButton: UIButton = ButtonFactory.makeGrayButton()
     private let closeButton = UIButton(type: .system)
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
@@ -42,6 +44,15 @@ final class CurrenciesViewController: UIViewController {
         setup()
     }
     
+    // MARK: - Actions
+    @objc private func closeButtonAction(sender: UIButton!) {
+        viewModel.closeButtonDidTap()
+    }
+    
+    @objc private func nextButtonAction(sender: UIButton!) {
+        viewModel.closeButtonDidTap()
+    }
+    
     // MARK: - Private Methods
     private func setup() {
         view.backgroundColor = .systemBackground
@@ -49,6 +60,7 @@ final class CurrenciesViewController: UIViewController {
         
         setupCloseButton()
         setupTableView()
+        setupNextButton()
         
         viewModel.onDataInserted = { [weak self] (at: [IndexPath]) -> Void in
             guard let self = self else { return }
@@ -70,7 +82,6 @@ final class CurrenciesViewController: UIViewController {
             self.tableView.endUpdates()
             
         }
-        viewModel.loadTestData()
     }
     
     private func setupCloseButton() {
@@ -82,6 +93,7 @@ final class CurrenciesViewController: UIViewController {
         }
         
         closeButton.setTitle(R.string.localizable.modal_close_button(), for: .normal)
+        closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
     }
     
     private func setupTableView() {
@@ -91,6 +103,16 @@ final class CurrenciesViewController: UIViewController {
             $0.leading.trailing.bottom.equalToSuperview()
             $0.top.equalTo(closeButton.snp.bottom).offset(16)
         }
+    }
+    
+    private func setupNextButton() {
+        view.addSubview(nextButton)
+        nextButton.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
+        }
+        nextButton.setTitle(R.string.localizable.default_save_button(), for: .normal)
+        nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
     }
 }
 
@@ -114,6 +136,7 @@ extension CurrenciesViewController: UITableViewDataSource {
             
             if let cell = cell as? CurrencyCell {
                 cell.configure(type: type)
+                cell.accessoryType = indexPath.row == viewModel.chosenIndex ? .checkmark : .none
             }
             
             return cell
@@ -129,15 +152,24 @@ extension CurrenciesViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 1 {
-            tableView.deselectRow(at: indexPath, animated: true)
-            if let chosenIndex = viewModel.chosenIndex {
-                let chosenIndexPath = IndexPath(row: chosenIndex, section: 0)
-                tableView.selectRow(at: chosenIndexPath, animated: false, scrollPosition: .none)
-            }
             viewModel.toggleState()
         } else {
-            viewModel.chosenIndex = indexPath.row
+            if let oldIndex = viewModel.chosenIndex {
+                let oldPath = IndexPath(row: oldIndex, section: 0)
+                tableView.cellForRow(at: oldPath)?.accessoryType = .none
+                
+                if oldPath == indexPath {
+                    viewModel.chosenIndex = nil
+                } else {
+                    tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+                    viewModel.chosenIndex = indexPath.row
+                }
+            } else {
+                tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+                viewModel.chosenIndex = indexPath.row
+            }
         }
     }
 }

@@ -1,0 +1,55 @@
+name: Wallet
+
+options:
+  bundleIdPrefix: ru.tinkoff
+  xcodeVersion: '13.4.1'
+  deploymentTarget: '13.0'
+  groupSortPosition: top
+  generateEmptyDirectories: true
+  minimumXcodeGenVersion: '2.31.0'
+
+configs:
+    Develop: debug
+    Enterprise: release
+
+targets:
+  Wallet:
+    type: application
+    platform: iOS
+    settings:
+      base:
+        MARKETING_VERSION: 1.0.0
+        CURRENT_PROJECT_VERSION: 1
+        TARGETED_DEVICE_FAMILY: 1
+    sources:
+       - Wallet
+    postCompileScripts:
+      - script: "if test -d \"/opt/homebrew/bin/\"; then\nPATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n"
+        name: SwiftLint
+    preBuildScripts:
+    - script: "if test -d \"/opt/homebrew/bin/\"; then\nPATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\nexport PATH\n\nif which rswift >/dev/null; then\n  rswift generate \"$SRCROOT/$TARGET_NAME/SupportingFiles/R.generated.swift\"\nelse\n  echo \"error: R.swift not installed; run 'mint bootstrap' to install\"\n  return -1\nfi\n"
+      name: R.Swift
+      inputFiles:
+      - "$TEMP_DIR/rswift-lastrun"
+      outputFiles:
+      - "$SRCROOT/$TARGET_NAME/SupportingFiles/R.generated.swift"
+    postBuildScripts:
+    - script: |
+        TAGS="TODO:|FIXME:"
+        echo "searching ${SRCROOT} for ${TAGS}"
+        find "${SRCROOT}" \( -name "*.swift" \) \( -not -path "*/Pods/*" \) -print0 | xargs -0 egrep --with-filename --line-number --only-matching "($TAGS).*\$" | perl -p -e "s/($TAGS)/ warning: \$1/"
+      name: Highlight TODOs and FIXMEs
+
+schemes:
+    Wallet:
+        build:
+            targets:
+                Wallet: Wallet
+        run:
+            config: Develop
+        profile:
+            config: Develop
+        analyze:
+            config: Develop
+        archieve:
+            config: Enterprise

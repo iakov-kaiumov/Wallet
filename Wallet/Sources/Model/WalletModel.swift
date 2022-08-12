@@ -5,7 +5,7 @@
 
 import Foundation
 
-enum CurrencyType: String, Codable {
+enum CurrencyType: String, Codable, CaseIterable {
     case RUB, USD, EUR, CHF, KWD, BHD, OMR, JPY, SEK
 }
 

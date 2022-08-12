@@ -6,11 +6,11 @@
 import Foundation
 
 extension String {
-    var encodeUrl : String {
+    var encodeUrl: String {
         return self.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) ?? self
     }
     
-    var decodeUrl : String {
+    var decodeUrl: String {
         return self.removingPercentEncoding ?? self
     }
 }

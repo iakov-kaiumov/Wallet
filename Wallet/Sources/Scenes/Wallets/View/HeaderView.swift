@@ -46,19 +46,19 @@ class HeaderView: UIView {
         balanceTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         balanceTitleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(95)
-            $0.left.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(16)
         }
         
         balanceLabel.translatesAutoresizingMaskIntoConstraints = false
         balanceLabel.snp.makeConstraints {
             $0.top.equalTo(balanceTitleLabel.snp.bottom).offset(6)
-            $0.left.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(16)
         }
         
         moneyStack.translatesAutoresizingMaskIntoConstraints = false
         moneyStack.snp.makeConstraints {
             $0.top.equalTo(balanceLabel.snp.bottom).offset(24)
-            $0.left.right.equalToSuperview().offset(16)
+            $0.leading.right.equalToSuperview().offset(16)
         }
         
         self.backgroundColor = R.color.purpleBackground()

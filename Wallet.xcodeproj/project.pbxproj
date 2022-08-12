@@ -32,6 +32,8 @@
 		993ED00328A4FB5B0083D11E /* WalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993ED00128A4FB5B0083D11E /* WalletsViewController.swift */; };
 		993ED00528A4FB790083D11E /* WalletsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993ED00428A4FB790083D11E /* WalletsCoordinator.swift */; };
 		993ED00728A4FB830083D11E /* WalletsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993ED00628A4FB830083D11E /* WalletsViewModel.swift */; };
+		993ED00928A54B8A0083D11E /* CurrenciesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993ED00828A54B8A0083D11E /* CurrenciesView.swift */; };
+		993ED00B28A653960083D11E /* WalletCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993ED00A28A653960083D11E /* WalletCell.swift */; };
 		B8D42383EFE3F83AF7DEC916 /* Pods_Wallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A84D4897DE1B568819F927D /* Pods_Wallet.framework */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +67,8 @@
 		993ED00128A4FB5B0083D11E /* WalletsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletsViewController.swift; path = Wallet/Sources/Scenes/Wallets/View/WalletsViewController.swift; sourceTree = SOURCE_ROOT; };
 		993ED00428A4FB790083D11E /* WalletsCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletsCoordinator.swift; path = Wallet/Sources/Scenes/Wallets/WalletsCoordinator.swift; sourceTree = SOURCE_ROOT; };
 		993ED00628A4FB830083D11E /* WalletsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletsViewModel.swift; path = Wallet/Sources/Scenes/Wallets/ViewModel/WalletsViewModel.swift; sourceTree = SOURCE_ROOT; };
+		993ED00828A54B8A0083D11E /* CurrenciesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenciesView.swift; sourceTree = "<group>"; };
+		993ED00A28A653960083D11E /* WalletCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCell.swift; sourceTree = "<group>"; };
 		F5B7635821AADD5375E7C352 /* Pods-Wallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wallet.debug.xcconfig"; path = "Target Support Files/Pods-Wallet/Pods-Wallet.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -278,7 +282,10 @@
 		993ECFFE28A4FB1D0083D11E /* View */ = {
 			isa = PBXGroup;
 			children = (
-				993ED00628A4FB830083D11E /* WalletsViewModel.swift */,
+				993ED00028A4FB5B0083D11E /* HeaderView.swift */,
+				993ED00128A4FB5B0083D11E /* WalletsViewController.swift */,
+				993ED00828A54B8A0083D11E /* CurrenciesView.swift */,
+				993ED00A28A653960083D11E /* WalletCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -286,8 +293,7 @@
 		993ECFFF28A4FB260083D11E /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				993ED00028A4FB5B0083D11E /* HeaderView.swift */,
-				993ED00128A4FB5B0083D11E /* WalletsViewController.swift */,
+				993ED00628A4FB830083D11E /* WalletsViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -461,12 +467,14 @@
 				3A2B6D9F28A3EDF7004DDFBA /* WalletDetailsCoordinator.swift in Sources */,
 				76CDC24728A3EBFE00B01FEE /* OnboardingViewController.swift in Sources */,
 				76CDC25328A40C8700B01FEE /* ButtonFactory.swift in Sources */,
+				993ED00928A54B8A0083D11E /* CurrenciesView.swift in Sources */,
 				76CDC24928A3ED3700B01FEE /* OnboardingCoordinator.swift in Sources */,
 				76CDC25528A416EF00B01FEE /* WalletModel.swift in Sources */,
 				76CDC24C28A3ED7900B01FEE /* OnboardingViewModel.swift in Sources */,
 				3A2B6D9128A3E0AF004DDFBA /* AppCoordinator.swift in Sources */,
 				993ED00528A4FB790083D11E /* WalletsCoordinator.swift in Sources */,
 				76CDC25728A416FE00B01FEE /* CategoryModel.swift in Sources */,
+				993ED00B28A653960083D11E /* WalletCell.swift in Sources */,
 				993ED00728A4FB830083D11E /* WalletsViewModel.swift in Sources */,
 				68F646EB289D3BAE00DAAE91 /* SceneDelegate.swift in Sources */,
 				3A2B6D8F28A3E013004DDFBA /* Coordinator.swift in Sources */,

@@ -3,6 +3,7 @@
 //  Wallet
 
 import UIKit
+import SnapKit
 
 class WalletCell: UITableViewCell {
     

@@ -19,7 +19,7 @@ final class WalletsCoordinator: Coordinator {
     func start() {
         let viewModel = WalletsViewModel()
         let viewController = WalletsViewController(viewModel: viewModel)
-        navigationController.pushViewController(viewController, animated: false)
+        navigationController.pushViewController(viewController, animated: true)
     }
     
 }

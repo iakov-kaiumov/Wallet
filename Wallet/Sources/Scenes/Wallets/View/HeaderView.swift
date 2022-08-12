@@ -70,18 +70,10 @@ class HeaderView: UIView {
     }
     
     // MARK: - Public methods
-    public func setData(balance: Double?, income: Double?, expences: Double?) {
-        if let balance = balance {
-            balanceLabel.text = "\(balance) ₽"
-        }
-        
-        if let income = income {
-            incomeLabel.text = "\(income) ₽"
-        }
-        
-        if let expences = expences {
-            expencesLabel.text = "\(expences) ₽"
-        }
+    public func configure(model: PersonModel) {
+        balanceLabel.text = String(format: "%.2f ₽", model.personBalance ?? 0)
+        incomeLabel.text = String(format: "%.2f ₽", model.personIncome ?? 0)
+        expencesLabel.text = String(format: "%.2f ₽", model.personSpendings ?? 0)
     }
     
     // MARK: - Private Methods

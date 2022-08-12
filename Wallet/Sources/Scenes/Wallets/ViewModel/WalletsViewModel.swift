@@ -6,9 +6,13 @@ class WalletsViewModel {
     
     // MARK: - Properties
     var wallets: [WalletModel] = []
+    var userData: PersonModel
+    var currencyData: CurrenciesModel
     
     // MARK: - Init
     init() {
+        userData = PersonModel.getTestModel()
+        currencyData = CurrenciesModel.getTestModel()
         loadWallets()
     }
     

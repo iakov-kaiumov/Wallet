@@ -6,7 +6,7 @@
 import Foundation
 
 enum CurrencyType: String, Codable {
-    case RUB, USD, EUR, CHF, KWD, BHD, OMR, JPY, SEK
+    case RUB, USD, EUR, CHF, KWD, BHD, OMR, JPY, SEK, GBR
 }
 
 struct WalletModel: Codable {

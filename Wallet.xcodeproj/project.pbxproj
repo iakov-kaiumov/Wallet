@@ -34,6 +34,7 @@
 		993ED00728A4FB830083D11E /* WalletsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993ED00628A4FB830083D11E /* WalletsViewModel.swift */; };
 		993ED00928A54B8A0083D11E /* CurrenciesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993ED00828A54B8A0083D11E /* CurrenciesView.swift */; };
 		993ED00B28A653960083D11E /* WalletCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993ED00A28A653960083D11E /* WalletCell.swift */; };
+		993ED00D28A67E8A0083D11E /* CurrenciesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993ED00C28A67E8A0083D11E /* CurrenciesModel.swift */; };
 		B8D42383EFE3F83AF7DEC916 /* Pods_Wallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A84D4897DE1B568819F927D /* Pods_Wallet.framework */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +70,7 @@
 		993ED00628A4FB830083D11E /* WalletsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletsViewModel.swift; path = Wallet/Sources/Scenes/Wallets/ViewModel/WalletsViewModel.swift; sourceTree = SOURCE_ROOT; };
 		993ED00828A54B8A0083D11E /* CurrenciesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenciesView.swift; sourceTree = "<group>"; };
 		993ED00A28A653960083D11E /* WalletCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCell.swift; sourceTree = "<group>"; };
+		993ED00C28A67E8A0083D11E /* CurrenciesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenciesModel.swift; sourceTree = "<group>"; };
 		F5B7635821AADD5375E7C352 /* Pods-Wallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wallet.debug.xcconfig"; path = "Target Support Files/Pods-Wallet/Pods-Wallet.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -164,6 +166,7 @@
 				76CDC25628A416FE00B01FEE /* CategoryModel.swift */,
 				76CDC25828A4170900B01FEE /* OperationModel.swift */,
 				76CDC25A28A4171D00B01FEE /* PersonModel.swift */,
+				993ED00C28A67E8A0083D11E /* CurrenciesModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -475,6 +478,7 @@
 				993ED00528A4FB790083D11E /* WalletsCoordinator.swift in Sources */,
 				76CDC25728A416FE00B01FEE /* CategoryModel.swift in Sources */,
 				993ED00B28A653960083D11E /* WalletCell.swift in Sources */,
+				993ED00D28A67E8A0083D11E /* CurrenciesModel.swift in Sources */,
 				993ED00728A4FB830083D11E /* WalletsViewModel.swift in Sources */,
 				68F646EB289D3BAE00DAAE91 /* SceneDelegate.swift in Sources */,
 				3A2B6D8F28A3E013004DDFBA /* Coordinator.swift in Sources */,

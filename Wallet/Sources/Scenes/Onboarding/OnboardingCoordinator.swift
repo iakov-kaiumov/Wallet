@@ -18,7 +18,17 @@ final class OnboardingCoordinator: Coordinator {
     
     func start() {
         let viewModel = OnboardingViewModel()
+        viewModel.delegate = self
         let viewController = OnboardingViewController(viewModel: viewModel)
-        navigationController.pushViewController(viewController, animated: true)
+        
+        navigationController.setViewControllers([viewController], animated: true)
+    }
+}
+
+extension OnboardingCoordinator: OnboardingViewModelDelegate {
+    func onboardingViewModelDidEnd(_ viewModel: OnboardingViewModel) {
+        let coordinator = WalletsCoordinator(navigationController: navigationController, dependencies: dependencies)
+        childCoordinators.append(coordinator)
+        coordinator.start()
     }
 }

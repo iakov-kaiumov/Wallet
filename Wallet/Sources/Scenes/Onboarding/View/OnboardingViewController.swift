@@ -30,6 +30,11 @@ final class OnboardingViewController: UIViewController {
         setup()
     }
     
+    // MARK: - Actions
+    @objc private func loginButtonAction() {
+        viewModel.loginButtonDidTap()
+    }
+    
     // MARK: - Private Methods
     private func setup() {
         view.backgroundColor = .systemBackground
@@ -88,5 +93,7 @@ final class OnboardingViewController: UIViewController {
         }
         let title = R.string.localizable.onboarding_login_button()
         loginButton.setTitle(title, for: .normal)
+        
+        loginButton.addTarget(self, action: #selector(loginButtonAction), for: .touchUpInside)
     }
 }

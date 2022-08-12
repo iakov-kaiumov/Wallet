@@ -54,7 +54,7 @@ class WalletsViewController: UIViewController {
         headerView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
         }
-        headerView.setData(balance: 23.45, income: 12, expences: nil)
+        headerView.configure(model: viewModel.userData)
     }
     
     func setupCurrenciesView() {
@@ -65,6 +65,8 @@ class WalletsViewController: UIViewController {
             $0.trailing.equalToSuperview().inset(16)
             $0.top.equalTo(headerView.snp.bottom).offset(16)
         }
+        
+        currenciesView.configure(model: viewModel.currencyData)
     }
     
     func setupCreateWalletButton() {
@@ -75,7 +77,7 @@ class WalletsViewController: UIViewController {
         createWalletButton.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().inset(16)
-            $0.bottom.equalToSuperview().inset(50)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
         }
     }
     
@@ -105,6 +107,10 @@ class WalletsViewController: UIViewController {
 extension WalletsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 

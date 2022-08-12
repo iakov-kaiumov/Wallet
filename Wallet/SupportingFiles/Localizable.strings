@@ -14,3 +14,4 @@
 "wallets_income" = "Общий доход";
 "wallets_expences" = "Общий расход";
 "wallets_button" = "Cоздать кошелёк";
+"wallets_empty_label" = "У вас пока нет созданных кошельков";

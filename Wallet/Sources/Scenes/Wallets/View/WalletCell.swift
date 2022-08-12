@@ -54,28 +54,33 @@ class WalletCell: UITableViewCell {
     }
     
     func setupWalletTitle() {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .equalSpacing
+        stackView.alignment = .center
+        stackView.addArrangedSubview(walletTitleLabel)
+        stackView.addArrangedSubview(walletBalanceLabel)
+        walletBalanceLabel.font = .systemFont(ofSize: 17)
         walletTitleLabel.font = .systemFont(ofSize: 17)
+        walletBalanceLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         
-        contentView.addSubview(walletTitleLabel)
-        walletTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        walletTitleLabel.snp.makeConstraints {
+        contentView.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.snp.makeConstraints {
             $0.leading.equalTo(icon.snp.trailing).offset(16)
-            $0.top.equalToSuperview().offset(10)
-            $0.bottom.equalToSuperview().inset(10)
+            $0.top.bottom.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(16)
         }
     }
     
     func setupWalletBalance() {
-        walletBalanceLabel.font = .systemFont(ofSize: 17)
-        walletBalanceLabel.text = "120 000 ₽"
         
-        contentView.addSubview(walletBalanceLabel)
-        walletBalanceLabel.translatesAutoresizingMaskIntoConstraints = false
-        walletBalanceLabel.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(16)
-            $0.top.equalToSuperview().offset(10)
-            $0.bottom.equalToSuperview().inset(10)
-        }
+//        contentView.addSubview(walletBalanceLabel)
+//        walletBalanceLabel.translatesAutoresizingMaskIntoConstraints = false
+//        walletBalanceLabel.snp.makeConstraints {
+//            $0.trailing.equalToSuperview().inset(16)
+//            $0.centerY.equalTo(contentView)
+//        }
         
     }
 }

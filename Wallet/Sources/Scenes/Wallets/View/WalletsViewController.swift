@@ -1,22 +1,22 @@
 //
 //  WalletsViewController.swift
 //  Wallet
-//
-//  Created by Ярослав Ульяненков on 10.08.2022.
-//
 
 import UIKit
 import SnapKit
 
 class WalletsViewController: UIViewController {
+    
     // MARK: - Properties
     let viewModel: WalletsViewModel
     lazy var headerView = HeaderView()
     lazy var currenciesView = CurrenciesView()
     lazy var createWalletButton = ButtonFactory.makeGrayButton()
+    lazy var emptyLabel = UILabel()
     lazy var walletsTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.separatorStyle = .none
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -44,11 +44,11 @@ class WalletsViewController: UIViewController {
         setupCurrenciesView()
         setupWalletsTableView()
         setupCreateWalletButton()
+        setupEmptyLabel()
     }
     
     // MARK: - private methods
-    
-    private func setupHeaderView() {
+    func setupHeaderView() {
         view.addSubview(headerView)
         headerView.translatesAutoresizingMaskIntoConstraints = false
         headerView.snp.makeConstraints {
@@ -57,7 +57,7 @@ class WalletsViewController: UIViewController {
         headerView.setData(balance: 23.45, income: 12, expences: nil)
     }
     
-    private func setupCurrenciesView() {
+    func setupCurrenciesView() {
         view.addSubview(currenciesView)
         currenciesView.translatesAutoresizingMaskIntoConstraints = false
         currenciesView.snp.makeConstraints {
@@ -67,7 +67,7 @@ class WalletsViewController: UIViewController {
         }
     }
     
-    private func setupCreateWalletButton() {
+    func setupCreateWalletButton() {
         createWalletButton.setTitle(R.string.localizable.wallets_button(), for: .normal)
         
         view.addSubview(createWalletButton)
@@ -79,12 +79,25 @@ class WalletsViewController: UIViewController {
         }
     }
     
-    private func setupWalletsTableView() {
+    func setupWalletsTableView() {
         view.addSubview(walletsTableView)
         walletsTableView.translatesAutoresizingMaskIntoConstraints = false
         walletsTableView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalToSuperview()
             $0.top.equalTo(currenciesView.snp.bottom).offset(25)
+        }
+    }
+    
+    func setupEmptyLabel() {
+        emptyLabel.text = R.string.localizable.wallets_empty_label()
+        emptyLabel.font = .systemFont(ofSize: 16)
+        emptyLabel.textColor = .systemGray
+        emptyLabel.numberOfLines = 2
+        view.addSubview(emptyLabel)
+        emptyLabel.translatesAutoresizingMaskIntoConstraints = false
+        emptyLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.centerY.equalToSuperview().offset(50)
         }
     }
 }
@@ -97,13 +110,14 @@ extension WalletsViewController: UITableViewDelegate {
 
 extension WalletsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        emptyLabel.layer.opacity = viewModel.wallets.isEmpty ? 1.0 : 0.0
+        return viewModel.wallets.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath) as? WalletCell
         
-        cell?.configure(model: WalletModel.getTestModel())
+        cell?.configure(model: viewModel.wallets[indexPath.row])
         
         return cell ?? WalletCell()
     }

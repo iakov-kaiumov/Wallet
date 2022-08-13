@@ -10,6 +10,23 @@
 "onboarding_login_button" = "Войти с помощью Google";
 
 "modal_close_button" = "Закрыть";
+"default_next_button" = "Далее";
+"default_save_button" = "Сохранить";
 
 "currencies_show_more_button" = "Показать больше";
 "currencies_show_less_button" = "Свернуть";
+
+"wallet_edit_add_title" = "Новый кошелек";
+"wallet_edit_edit_title" = "Кошелек";
+"wallet_edit_add_button" = "Создать кошелек";
+"wallet_edit_save_button" = "Сохранить";
+"wallet_edit_name" = "Название";
+"wallet_edit_currency" = "Валюта";
+"wallet_edit_limit" = "Лимит";
+
+"wallet_name_title" = "Придумайте название";
+"wallet_name_prompt" = "Название кошелька";
+"wallet_name_button_title" = "Далее";
+
+"wallet_limit_title" = "Лимиты на траты";
+"wallet_limit_prompt" = "Лимиты на траты";

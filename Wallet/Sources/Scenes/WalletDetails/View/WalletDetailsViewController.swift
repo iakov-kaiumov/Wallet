@@ -10,9 +10,14 @@ final class WalletDetailesViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: WalletDetailesViewModel
     
-    private let settingsButton = UIButton(type: .system)
-    private let walletName = UILabel()
-    private let walletAmount = UILabel()
+    private let settingsButton = UIBarButtonItem()
+    private let walletNameLabel = UILabel()
+    private let walletAmountLabel = UILabel()
+    private let spendChipsContainerStackView = UIStackView()
+    private let incomeChipView = SpendChipView()
+    private let expenseChipView = SpendChipView()
+    private let operationTableView = UITableView()
+    private let addOperationButton = ButtonFactory.makeGrayButton()
     
     // MARK: - Init
     init(viewModel: WalletDetailesViewModel) {
@@ -30,9 +35,85 @@ final class WalletDetailesViewController: UIViewController {
         setup()
     }
     
+    // MARK: - Actions
+    @objc private func settingsButtonTapped() {
+        print("Tapped")
+    }
+    
     // MARK: - Private Methods
     private func setup() {
         view.backgroundColor = R.color.background()
+        setupSettingsButton()
+        setupWalletNameLabel()
+        setupWalletAmountLabel()
+        setupSpendChipsContainerStackView()
+        setupIncomeChipView()
+        setupExpenseChipView()
+        setupOperationTableView()
+        setupAddOperationButton()
+    }
+    
+    private func setupSettingsButton() {
+        settingsButton.image = R.image.settingsButton()
+        settingsButton.style = .plain
+        settingsButton.target = self
+        settingsButton.action = #selector(settingsButtonTapped)
+        settingsButton.tintColor = R.color.accentPurple()
+        navigationItem.rightBarButtonItem = settingsButton
+    }
+    
+    private func setupWalletNameLabel() {
+        view.addSubview(walletNameLabel)
+        walletNameLabel.text = "Кошелек 1"
+        walletNameLabel.font = .systemFont(ofSize: 13, weight: .regular)
+        walletNameLabel.numberOfLines = 2
+        walletNameLabel.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(16)
+        }
+    }
+    
+    private func setupWalletAmountLabel() {
+        view.addSubview(walletAmountLabel)
+        walletAmountLabel.text = "118 000 ₽"
+        walletAmountLabel.font = .systemFont(ofSize: 32, weight: .semibold)
+        walletAmountLabel.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.top.equalTo(walletNameLabel.snp.bottom).offset(16)
+        }
+    }
+    
+    private func setupSpendChipsContainerStackView() {
+        view.addSubview(spendChipsContainerStackView)
+        spendChipsContainerStackView.axis = .horizontal
+        spendChipsContainerStackView.addArrangedSubview(incomeChipView)
+        spendChipsContainerStackView.addArrangedSubview(expenseChipView)
+        spendChipsContainerStackView.distribution = .fillEqually
+        spendChipsContainerStackView.spacing = 16
+        spendChipsContainerStackView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.top.equalTo(walletAmountLabel.snp.bottom).offset(16)
+        }
+    }
+    
+    private func setupIncomeChipView() {
+    }
+    
+    private func setupExpenseChipView() {
         
     }
+    
+    private func setupOperationTableView() {
+        
+    }
+    
+    private func setupAddOperationButton() {
+        view.addSubview(addOperationButton)
+        addOperationButton.setTitle("Добавить операцию", for: .normal)
+        addOperationButton.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
+        }
+    }
+        
 }

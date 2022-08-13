@@ -6,7 +6,7 @@
 import Foundation
 
 enum CurrencyType: String, Codable, CaseIterable {
-    case RUB, USD, EUR, CHF, KWD, BHD, OMR, JPY, SEK
+    case RUB, USD, EUR, CHF, KWD, BHD, OMR, JPY, SEK, GBR
 }
 
 struct WalletModel: Codable {
@@ -25,6 +25,10 @@ struct WalletModel: Codable {
     var income: Double?
 
     var spendings: Double?
+    
+    var formattedBalance: String {
+        String(format: "%.2f ₽", balance ?? 0)
+    }
     
     static func getTestModel(_ id: Int = 0) -> WalletModel {
         return WalletModel(

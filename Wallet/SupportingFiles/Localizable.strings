@@ -31,6 +31,12 @@
 "wallet_limit_title" = "Лимиты на траты";
 "wallet_limit_prompt" = "Лимиты на траты";
 
+// Wallets screen
+"wallets_balance" = "Общий баланс";
+"wallets_income" = "Общий доход";
+"wallets_expences" = "Общий расход";
+"wallets_button" = "Cоздать кошелёк";
+"wallets_empty_label" = "У вас пока нет созданных кошельков";
 "operation_edit_add_title" = "Новая операция";
 "operation_edit_add_button" = "Создать операцию";
 "operation_edit_save_button" = "Сохранить";

@@ -4,10 +4,6 @@
 
 import UIKit
 
-enum DotSize: CGFloat {
-    case size = 8
-}
-
 class DotView: UIView {
     enum DotColor {
         case red
@@ -24,7 +20,7 @@ class DotView: UIView {
     }
     
     init(color: DotColor) {
-        super.init(frame: CGRect(x: 0, y: 0, width: DotSize.size.rawValue, height: DotSize.size.rawValue))
+        super.init(frame: CGRect(x: 0, y: 0, width: Constants.dotSize, height: Constants.dotSize))
         setup(color: color)
     }
     
@@ -35,12 +31,17 @@ class DotView: UIView {
     // MARK: - Private methods
     private func setup(color: DotColor) {
         backgroundColor = color.getColor()
-        layer.cornerRadius = DotSize.size.rawValue / 2.0
+        layer.cornerRadius = Constants.dotSize / 2.0
         translatesAutoresizingMaskIntoConstraints = false
         self.snp.makeConstraints {
-            $0.width.equalTo(DotSize.size.rawValue)
-            $0.height.equalTo(DotSize.size.rawValue)
+            $0.width.equalTo(Constants.dotSize)
+            $0.height.equalTo(Constants.dotSize)
         }
     }
     
+}
+
+// MARK: - Constants
+fileprivate extension Constants {
+    static let dotSize: CGFloat = 8
 }

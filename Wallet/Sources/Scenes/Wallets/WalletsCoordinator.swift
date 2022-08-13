@@ -1,13 +1,13 @@
 //
-//  CurrenciesCoordinator.swift
+//  WalletsCoordinator.swift
 //  Wallet
 //
 
 import UIKit
 
-final class CurrenciesCoordinator: Coordinator {
+final class WalletsCoordinator: Coordinator {
     init(navigationController: UINavigationController,
-         dependencies: AppDependency = AppDependency()) {
+         dependencies: AppDependency) {
         self.navigationController = navigationController
         self.dependencies = dependencies
     }
@@ -17,8 +17,9 @@ final class CurrenciesCoordinator: Coordinator {
     var dependencies: AppDependency
     
     func start() {
-        let viewModel = CurrenciesViewModel()
-        let viewController = CurrenciesViewController(viewModel: viewModel)
+        let viewModel = WalletsViewModel()
+        let viewController = WalletsViewController(viewModel: viewModel)
         navigationController.pushViewController(viewController, animated: true)
     }
+    
 }

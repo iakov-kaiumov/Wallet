@@ -9,10 +9,10 @@ import SnapKit
 final class OnboardingViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: OnboardingViewModel
-    private let onboardingImage: UIImageView = UIImageView()
-    private let titleLabel = UILabel()
-    private let descriptionLabel = UILabel()
-    private let loginButton = ButtonFactory.makeGrayButton()
+    private lazy var onboardingImage: UIImageView = UIImageView()
+    private lazy var titleLabel = UILabel()
+    private lazy var descriptionLabel = UILabel()
+    private lazy var loginButton = ButtonFactory.makeGrayButton()
     
     // MARK: - Init
     init(viewModel: OnboardingViewModel) {
@@ -28,6 +28,11 @@ final class OnboardingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+    }
+    
+    // MARK: - Actions
+    @objc private func loginButtonAction() {
+        viewModel.loginButtonDidTap()
     }
     
     // MARK: - Private Methods
@@ -88,5 +93,7 @@ final class OnboardingViewController: UIViewController {
         }
         let title = R.string.localizable.onboarding_login_button()
         loginButton.setTitle(title, for: .normal)
+        
+        loginButton.addTarget(self, action: #selector(loginButtonAction), for: .touchUpInside)
     }
 }

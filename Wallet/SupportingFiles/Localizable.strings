@@ -30,3 +30,14 @@
 
 "wallet_limit_title" = "Лимиты на траты";
 "wallet_limit_prompt" = "Лимиты на траты";
+
+"operation_edit_add_title" = "Новая операция";
+"operation_edit_add_button" = "Создать операцию";
+"operation_edit_save_button" = "Сохранить";
+"operation_edit_amount" = "Сумма";
+"operation_edit_type" = "Тип";
+"operation_edit_category" = "Категория";
+"operation_edit_date" = "Дата операции";
+
+"operation_amount_title" = "Введите сумму";
+"operation_amount_prompt" = "Сумма операции";

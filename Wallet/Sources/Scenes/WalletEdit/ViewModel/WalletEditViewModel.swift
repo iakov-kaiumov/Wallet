@@ -7,7 +7,7 @@ enum WalletEditFieldType: Int {
     case name, currency, limit
 }
 
-struct EditTableItem {
+struct WalletEditTableItem {
     var type: WalletEditFieldType
     var title: String
     var value: String
@@ -24,19 +24,25 @@ protocol WalletEditViewModelDelegate: AnyObject {
 }
 
 final class WalletEditViewModel {
+    // MARK: - Properties
     var isCreatingMode: Bool = true
     
     weak var delegate: WalletEditViewModelDelegate?
     
     var onDataChanged: (() -> Void)?
     
-    var tableItems: [EditTableItem] = [
-        EditTableItem(type: .name, title: R.string.localizable.wallet_edit_name(), value: "Новый кошелек 1"),
-        EditTableItem(type: .currency, title: R.string.localizable.wallet_edit_currency(), value: "USD"),
-        EditTableItem(type: .limit, title: R.string.localizable.wallet_edit_limit(), value: "")
+    var tableItems: [WalletEditTableItem] = [
+        WalletEditTableItem(type: .name, title: R.string.localizable.wallet_edit_name(), value: "Новый кошелек 1"),
+        WalletEditTableItem(type: .currency, title: R.string.localizable.wallet_edit_currency(), value: "USD"),
+        WalletEditTableItem(type: .limit, title: R.string.localizable.wallet_edit_limit(), value: "")
     ]
     
-    func cellDidTap(item: EditTableItem) {
+    // MARK: - Public
+    func itemIndex(for type: WalletEditFieldType) -> Int? {
+        return tableItems.firstIndex(where: { $0.type == type })
+    }
+    
+    func cellDidTap(item: WalletEditTableItem) {
         switch item.type {
         case .name:
             delegate?.walletEditViewModelEnterName(item.value)
@@ -52,17 +58,20 @@ final class WalletEditViewModel {
     }
     
     func changeName(_ value: String?) {
-        tableItems[0].value = value ?? ""
+        guard let index = itemIndex(for: .name) else { return }
+        tableItems[index].value = value ?? ""
         onDataChanged?()
     }
     
     func changeCurrency(_ value: CurrencyType?) {
-        tableItems[1].value = value?.rawValue ?? ""
+        guard let index = itemIndex(for: .name) else { return }
+        tableItems[index].value = value?.rawValue ?? ""
         onDataChanged?()
     }
     
     func changeLimit(_ value: String?) {
-        tableItems[2].value = value ?? ""
+        guard let index = itemIndex(for: .name) else { return }
+        tableItems[index].value = value ?? ""
         onDataChanged?()
     }
 }

@@ -24,7 +24,7 @@ final class WalletEditViewController: UIViewController {
         return tableView
     }()
 
-    private let addButton: UIButton = ButtonFactory.makeGrayButton()
+    private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
 
     // MARK: - Init
     init(viewModel: WalletEditViewModel) {
@@ -52,7 +52,7 @@ final class WalletEditViewController: UIViewController {
         }
 
         setupTableView()
-        setupButton()
+        setupNextButton()
 
         viewModel.onDataChanged = { [weak self] in
             self?.tableView.reloadData()
@@ -68,16 +68,21 @@ final class WalletEditViewController: UIViewController {
         }
     }
 
-    private func setupButton() {
-        view.addSubview(addButton)
+    private func setupNextButton() {
+        view.addSubview(nextButton)
 
-        addButton.snp.makeConstraints {
+        nextButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
         }
 
         let title = viewModel.isCreatingMode ? R.string.localizable.wallet_edit_add_button() : R.string.localizable.wallet_edit_save_button()
-        addButton.setTitle(title, for: .normal)
+        nextButton.setTitle(title, for: .normal)
+        nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+    }
+    
+    @objc private func nextButtonAction() {
+        viewModel.nextButtonDidTap()
     }
 }
 

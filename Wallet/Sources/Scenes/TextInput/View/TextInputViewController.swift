@@ -8,11 +8,11 @@ import SnapKit
 
 final class TextInputViewController: UIViewController {
     // MARK: - Properties
-    private var viewModel: TextInputViewModel
+    private let viewModel: TextInputViewModel
     
-    private let nextButton: UIButton = ButtonFactory.makeGrayButton()
-    private let textField: MaterialTextField = MaterialTextField()
-    private let closeButton = UIButton(type: .system)
+    private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
+    private lazy var textField: MaterialTextField = MaterialTextField()
+    private lazy var closeButton = UIButton(type: .system)
     
     // MARK: - Init
     init(viewModel: TextInputViewModel) {
@@ -97,7 +97,7 @@ final class TextInputViewController: UIViewController {
         closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
     }
     
-    @objc func keyboardWillShow(notification: NSNotification) {
+    @objc private func keyboardWillShow(notification: NSNotification) {
         animateWithKeyboard(notification: notification) { keyboardFrame in
             self.nextButton.snp.updateConstraints {
                 $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(keyboardFrame.height)
@@ -105,7 +105,7 @@ final class TextInputViewController: UIViewController {
         }
     }
 
-    @objc func keyboardWillHide(notification: NSNotification) {
+    @objc private func keyboardWillHide(notification: NSNotification) {
         animateWithKeyboard(notification: notification) { _ in
             self.nextButton.snp.updateConstraints {
                 $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(16)

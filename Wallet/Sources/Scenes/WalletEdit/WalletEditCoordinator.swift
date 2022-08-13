@@ -10,10 +10,7 @@ final class WalletEditCoordinator: Coordinator {
     var navigationController: UINavigationController
     var dependencies: AppDependency
     
-    var viewModel: WalletEditViewModel?
-    var nameInputViewModel: TextInputViewModel?
-    var currenciesViewModel: CurrenciesViewModel?
-    var limitInputViewModel: TextInputViewModel?
+    private var walletViewModel: WalletEditViewModel = WalletEditViewModel()
     
     init(navigationController: UINavigationController,
          dependencies: AppDependency = AppDependency()) {
@@ -22,50 +19,43 @@ final class WalletEditCoordinator: Coordinator {
     }
     
     func start() {
-        configure()
-        if let viewModel = viewModel {
-            let controller = WalletEditViewController(viewModel: viewModel)
-            navigationController.setViewControllers([controller], animated: false)
-        }
-    }
-    
-    private func configure() {
-        viewModel = WalletEditViewModel()
-        viewModel?.delegate = self
+        walletViewModel.delegate = self
         
-        nameInputViewModel = TextInputViewModel.makeWalletName(isModal: true)
-        nameInputViewModel?.delegate = self
-        
-        currenciesViewModel = CurrenciesViewModel()
-        currenciesViewModel?.delegate = self
-        
-        limitInputViewModel = TextInputViewModel.makeWalletLimit(isModal: true)
-        limitInputViewModel?.delegate = self
+        let controller = WalletEditViewController(viewModel: walletViewModel)
+        navigationController.setViewControllers([controller], animated: false)
     }
 }
 
 extension WalletEditCoordinator: WalletEditViewModelDelegate {
+    func walletEditViewModelDidFinish() {
+        
+    }
     
     func walletEditViewModelEnterName(_ currentValue: String?) {
-        guard let nameInputViewModel = nameInputViewModel else { return }
+        let nameInputViewModel = TextInputViewModel.makeWalletName(isModal: true)
+        nameInputViewModel.delegate = self
         nameInputViewModel.text = currentValue
+        
         let controller = TextInputViewController(viewModel: nameInputViewModel)
         navigationController.present(controller, animated: true)
     }
     
     func walletEditViewModelEnterCurrency(_ currentValue: String?) {
-        guard let currenciesViewModel = currenciesViewModel else { return }
-        if let currentValue = currentValue,
-           let type = CurrencyType(rawValue: currentValue) {
+        let currenciesViewModel = CurrenciesViewModel()
+        currenciesViewModel.delegate = self
+        if let currentValue = currentValue, let type = CurrencyType(rawValue: currentValue) {
             currenciesViewModel.setCurrentCurrency(type)
         }
+        
         let controller = CurrenciesViewController(viewModel: currenciesViewModel)
         navigationController.present(controller, animated: true)
     }
     
     func walletEditViewModelEnterLimit(_ currentValue: String?) {
-        guard let limitInputViewModel = limitInputViewModel else { return }
+        let limitInputViewModel = TextInputViewModel.makeWalletLimit(isModal: true)
+        limitInputViewModel.delegate = self
         limitInputViewModel.text = currentValue
+        
         let controller = TextInputViewController(viewModel: limitInputViewModel)
         navigationController.present(controller, animated: true)
     }
@@ -79,9 +69,9 @@ extension WalletEditCoordinator: TextInputViewModelDelegate {
     func textInputViewModelValueChanged(screen: TextInputScreenType, value: String?) {
         switch screen {
         case .walletName:
-            viewModel?.changeName(value)
+            walletViewModel.changeName(value)
         case .walletLimit:
-            viewModel?.changeLimit(value)
+            walletViewModel.changeLimit(value)
         default:
             break
         }
@@ -95,6 +85,6 @@ extension WalletEditCoordinator: CurrenciesViewModelDelegate {
     }
     
     func currenciesViewModelValueChanged(_ value: CurrencyType?) {
-        viewModel?.changeCurrency(value)
+        walletViewModel.changeCurrency(value)
     }
 }

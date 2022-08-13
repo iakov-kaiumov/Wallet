@@ -11,7 +11,7 @@ protocol CurrenciesViewModelDelegate: AnyObject {
     func currenciesViewModelValueChanged(_ value: CurrencyType?)
 }
 
-class CurrenciesViewModel {
+final class CurrenciesViewModel {
     
     private let mainCurrencies: [CurrencyType] = [.RUB, .USD, .EUR]
     

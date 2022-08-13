@@ -15,7 +15,7 @@ protocol TextInputViewModelDelegate: AnyObject {
     func textInputViewModelValueChanged(screen: TextInputScreenType, value: String?)
 }
 
-class TextInputViewModel {
+final class TextInputViewModel {
     var screen: TextInputScreenType
     var title: String
     var textInputPrompt: String

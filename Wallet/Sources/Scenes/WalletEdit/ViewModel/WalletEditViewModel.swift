@@ -19,9 +19,11 @@ protocol WalletEditViewModelDelegate: AnyObject {
     func walletEditViewModelEnterCurrency(_ currentValue: String?)
     
     func walletEditViewModelEnterLimit(_ currentValue: String?)
+    
+    func walletEditViewModelDidFinish()
 }
 
-class WalletEditViewModel {
+final class WalletEditViewModel {
     var isCreatingMode: Bool = true
     
     weak var delegate: WalletEditViewModelDelegate?
@@ -43,6 +45,10 @@ class WalletEditViewModel {
         case .limit:
             delegate?.walletEditViewModelEnterLimit(item.value)
         }
+    }
+    
+    func nextButtonDidTap() {
+        delegate?.walletEditViewModelDidFinish()
     }
     
     func changeName(_ value: String?) {

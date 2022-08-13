@@ -11,8 +11,8 @@ final class CurrenciesViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: CurrenciesViewModel
     
-    private let nextButton: UIButton = ButtonFactory.makeGrayButton()
-    private let closeButton = UIButton(type: .system)
+    private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
+    private lazy var closeButton = UIButton(type: .system)
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         

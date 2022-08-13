@@ -53,7 +53,7 @@ class TextInputViewModel {
 }
 
 extension TextInputViewModel {
-    static func walletName(isModal: Bool = false) -> TextInputViewModel {
+    static func makeWalletName(isModal: Bool = false) -> TextInputViewModel {
         TextInputViewModel(
             screen: .walletName,
             title: R.string.localizable.wallet_name_title(),
@@ -64,7 +64,7 @@ extension TextInputViewModel {
         )
     }
     
-    static func walletLimit(isModal: Bool = false) -> TextInputViewModel {
+    static func makeWalletLimit(isModal: Bool = false) -> TextInputViewModel {
         TextInputViewModel(
             screen: .walletLimit,
             title: R.string.localizable.wallet_limit_title(),

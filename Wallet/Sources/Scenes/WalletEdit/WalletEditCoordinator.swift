@@ -33,13 +33,13 @@ final class WalletEditCoordinator: Coordinator {
         viewModel = WalletEditViewModel()
         viewModel?.delegate = self
         
-        nameInputViewModel = TextInputViewModel.walletName(isModal: true)
+        nameInputViewModel = TextInputViewModel.makeWalletName(isModal: true)
         nameInputViewModel?.delegate = self
         
         currenciesViewModel = CurrenciesViewModel()
         currenciesViewModel?.delegate = self
         
-        limitInputViewModel = TextInputViewModel.walletLimit(isModal: true)
+        limitInputViewModel = TextInputViewModel.makeWalletLimit(isModal: true)
         limitInputViewModel?.delegate = self
     }
 }

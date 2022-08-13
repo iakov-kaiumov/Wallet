@@ -50,6 +50,9 @@ final class TextInputViewController: UIViewController {
         setupCloseButton()
         setupNextButton()
         setupTextField()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     private func setupTextField() {
@@ -92,5 +95,21 @@ final class TextInputViewController: UIViewController {
         
         closeButton.setTitle(R.string.localizable.modal_close_button(), for: .normal)
         closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        animateWithKeyboard(notification: notification) { keyboardFrame in
+            self.nextButton.snp.updateConstraints {
+                $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(keyboardFrame.height)
+            }
+        }
+    }
+
+    @objc func keyboardWillHide(notification: NSNotification) {
+        animateWithKeyboard(notification: notification) { _ in
+            self.nextButton.snp.updateConstraints {
+                $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(16)
+            }
+        }
     }
 }

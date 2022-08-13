@@ -5,7 +5,7 @@
 import UIKit
 import SnapKit
 
-class WalletsViewController: UIViewController {
+final class WalletsViewController: UIViewController {
     
     // MARK: - Properties
     private let viewModel: WalletsViewModel

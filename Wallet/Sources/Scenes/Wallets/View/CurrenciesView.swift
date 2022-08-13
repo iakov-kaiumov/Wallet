@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class CurrenciesView: UIView {
+final class CurrenciesView: UIView {
     // MARK: - Properties
     private let stack = UIStackView()
     

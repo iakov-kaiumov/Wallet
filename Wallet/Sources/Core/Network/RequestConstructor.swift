@@ -41,9 +41,9 @@ enum RequestConstructorError: Error {
     var localizedDescription: String {
         switch self {
         case .invalidBaseUrl:
-            return ""
+            return "Incorrect base url"
         case .urlCreationFailed:
-            return ""
+            return "Cannot build url"
         }
     }
 }

@@ -5,6 +5,6 @@
 
 import Foundation
 
-final class DefaultNetworkSettings {
+struct DefaultNetworkSettings {
     static let baseUrl: String = "https://api.stackexchange.com"
 }

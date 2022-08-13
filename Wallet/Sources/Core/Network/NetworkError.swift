@@ -6,6 +6,7 @@
 import Foundation
 
 enum NetworkError: Error {
+    case urlError
     case transportError(Error)
     case serverError(statusCode: Int)
     case noData

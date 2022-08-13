@@ -9,8 +9,6 @@ import SnapKit
 final class CurrencyCell: UITableViewCell {
     
     // MARK: - Properties
-    static let identifier = "CurrencyCellIdentifier"
-    
     private let titleLabel: UILabel = UILabel()
     
     // MARK: - Init

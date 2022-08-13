@@ -9,8 +9,6 @@ import SnapKit
 final class DefaultEditCell: UITableViewCell {
     
     // MARK: - Properties
-    static let identifier = "DefaultEditCellIdentifier"
-    
     private let titleLabel: UILabel = UILabel()
     private let subtitleLabel: UILabel = UILabel()
     

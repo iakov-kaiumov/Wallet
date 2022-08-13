@@ -8,7 +8,6 @@ import SnapKit
 final class ShowMoreCell: UITableViewCell {
     
     // MARK: - Properties
-    static let identifier = "ShowMoreCellIdentifier"
     
     private let titleLabel: UILabel = UILabel()
     

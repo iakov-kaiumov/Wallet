@@ -155,21 +155,22 @@ extension CurrenciesViewController: UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 1 {
             viewModel.toggleState()
-        } else {
-            if let oldIndex = viewModel.chosenIndex {
-                let oldPath = IndexPath(row: oldIndex, section: 0)
-                tableView.cellForRow(at: oldPath)?.accessoryType = .none
-                
-                if oldPath == indexPath {
-                    viewModel.chosenIndex = nil
-                } else {
-                    tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-                    viewModel.chosenIndex = indexPath.row
-                }
+            return
+        }
+        
+        if let oldIndex = viewModel.chosenIndex {
+            let oldPath = IndexPath(row: oldIndex, section: 0)
+            tableView.cellForRow(at: oldPath)?.accessoryType = .none
+            
+            if oldPath == indexPath {
+                viewModel.chosenIndex = nil
             } else {
                 tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
                 viewModel.chosenIndex = indexPath.row
             }
+        } else {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+            viewModel.chosenIndex = indexPath.row
         }
     }
 }

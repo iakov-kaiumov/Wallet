@@ -13,4 +13,8 @@ extension UITableViewCell {
             view.alpha = on ? 1 : 0.5
         }
     }
+    
+    static var identifier: String {
+        return String(describing: self)
+    }
 }

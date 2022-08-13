@@ -8,23 +8,12 @@ import SnapKit
 class WalletsViewController: UIViewController {
     
     // MARK: - Properties
-    let viewModel: WalletsViewModel
-    lazy var headerView = HeaderView()
-    lazy var currenciesView = CurrenciesView()
-    lazy var createWalletButton = ButtonFactory.makeGrayButton()
-    lazy var emptyLabel = UILabel()
-    lazy var walletsTableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
-        tableView.separatorStyle = .none
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
-        
-        tableView.dataSource = self
-        tableView.delegate = self
-        
-        tableView.register(WalletCell.self, forCellReuseIdentifier: WalletCell.reuseIdentifier)
-        
-        return tableView
-    }()
+    private let viewModel: WalletsViewModel
+    private lazy var headerView = HeaderView()
+    private lazy var currenciesView = CurrenciesView()
+    private lazy var createWalletButton = ButtonFactory.makeGrayButton()
+    private lazy var emptyLabel = UILabel()
+    private lazy var walletsTableView: UITableView = UITableView(frame: .zero, style: .plain)
     
     // MARK: - Init
     init(viewModel: WalletsViewModel) {
@@ -40,15 +29,21 @@ class WalletsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = R.color.background()
+
+        
+    }
+    
+    // MARK: - private methods
+    private func setup() {
         setupHeaderView()
+        setupTableView()
         setupCurrenciesView()
         setupWalletsTableView()
         setupCreateWalletButton()
         setupEmptyLabel()
     }
     
-    // MARK: - private methods
-    func setupHeaderView() {
+    private func setupHeaderView() {
         view.addSubview(headerView)
         headerView.translatesAutoresizingMaskIntoConstraints = false
         headerView.snp.makeConstraints {
@@ -57,7 +52,17 @@ class WalletsViewController: UIViewController {
         headerView.configure(model: viewModel.userData)
     }
     
-    func setupCurrenciesView() {
+    private func setupTableView() {
+        walletsTableView.separatorStyle = .none
+        walletsTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
+        
+        walletsTableView.dataSource = self
+        walletsTableView.delegate = self
+        
+        walletsTableView.register(WalletCell.self, forCellReuseIdentifier: WalletCell.reuseIdentifier)
+    }
+    
+    private func setupCurrenciesView() {
         view.addSubview(currenciesView)
         currenciesView.translatesAutoresizingMaskIntoConstraints = false
         currenciesView.snp.makeConstraints {
@@ -69,7 +74,7 @@ class WalletsViewController: UIViewController {
         currenciesView.configure(model: viewModel.currencyData)
     }
     
-    func setupCreateWalletButton() {
+    private func setupCreateWalletButton() {
         createWalletButton.setTitle(R.string.localizable.wallets_button(), for: .normal)
         
         view.addSubview(createWalletButton)
@@ -81,7 +86,7 @@ class WalletsViewController: UIViewController {
         }
     }
     
-    func setupWalletsTableView() {
+    private func setupWalletsTableView() {
         view.addSubview(walletsTableView)
         walletsTableView.translatesAutoresizingMaskIntoConstraints = false
         walletsTableView.snp.makeConstraints {
@@ -90,7 +95,7 @@ class WalletsViewController: UIViewController {
         }
     }
     
-    func setupEmptyLabel() {
+    private func setupEmptyLabel() {
         emptyLabel.text = R.string.localizable.wallets_empty_label()
         emptyLabel.font = .systemFont(ofSize: 16)
         emptyLabel.textColor = .systemGray
@@ -104,6 +109,7 @@ class WalletsViewController: UIViewController {
     }
 }
 
+// MARK: - Extensions
 extension WalletsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
@@ -121,10 +127,12 @@ extension WalletsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath) as? WalletCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath)
         
-        cell?.configure(model: viewModel.wallets[indexPath.row])
-        
-        return cell ?? WalletCell()
+        if let cell = cell as? WalletCell {
+            cell.configure(model: viewModel.wallets[indexPath.row])
+        }
+            
+        return cell
     }
 }

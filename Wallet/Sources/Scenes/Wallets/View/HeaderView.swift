@@ -5,64 +5,25 @@
 import UIKit
 import SnapKit
 
-class HeaderView: UIView {
+final class HeaderView: UIView {
     
     // MARK: - Types
-    lazy var balanceLabel: UILabel = getTitleLabel(fontSize: 32, weight: .medium)
+    private lazy var balanceLabel: UILabel = makeTitleLabel(fontSize: 32, weight: .medium)
     
-    lazy var incomeLabel: UILabel = getTitleLabel(fontSize: 16, weight: .medium)
+    private lazy var incomeLabel: UILabel = makeTitleLabel(fontSize: 16, weight: .medium)
     
-    lazy var expencesLabel: UILabel = getTitleLabel(fontSize: 16, weight: .medium)
+    private lazy var expencesLabel: UILabel = makeTitleLabel(fontSize: 16, weight: .medium)
     
-    lazy var balanceTitleLabel: UILabel = getTitleLabel(fontSize: 13, weight: .regular)
+    private lazy var balanceTitleLabel: UILabel = makeTitleLabel(fontSize: 13, weight: .regular)
     
-    lazy var incomeTitleLabel: UILabel = getTitleLabel(fontSize: 13, weight: .regular, opacity: 0.6)
+    private lazy var incomeTitleLabel: UILabel = makeTitleLabel(fontSize: 13, weight: .regular, opacity: 0.6)
     
-    lazy var expencesTitleLabel: UILabel = getTitleLabel(fontSize: 13, weight: .regular, opacity: 0.6)
-    
-    enum DotColor {
-        case red
-        case green
-    }
+    private lazy var expencesTitleLabel: UILabel = makeTitleLabel(fontSize: 13, weight: .regular, opacity: 0.6)
     
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        balanceLabel.text = "0 ₽"
-        balanceTitleLabel.text = R.string.localizable.wallets_balance()
-        incomeLabel.text = "0 ₽"
-        incomeTitleLabel.text = R.string.localizable.wallets_income()
-        expencesLabel.text = "0 ₽"
-        expencesTitleLabel.text = R.string.localizable.wallets_expences()
-        let moneyStack = getIncomeAndExpencesStackView()
-        [balanceLabel, balanceTitleLabel, moneyStack].forEach {
-            addSubview($0)
-        }
-        
-        self.snp.makeConstraints {
-            $0.height.equalTo(245)
-        }
-        
-        balanceTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        balanceTitleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(95)
-            $0.leading.equalToSuperview().offset(16)
-        }
-        
-        balanceLabel.translatesAutoresizingMaskIntoConstraints = false
-        balanceLabel.snp.makeConstraints {
-            $0.top.equalTo(balanceTitleLabel.snp.bottom).offset(6)
-            $0.leading.equalToSuperview().offset(16)
-        }
-        
-        moneyStack.translatesAutoresizingMaskIntoConstraints = false
-        moneyStack.snp.makeConstraints {
-            $0.top.equalTo(balanceLabel.snp.bottom).offset(24)
-            $0.leading.right.equalToSuperview().offset(16)
-        }
-        
-        self.backgroundColor = R.color.purpleBackground()
-        
+        setup()
     }
     
     required init?(coder: NSCoder) {
@@ -70,37 +31,52 @@ class HeaderView: UIView {
     }
     
     // MARK: - Public methods
-    public func configure(model: PersonModel) {
+    func configure(model: PersonModel) {
         balanceLabel.text = String(format: "%.2f ₽", model.personBalance ?? 0)
         incomeLabel.text = String(format: "%.2f ₽", model.personIncome ?? 0)
         expencesLabel.text = String(format: "%.2f ₽", model.personSpendings ?? 0)
     }
     
     // MARK: - Private Methods
-    private func getTitleLabel(fontSize: CGFloat, weight: UIFont.Weight, opacity: Float = 1) -> UILabel {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: fontSize, weight: weight)
-        label.textColor = .white
-        label.layer.opacity = opacity
-        return label
-    }
-    
-    private func getColoredDot(color: DotColor) -> UIView {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: 8))
-        view.backgroundColor = color == .red ? R.color.redDot() : R.color.greenDot()
-        view.layer.cornerRadius = 4
-    
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.snp.makeConstraints {
-            $0.width.equalTo(8)
-            $0.height.equalTo(8)
+    private func setup() {
+        self.snp.makeConstraints {
+            $0.height.equalTo(245)
         }
-        return view
+        
+        setupBalanceTitleLabel()
+        setupBalanceLabel()
+        setupMoneyStack()
+        
+        self.backgroundColor = R.color.accentPurple()
     }
     
-    private func getIncomeAndExpencesStackView() -> UIStackView {
-        let incomeStackView = getIncomeStackView()
-        let expencesStackView = getExpencesStackView()
+    private func setupBalanceLabel() {
+        balanceLabel.text = "0 ₽"
+        addSubview(balanceLabel)
+        balanceLabel.translatesAutoresizingMaskIntoConstraints = false
+        balanceLabel.snp.makeConstraints {
+            $0.top.equalTo(balanceTitleLabel.snp.bottom).offset(6)
+            $0.leading.equalToSuperview().offset(16)
+        }
+    }
+    
+    private func setupBalanceTitleLabel() {
+        balanceTitleLabel.text = R.string.localizable.wallets_balance()
+        addSubview(balanceTitleLabel)
+        balanceTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        balanceTitleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(95)
+            $0.leading.equalToSuperview().offset(16)
+        }
+    }
+    
+    private func setupMoneyStack() {
+        incomeLabel.text = "0 ₽"
+        incomeTitleLabel.text = R.string.localizable.wallets_income()
+        expencesLabel.text = "0 ₽"
+        expencesTitleLabel.text = R.string.localizable.wallets_expences()
+        let incomeStackView = makeStackViewWithContent(dotColor: .green, titleLabel: incomeTitleLabel, moneyLabel: incomeLabel)
+        let expencesStackView = makeStackViewWithContent(dotColor: .red, titleLabel: expencesTitleLabel, moneyLabel: expencesLabel)
         
         let moneyStackView = UIStackView()
         moneyStackView.addArrangedSubview(incomeStackView)
@@ -108,23 +84,29 @@ class HeaderView: UIView {
         moneyStackView.axis = .horizontal
         moneyStackView.distribution = .fillEqually
         moneyStackView.alignment = .center
-        return moneyStackView
+        
+        addSubview(moneyStackView)
+        moneyStackView.translatesAutoresizingMaskIntoConstraints = false
+        moneyStackView.snp.makeConstraints {
+            $0.top.equalTo(balanceLabel.snp.bottom).offset(24)
+            $0.leading.right.equalToSuperview().offset(16)
+        }
     }
     
-    private func getIncomeStackView() -> UIStackView {
-        return getStackViewWithContent(dotColor: .green, titleLabel: incomeTitleLabel, moneyLabel: incomeLabel)
+    private func makeTitleLabel(fontSize: CGFloat, weight: UIFont.Weight, opacity: Float = 1) -> UILabel {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: fontSize, weight: weight)
+        label.textColor = .white
+        label.layer.opacity = opacity
+        return label
     }
     
-    private func getExpencesStackView() -> UIStackView {
-        return getStackViewWithContent(dotColor: .red, titleLabel: expencesTitleLabel, moneyLabel: expencesLabel)
-    }
-    
-    private func getStackViewWithContent(dotColor: DotColor, titleLabel: UILabel, moneyLabel: UILabel) -> UIStackView {
+    private func makeStackViewWithContent(dotColor: DotView.DotColor, titleLabel: UILabel, moneyLabel: UILabel) -> UIStackView {
         let titleStackView = UIStackView()
         titleStackView.axis = .horizontal
         titleStackView.spacing = 6
         titleStackView.alignment = .center
-        let dotLabel = getColoredDot(color: dotColor)
+        let dotLabel = DotView(color: dotColor)
         titleStackView.addArrangedSubview(dotLabel)
         titleStackView.addArrangedSubview(titleLabel)
         

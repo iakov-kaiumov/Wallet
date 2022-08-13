@@ -26,6 +26,10 @@ struct WalletModel: Codable {
 
     var spendings: Double?
     
+    var formattedBalance: String {
+        String(format: "%.2f ₽", balance ?? 0)
+    }
+    
     static func getTestModel(_ id: Int = 0) -> WalletModel {
         return WalletModel(
             id: id,

@@ -10,42 +10,46 @@ class WalletCell: UITableViewCell {
     // MARK: - Properties
     static let reuseIdentifier = "Wallet Cell"
 
-    var icon = UIImageView(image: R.image.walletBgIcon())
-    var walletTitleLabel = UILabel()
-    var walletBalanceLabel = UILabel()
+    private var icon = UIImageView(image: R.image.walletBgIcon())
+    private var walletTitleLabel = UILabel()
+    private var walletBalanceLabel = UILabel()
     
     // MARK: - Init
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        setup()
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupIcon()
-        setupWalletTitle()
-        setupWalletBalance()
+        setup()
     }
     
     // MARK: - Lifecycle
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0))
+    }
+    
     override func prepareForReuse() {
         walletTitleLabel.text = ""
         walletBalanceLabel.text = ""
         super.prepareForReuse()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0))
-    }
-    
     // MARK: - Public Methods
-    public func configure(model: WalletModel) {
+    func configure(model: WalletModel) {
         walletTitleLabel.text = model.name
-        walletBalanceLabel.text = String(format: "%.2f ₽", model.balance ?? 0)
+        walletBalanceLabel.text = model.formattedBalance
     }
     
     // MARK: - Private Methods
-    func setupIcon() {
+    private func setup() {
+        setupIcon()
+        setupWalletContent()
+    }
+    
+    private func setupIcon() {
         contentView.addSubview(icon)
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.snp.makeConstraints {
@@ -54,7 +58,7 @@ class WalletCell: UITableViewCell {
         }
     }
     
-    func setupWalletTitle() {
+    private func setupWalletContent() {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
@@ -72,16 +76,5 @@ class WalletCell: UITableViewCell {
             $0.top.bottom.equalToSuperview()
             $0.trailing.equalToSuperview().inset(16)
         }
-    }
-    
-    func setupWalletBalance() {
-        
-//        contentView.addSubview(walletBalanceLabel)
-//        walletBalanceLabel.translatesAutoresizingMaskIntoConstraints = false
-//        walletBalanceLabel.snp.makeConstraints {
-//            $0.trailing.equalToSuperview().inset(16)
-//            $0.centerY.equalTo(contentView)
-//        }
-        
     }
 }

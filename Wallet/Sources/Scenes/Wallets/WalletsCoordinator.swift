@@ -18,8 +18,16 @@ final class WalletsCoordinator: Coordinator {
     
     func start() {
         let viewModel = WalletsViewModel()
+        viewModel.delegate = self
         let viewController = WalletsViewController(viewModel: viewModel)
-        navigationController.pushViewController(viewController, animated: true)
+        navigationController.setViewControllers([viewController], animated: true)
     }
-    
+}
+
+extension WalletsCoordinator: WalletsViewModelDelegate {
+    func walletsViewModelCreateWallet() {
+        let coordinator = WalletEditCoordinator(navigationController: navigationController, dependencies: dependencies)
+        childCoordinators.append(coordinator)
+        coordinator.start(isCreatingMode: true)
+    }
 }

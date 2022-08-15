@@ -1,14 +1,14 @@
 //
-//  CurrenciesViewController.swift
+//  OperationTypeViewController.swift
 //  Wallet
 //
 
 import UIKit
 import SnapKit
 
-final class CurrenciesViewController: UIViewController {
+final class OperationTypeViewController: UIViewController {
     // MARK: - Properties
-    private let viewModel: CurrenciesViewModel
+    private let viewModel: OperationTypeViewModel
     
     private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
     private lazy var closeButton = UIButton(type: .system)
@@ -21,14 +21,13 @@ final class CurrenciesViewController: UIViewController {
         tableView.allowsMultipleSelection = false
         tableView.separatorStyle = .none
         
-        tableView.register(CurrencyCell.self, forCellReuseIdentifier: CurrencyCell.identifier)
-        tableView.register(ShowMoreCell.self, forCellReuseIdentifier: ShowMoreCell.identifier)
+        tableView.register(DefaultEditCell.self, forCellReuseIdentifier: DefaultEditCell.identifier)
         
         return tableView
     }()
     
     // MARK: - Init
-    init(viewModel: CurrenciesViewModel) {
+    init(viewModel: OperationTypeViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -61,26 +60,6 @@ final class CurrenciesViewController: UIViewController {
         setupTableView()
         setupNextButton()
         
-        viewModel.onDataInserted = { [weak self] (at: [IndexPath]) -> Void in
-            guard let self = self else { return }
-            
-            self.tableView.beginUpdates()
-            self.tableView.insertRows(at: at, with: .top)
-            
-            self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
-            self.tableView.endUpdates()
-            
-        }
-        viewModel.onDataDeleted = { [weak self] (at: [IndexPath]) -> Void in
-            guard let self = self else { return }
-            
-            self.tableView.beginUpdates()
-            self.tableView.deleteRows(at: at, with: .top)
-            
-            self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
-            self.tableView.endUpdates()
-            
-        }
     }
     
     private func setupCloseButton() {
@@ -115,65 +94,44 @@ final class CurrenciesViewController: UIViewController {
     }
 }
 
-extension CurrenciesViewController: UITableViewDataSource {
+extension OperationTypeViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        2
+        1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return viewModel.currencies.count
-        }
-        return 1
+        viewModel.types.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyCell.identifier, for: indexPath)
-            let type = viewModel.currencies[indexPath.row]
-            
-            if let cell = cell as? CurrencyCell {
-                cell.configure(type: type)
-                cell.accessoryType = indexPath.row == viewModel.chosenIndex ? .checkmark : .none
-            }
-            
-            return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: ShowMoreCell.identifier, for: indexPath)
-            
-            if let cell = cell as? ShowMoreCell {
-                cell.configure(isShortMode: viewModel.isShortMode)
-            }
-            
-            return cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: DefaultEditCell.identifier, for: indexPath)
+        let type = viewModel.types[indexPath.row]
+        let localizedString = type == .INCOME ? R.string.localizable.operation_type_income() : R.string.localizable.operation_type_spending()
+        
+        if let cell = cell as? DefaultEditCell {
+            cell.configure(title: localizedString, subtitle: "")
+            cell.accessoryType = type == viewModel.chosenType ? .checkmark : .none
         }
+        
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 1 {
-            viewModel.toggleState()
-            return
-        }
         
-        if let oldIndex = viewModel.chosenIndex {
+        let type = viewModel.types[indexPath.row]
+        if let oldIndex = viewModel.types.firstIndex(of: viewModel.chosenType) {
+            
             let oldPath = IndexPath(row: oldIndex, section: 0)
             tableView.cellForRow(at: oldPath)?.accessoryType = .none
-            
-            if oldPath == indexPath {
-                viewModel.chosenIndex = nil
-            } else {
-                tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-                viewModel.chosenIndex = indexPath.row
-            }
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-            viewModel.chosenIndex = indexPath.row
         }
+        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        viewModel.chosenType = type
+        viewModel.onTypeChanged()
     }
 }
 
-extension CurrenciesViewController: UITableViewDelegate {
+extension OperationTypeViewController: UITableViewDelegate {
     
 }

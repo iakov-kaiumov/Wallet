@@ -2,14 +2,18 @@
 //  WalletsViewModel.swift
 //  Wallet
 
-import Foundation
+protocol WalletsViewModelDelegate: AnyObject {
+    func walletsViewModelCreateWallet()
+}
 
-class WalletsViewModel {
+final class WalletsViewModel {
     
     // MARK: - Properties
     var wallets: [WalletModel] = []
     var userData: PersonModel
     var currencyData: CurrenciesModel
+    
+    weak var delegate: WalletsViewModelDelegate?
     
     // MARK: - Init
     init() {
@@ -39,5 +43,7 @@ class WalletsViewModel {
     
     func onCellEdit(_ indexPath: IndexPath) {
         
+    func createWalletButtonDidTap() {
+        delegate?.walletsViewModelCreateWallet()
     }
 }

@@ -47,3 +47,6 @@
 
 "operation_amount_title" = "Введите сумму";
 "operation_amount_prompt" = "Сумма операции";
+
+"operation_type_spending" = "Расход";
+"operation_type_income" = "Доход";

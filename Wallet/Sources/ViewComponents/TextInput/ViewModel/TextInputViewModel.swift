@@ -58,7 +58,7 @@ extension TextInputViewModel {
             screen: .walletName,
             title: R.string.localizable.wallet_name_title(),
             textInputPrompt: R.string.localizable.wallet_name_prompt(),
-            buttonTitle: R.string.localizable.default_save_button(),
+            buttonTitle: isModal ? R.string.localizable.default_save_button() : R.string.localizable.default_next_button(),
             isModal: isModal,
             keyboardType: .default
         )

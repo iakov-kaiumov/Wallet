@@ -32,6 +32,16 @@ final class WalletsViewController: UIViewController {
         setup()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.navigationBar.topItem?.title = ""
+    }
+    
+    @objc private func createWalletButtonAction() {
+        viewModel.createWalletButtonDidTap()
+    }
+    
     // MARK: - private methods
     private func setup() {
         setupHeaderView()
@@ -83,6 +93,8 @@ final class WalletsViewController: UIViewController {
             $0.trailing.equalToSuperview().inset(16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
         }
+        
+        createWalletButton.addTarget(self, action: #selector(createWalletButtonAction), for: .touchUpInside)
     }
     
     private func setupWalletsTableView() {

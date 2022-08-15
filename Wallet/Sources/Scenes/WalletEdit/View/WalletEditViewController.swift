@@ -41,15 +41,21 @@ final class WalletEditViewController: UIViewController {
         super.viewDidLoad()
         setup()
     }
-
-    // MARK: - Private Methods
-    private func setup() {
-        view.backgroundColor = .systemBackground
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        
         if viewModel.isCreatingMode {
             navigationController?.navigationBar.topItem?.title = R.string.localizable.wallet_edit_add_title()
         } else {
             navigationController?.navigationBar.topItem?.title = R.string.localizable.wallet_edit_edit_title()
         }
+    }
+
+    // MARK: - Private Methods
+    private func setup() {
+        view.backgroundColor = .systemBackground
 
         setupTableView()
         setupNextButton()

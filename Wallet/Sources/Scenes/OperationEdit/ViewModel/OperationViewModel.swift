@@ -18,11 +18,9 @@ struct OperationEditTableItem {
 protocol OperationViewModelDelegate: AnyObject {
     func operationViewModelEnterAmount(_ currentValue: Double?)
     
-    func operationViewModelEnterType(_ currentValue: OperationType?)
+    func operationViewModelEnterType(_ currentValue: OperationType)
     
     func operationViewModelEnterCategory(_ currentValue: CategoryModel?)
-    
-    func operationViewModelEnterDate(_ currentValue: Date?)
     
     func operationViewModelDidFinish()
 }
@@ -57,22 +55,22 @@ final class OperationViewModel {
             OperationEditTableItem(
                 type: .amount,
                 title: R.string.localizable.operation_edit_amount(),
-                value: formatter.formatAmount(model.operationBalance)
+                value: formatter.formatAmount(model)
             ),
             OperationEditTableItem(
                 type: .type,
                 title: R.string.localizable.operation_edit_type(),
-                value: formatter.formatType(model.type)
+                value: formatter.formatType(model)
             ),
             OperationEditTableItem(
                 type: .category,
                 title: R.string.localizable.operation_edit_category(),
-                value: formatter.formatCategory(model.category)
+                value: formatter.formatCategory(model)
             ),
             OperationEditTableItem(
                 type: .date,
                 title: R.string.localizable.operation_edit_date(),
-                value: formatter.formatDate(model.operationDate)
+                value: formatter.formatDate(model)
             )
         ]
         tableItems.indices.forEach { onItemChanged?($0) }
@@ -83,7 +81,7 @@ final class OperationViewModel {
         case .amount:
             delegate?.operationViewModelEnterAmount(model.operationBalance)
         case .type:
-            delegate?.operationViewModelEnterType(model.type)
+            delegate?.operationViewModelEnterType(model.type ?? .INCOME)
         case .category:
             delegate?.operationViewModelEnterCategory(model.category)
         default:
@@ -98,30 +96,28 @@ final class OperationViewModel {
     func changeAmount(_ value: Double?) {
         guard let index = itemIndex(for: .amount) else { return }
         model.operationBalance = value
-        tableItems[index].value = formatter.formatAmount(value)
+        tableItems[index].value = formatter.formatAmount(model)
         onItemChanged?(index)
     }
     
     func changeType(_ value: OperationType?) {
         guard let index = itemIndex(for: .type) else { return }
         model.type = value
-        tableItems[index].value = formatter.formatType(value)
+        tableItems[index].value = formatter.formatType(model)
         onItemChanged?(index)
     }
     
     func changeCategory(_ value: CategoryModel?) {
         guard let index = itemIndex(for: .category) else { return }
         model.category = value
-        tableItems[index].value = formatter.formatCategory(value)
+        tableItems[index].value = formatter.formatCategory(model)
         onItemChanged?(index)
     }
     
     func changeDate(_ value: Date?) {
-        print(value)
         guard let index = itemIndex(for: .date) else { return }
         model.operationDate = value
-        tableItems[index].value = formatter.formatDate(value)
+        tableItems[index].value = formatter.formatDate(model)
         onItemChanged?(index)
-        print("changeDate \(tableItems[index].value)")
     }
 }

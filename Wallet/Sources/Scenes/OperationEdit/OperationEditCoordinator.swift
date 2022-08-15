@@ -34,21 +34,25 @@ extension OperationEditCoordinator: OperationViewModelDelegate {
     func operationViewModelEnterAmount(_ currentValue: Double?) {
         let viewModel = TextInputViewModel.makeOperationAmount(isModal: true)
         viewModel.delegate = self
-        viewModel.text = OperationViewModelFormatter().formatAmount(currentValue)
+        viewModel.text = ""
+        if let currentValue = currentValue {
+            viewModel.text = String(format: "%.2f", currentValue)
+        }
         
         let controller = TextInputViewController(viewModel: viewModel)
         navigationController.present(controller, animated: true)
     }
     
-    func operationViewModelEnterType(_ currentValue: OperationType?) {
+    func operationViewModelEnterType(_ currentValue: OperationType) {
+        let viewModel = OperationTypeViewModel(isModal: true)
+        viewModel.delegate = self
+        viewModel.chosenType = currentValue
         
+        let controller = OperationTypeViewController(viewModel: viewModel)
+        navigationController.present(controller, animated: true)
     }
     
     func operationViewModelEnterCategory(_ currentValue: CategoryModel?) {
-        
-    }
-    
-    func operationViewModelEnterDate(_ currentValue: Date?) {
         
     }
     
@@ -75,5 +79,15 @@ extension OperationEditCoordinator: TextInputViewModelDelegate {
             break
         }
         navigationController.dismiss(animated: true)
+    }
+}
+
+extension OperationEditCoordinator: OperationTypeViewModelDelegate {
+    func operationTypeViewModelCloseButtonDidTap() {
+        navigationController.dismiss(animated: true)
+    }
+    
+    func operationTypeViewModelValueChanged(_ value: OperationType?) {
+        operationViewModel?.changeType(value)
     }
 }

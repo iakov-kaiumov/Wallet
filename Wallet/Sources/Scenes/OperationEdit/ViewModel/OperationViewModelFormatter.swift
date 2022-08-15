@@ -6,10 +6,10 @@
 import Foundation
 
 protocol IOperationViewModelFormatter {
-    func formatAmount(_ value: Double?) -> String
-    func formatType(_ value: OperationType?) -> String
-    func formatCategory(_ value: CategoryModel?) -> String
-    func formatDate(_ value: Date?) -> String
+    func formatAmount(_ operation: OperationModel?) -> String
+    func formatType(_ operation: OperationModel?) -> String
+    func formatCategory(_ operation: OperationModel?) -> String
+    func formatDate(_ operation: OperationModel?) -> String
 }
 
 final class OperationViewModelFormatter: IOperationViewModelFormatter {
@@ -19,31 +19,36 @@ final class OperationViewModelFormatter: IOperationViewModelFormatter {
         return formatter
     }()
     
-    func formatAmount(_ value: Double?) -> String {
-        guard let value = value else {
+    func formatAmount(_ operation: OperationModel?) -> String {
+        guard let amount = operation?.operationBalance else {
             return ""
         }
-        return String(format: "%.2f", value)
+        return String(format: "%.2f", amount) + " $"
     }
     
-    func formatType(_ value: OperationType?) -> String {
-        guard let value = value else {
+    func formatType(_ operation: OperationModel?) -> String {
+        guard let type = operation?.type else {
             return ""
         }
-        return value.rawValue
+        switch type {
+        case .INCOME:
+            return R.string.localizable.operation_type_income()
+        case .SPENDING:
+            return R.string.localizable.operation_type_spending()
+        }
     }
     
-    func formatCategory(_ value: CategoryModel?) -> String {
-        guard let value = value else {
+    func formatCategory(_ operation: OperationModel?) -> String {
+        guard let category = operation?.category else {
             return ""
         }
-        return value.name ?? ""
+        return category.name ?? ""
     }
     
-    func formatDate(_ value: Date?) -> String {
-        guard let value = value else {
+    func formatDate(_ operation: OperationModel?) -> String {
+        guard let date = operation?.operationDate else {
             return ""
         }
-        return dateFormatter.string(from: value)
+        return dateFormatter.string(from: date)
     }
 }

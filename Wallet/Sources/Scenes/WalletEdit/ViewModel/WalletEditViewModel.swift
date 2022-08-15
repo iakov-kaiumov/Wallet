@@ -64,13 +64,13 @@ final class WalletEditViewModel {
     }
     
     func changeCurrency(_ value: CurrencyType?) {
-        guard let index = itemIndex(for: .name) else { return }
+        guard let index = itemIndex(for: .currency) else { return }
         tableItems[index].value = value?.rawValue ?? ""
         onDataChanged?()
     }
     
     func changeLimit(_ value: String?) {
-        guard let index = itemIndex(for: .name) else { return }
+        guard let index = itemIndex(for: .limit) else { return }
         tableItems[index].value = value ?? ""
         onDataChanged?()
     }

@@ -10,7 +10,7 @@ class PopupDatePicker: UIView {
     var onValueChanged: ((Date) -> Void)?
     var onDismissed: (() -> Void)?
 
-    let datePicker: UIDatePicker = {
+    private let datePicker: UIDatePicker = {
         let v = UIDatePicker()
         return v
     }()
@@ -69,8 +69,8 @@ class PopupDatePicker: UIView {
         
         datePicker.addTarget(self, action: #selector(didChangeDate(_:)), for: .valueChanged)
         
-        let t = UITapGestureRecognizer(target: self, action: #selector(tapHandler(_:)))
-        blurredEffectView.addGestureRecognizer(t)
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(tapHandler(_:)))
+        blurredEffectView.addGestureRecognizer(recognizer)
     }
     
     @objc func tapHandler(_ g: UITapGestureRecognizer) {

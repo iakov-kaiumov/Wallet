@@ -2,12 +2,18 @@
 //  WalletsViewModel.swift
 //  Wallet
 
-class WalletsViewModel {
+protocol WalletsViewModelDelegate: AnyObject {
+    func walletsViewModelCreateWallet()
+}
+
+final class WalletsViewModel {
     
     // MARK: - Properties
     var wallets: [WalletModel] = []
     var userData: PersonModel
     var currencyData: CurrenciesModel
+    
+    weak var delegate: WalletsViewModelDelegate?
     
     // MARK: - Init
     init() {
@@ -21,5 +27,9 @@ class WalletsViewModel {
         for i in 1...10 {
             wallets.append(WalletModel.getTestModel(i))
         }
+    }
+    
+    func createWalletButtonDidTap() {
+        delegate?.walletsViewModelCreateWallet()
     }
 }

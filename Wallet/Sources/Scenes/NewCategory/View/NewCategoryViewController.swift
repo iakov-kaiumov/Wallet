@@ -32,6 +32,10 @@ final class NewCategoryViewController: UIViewController {
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.topItem?.title = R.string.localizable.newcategory_title()
         setupTableView()
+        
+        viewModel.onItemChanged = { [weak self] row in
+            self?.tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
+        }
     }
     
     private func setupTableView() {
@@ -57,21 +61,20 @@ extension NewCategoryViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 2 {
+        let item = viewModel.tableItems[indexPath.row]
+        if item.type == .icon {
             let cell = tableView.dequeueReusableCell(withIdentifier: IconCell.identifier, for: indexPath)
             
-            if let cell = cell as? IconCell,
-               let model = viewModel.tableItems[indexPath.row] as?  NewCategoryItemIcon {
-                cell.configure(viewModel.iconBuilder.build(model))
+            if let cell = cell as? IconCell {
+                cell.configure(viewModel.iconBuilder.build(item))
             }
             
             cell.accessoryType = .disclosureIndicator
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: DefaultEditCell.identifier, for: indexPath)
-            if let cell = cell as? DefaultEditCell,
-               let model = viewModel.tableItems[indexPath.row] as? NewCategoryItemText {
-                cell.configure(title: model.title, subtitle: model.value)
+            if let cell = cell as? DefaultEditCell {
+                cell.configure(title: item.title, subtitle: item.value)
             }
             
             cell.accessoryType = .disclosureIndicator
@@ -81,6 +84,8 @@ extension NewCategoryViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        viewModel.cellDidTap(at: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -5,7 +5,7 @@
 
 import Foundation
 
-enum CategoryType: String, Codable {
+enum CategoryType: String, Codable, CaseIterable {
     case INCOME, SPENDING
 }
 
@@ -16,7 +16,7 @@ struct CategoryModel: Codable {
     
     var type: CategoryType?
     
-    var color: String?
+    var colorId: Int?
     
     var iconId: Int?
     
@@ -25,8 +25,18 @@ struct CategoryModel: Codable {
             id: id,
             name: "Категория №\(id)",
             type: Bool.random() ? CategoryType.INCOME : CategoryType.SPENDING,
-            color: "red",
+            colorId: 10,
             iconId: Int.random(in: 0...5)
+        )
+    }
+    
+    static func newCategory() -> CategoryModel {
+        CategoryModel(
+            id: 0,
+            name: "Новая категория",
+            type: .INCOME,
+            colorId: Int.random(in: 0...8),
+            iconId: Int.random(in: 0...15)
         )
     }
 }

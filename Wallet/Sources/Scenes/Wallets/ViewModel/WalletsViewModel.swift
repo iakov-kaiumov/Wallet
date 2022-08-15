@@ -19,8 +19,6 @@ final class WalletsViewModel {
     var userData: PersonModel
     var currencyData: CurrenciesModel
     
-    weak var delegate: WalletsViewModelDelegate?
-    
     // MARK: - Init
     init() {
         userData = PersonModel.getTestModel()
@@ -34,11 +32,8 @@ final class WalletsViewModel {
         delegate?.walletsViewModel(self, didSelectWallet: wallets[index])
     }
     
-    // MARK: - Private Methods
-    func loadWallets() {
-        for i in 1...10 {
-            wallets.append(WalletModel.getTestModel(i))
-        }
+    func createWalletButtonDidTap() {
+        delegate?.walletsViewModelDidAskToCreateWallet()
     }
     
     func onCellTapped(_ indexPath: IndexPath) {
@@ -56,8 +51,12 @@ final class WalletsViewModel {
     func onCellEdit(_ indexPath: IndexPath) {
         
     }
-        
-    func createWalletButtonDidTap() {
-        delegate?.walletsViewModelCreateWallet()
+    
+    // MARK: - Private Methods
+    private func loadWallets() {
+        for i in 1...10 {
+            wallets.append(WalletModel.getTestModel(i))
+        }
     }
+
 }

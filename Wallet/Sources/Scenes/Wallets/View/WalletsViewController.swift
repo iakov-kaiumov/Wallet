@@ -25,14 +25,14 @@ final class WalletsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - lifecycle
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = R.color.background()
         setup()
     }
     
-    // MARK: - private methods
+    // MARK: - Private Methods
     private func setup() {
         setupHeaderView()
         setupTableView()
@@ -115,6 +115,7 @@ extension WalletsViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.selectWalletWithIndex(indexPath.row)
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

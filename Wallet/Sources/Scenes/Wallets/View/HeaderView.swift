@@ -102,7 +102,7 @@ final class HeaderView: UIView {
         return label
     }
     
-    private func makeStackViewWithContent(dotColor: DotView.DotColor, titleLabel: UILabel, moneyLabel: UILabel) -> UIStackView {
+    private func makeStackViewWithContent(dotColor: DotColor, titleLabel: UILabel, moneyLabel: UILabel) -> UIStackView {
         let titleStackView = UIStackView()
         titleStackView.axis = .horizontal
         titleStackView.spacing = 6

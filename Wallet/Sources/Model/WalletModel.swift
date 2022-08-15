@@ -7,6 +7,15 @@ import Foundation
 
 enum CurrencyType: String, Codable, CaseIterable {
     case RUB, USD, EUR, CHF, KWD, BHD, OMR, JPY, SEK, GBR
+    
+    var currencySymbol: String {
+        switch self {
+        case .RUB:
+            return "₽"
+        default:
+            return ""
+        }
+    }
 }
 
 struct WalletModel: Codable {

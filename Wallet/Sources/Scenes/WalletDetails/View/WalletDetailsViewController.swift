@@ -33,6 +33,15 @@ final class WalletDetailesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        viewModel.onDidUpdateIncomeChip = { [weak self] in
+            guard let model = self?.viewModel.incomeChipModel else { return }
+            self?.incomeChipView.configure(with: model)
+        }
+        viewModel.onDidUpdateExpenseChip = { [weak self] in
+            guard let model = self?.viewModel.expenseChipModel else { return }
+            self?.expenseChipView.configure(with: model)
+        }
+        viewModel.load()
     }
     
     // MARK: - Actions
@@ -47,8 +56,6 @@ final class WalletDetailesViewController: UIViewController {
         setupWalletNameLabel()
         setupWalletAmountLabel()
         setupSpendChipsContainerStackView()
-        setupIncomeChipView()
-        setupExpenseChipView()
         setupOperationTableView()
         setupAddOperationButton()
     }
@@ -96,13 +103,6 @@ final class WalletDetailesViewController: UIViewController {
         }
     }
     
-    private func setupIncomeChipView() {
-    }
-    
-    private func setupExpenseChipView() {
-        
-    }
-    
     private func setupOperationTableView() {
         
     }
@@ -115,5 +115,5 @@ final class WalletDetailesViewController: UIViewController {
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
         }
     }
-        
+    
 }

@@ -116,6 +116,39 @@ extension WalletsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        viewModel.onCellTapped(indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        // Hide/show action
+        let hide = UIContextualAction(style: .normal, title: "") { [weak self] (_, _, completionHandler) in
+            self?.viewModel.onCellHide(indexPath)
+            completionHandler(true)
+        }
+        hide.image = R.image.actionHide()
+        hide.backgroundColor = .systemBackground
+
+        // Edit action
+        let edit = UIContextualAction(style: .normal, title: "") { [weak self] (_, _, completionHandler) in
+            self?.viewModel.onCellEdit(indexPath)
+            completionHandler(true)
+        }
+        edit.image = R.image.actionEdit()
+        edit.backgroundColor = .systemBackground
+        
+        // Trash action
+        let trash = UIContextualAction(style: .destructive, title: "") { [weak self] (_, _, completionHandler) in
+            self?.viewModel.onCellDelete(indexPath)
+            completionHandler(true)
+        }
+        trash.image = R.image.actionDelete()
+        trash.backgroundColor = .systemBackground
+        
+        let configuration = UISwipeActionsConfiguration(actions: [trash, edit, hide])
+
+        return configuration
     }
 }
 

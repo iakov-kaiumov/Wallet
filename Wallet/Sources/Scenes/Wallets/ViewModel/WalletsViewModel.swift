@@ -2,6 +2,8 @@
 //  WalletsViewModel.swift
 //  Wallet
 
+import Foundation
+
 class WalletsViewModel {
     
     // MARK: - Properties
@@ -21,5 +23,21 @@ class WalletsViewModel {
         for i in 1...10 {
             wallets.append(WalletModel.getTestModel(i))
         }
+    }
+    
+    func onCellTapped(_ indexPath: IndexPath) {
+        
+    }
+    
+    func onCellDelete(_ indexPath: IndexPath) {
+        
+    }
+    
+    func onCellHide(_ indexPath: IndexPath) {
+        
+    }
+    
+    func onCellEdit(_ indexPath: IndexPath) {
+        
     }
 }

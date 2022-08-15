@@ -31,27 +31,38 @@ class SignInService {
     private func signInServer(with idToken: String, completion: @escaping (_ success: Bool) -> Void) {
         completion(true)
         return
-//        guard let authData = try? JSONEncoder().encode(["idToken": idToken]) else {
-//            return
-//        }
-//        let url = URL(string: "https://yourbackend.example.com/tokensignin")!
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "POST"
-//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//
-//        let task = URLSession.shared.uploadTask(with: request, from: authData) { data, response, error in
-//            // Handle response from your backend.
-//        }
-//        task.resume()
+        
+        // TODO: Add server authentication
+        /*
+        guard let authData = try? JSONEncoder().encode(["idToken": idToken]) else {
+            return
+        }
+        let url = URL(string: "https://yourbackend.example.com/tokensignin")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let task = URLSession.shared.uploadTask(with: request, from: authData) { data, response, error in
+            // Handle response from your backend.
+        }
+        task.resume()
+         */
     }
     
     func signIn(presenting controller: UIViewController, completion: @escaping (_ success: Bool) -> Void) {
         guard let signInConfig = getSignInConfig() else {
+            completion(false)
             return
         }
         GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: controller) { [weak self] user, error in
-            guard error == nil else { return }
-            guard let user = user else { return }
+            guard error == nil else {
+                completion(false)
+                return
+            }
+            guard let user = user else {
+                completion(false)
+                return
+            }
 
             user.authentication.do { authentication, error in
                 guard error == nil else {

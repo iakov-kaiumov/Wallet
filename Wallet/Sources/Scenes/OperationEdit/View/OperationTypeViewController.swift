@@ -54,6 +54,7 @@ final class OperationTypeViewController: UIViewController {
     // MARK: - Private Methods
     private func setup() {
         view.backgroundColor = .systemBackground
+        navigationController?.navigationBar.tintColor = R.color.accentPurple()
         navigationController?.setNavigationBarHidden(true, animated: false)
         
         setupCloseButton()

@@ -45,6 +45,7 @@ final class WalletEditViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.navigationBar.tintColor = R.color.accentPurple()
         
         if viewModel.isCreatingMode {
             navigationController?.navigationBar.topItem?.title = R.string.localizable.wallet_edit_add_title()

@@ -34,7 +34,6 @@ final class TextInputViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(viewModel.isModal, animated: true)
-        navigationController?.navigationBar.tintColor = R.color.accentPurple()
     }
     
     // MARK: - Actions

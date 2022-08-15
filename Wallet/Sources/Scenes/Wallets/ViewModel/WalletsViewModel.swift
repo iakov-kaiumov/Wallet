@@ -8,6 +8,7 @@ import UIKit
 protocol WalletsViewModelDelegate: AnyObject {
     func walletsViewModel(_ viewModel: WalletsViewModel, didSelectWallet wallet: WalletModel)
     func walletsViewModelDidAskToCreateWallet()
+    func walletsViewModelSignOut()
 }
 
 final class WalletsViewModel {
@@ -50,6 +51,10 @@ final class WalletsViewModel {
     
     func onCellEdit(_ indexPath: IndexPath) {
         
+    }
+    
+    func signOut() {
+        delegate?.walletsViewModelSignOut()
     }
     
     // MARK: - Private Methods

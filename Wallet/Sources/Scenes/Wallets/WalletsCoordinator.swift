@@ -5,6 +5,10 @@
 
 import UIKit
 
+protocol WalletsCoordinatorDelegate: AnyObject {
+    func walletsCoordinatorSignOut()
+}
+
 final class WalletsCoordinator: Coordinator {
     init(navigationController: UINavigationController,
          dependencies: AppDependency) {
@@ -15,12 +19,13 @@ final class WalletsCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     var dependencies: AppDependency
+    var delegate: WalletsCoordinatorDelegate?
     
     func start() {
         let viewModel = WalletsViewModel()
         viewModel.delegate = self
         let viewController = WalletsViewController(viewModel: viewModel)
-        navigationController.pushViewController(viewController, animated: true)
+        navigationController.setViewControllers([viewController], animated: true)
     }
     
     private func goToWalletDetails(wallet: WalletModel) {
@@ -43,4 +48,7 @@ extension WalletsCoordinator: WalletsViewModelDelegate {
         coordinator.start(isCreatingMode: true)
     }
     
+    func walletsViewModelSignOut() {
+        delegate?.walletsCoordinatorSignOut()
+    }
 }

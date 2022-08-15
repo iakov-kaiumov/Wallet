@@ -28,21 +28,35 @@ final class AppCoordinator: Coordinator {
     var window: UIWindow?
     
     func start() {
+        navigationController.navigationBar.tintColor = R.color.accentPurple()
+        
         GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
             guard let self = self else {
                 return
             }
             
             if error != nil || user == nil {
-                let onboardingCoordinator = OnboardingCoordinator(navigationController: self.navigationController, dependencies: self.dependencies)
-                self.childCoordinators.append(onboardingCoordinator)
-                onboardingCoordinator.start()
+                let coordinator = OnboardingCoordinator(navigationController: self.navigationController, dependencies: self.dependencies)
+                self.childCoordinators.append(coordinator)
+                coordinator.start()
             } else {
-                let onboardingCoordinator = WalletsCoordinator(navigationController: self.navigationController, dependencies: self.dependencies)
-                self.childCoordinators.append(onboardingCoordinator)
-                onboardingCoordinator.start()
+                let coordinator = WalletsCoordinator(navigationController: self.navigationController, dependencies: self.dependencies)
+                coordinator.delegate = self
+                self.childCoordinators.append(coordinator)
+                coordinator.start()
             }
         }
     }
-    
+}
+
+extension AppCoordinator: WalletsCoordinatorDelegate {
+    func walletsCoordinatorSignOut() {
+        GIDSignIn.sharedInstance.signOut()
+        
+        childCoordinators = []
+        
+        let coordinator = OnboardingCoordinator(navigationController: navigationController, dependencies: dependencies)
+        childCoordinators.append(coordinator)
+        coordinator.start()
+    }
 }

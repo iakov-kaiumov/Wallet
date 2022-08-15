@@ -12,6 +12,8 @@ final class WalletEditCoordinator: Coordinator {
     
     private var walletViewModel: WalletEditViewModel = WalletEditViewModel()
     
+    private var isFirstStart: Bool = true
+    
     init(navigationController: UINavigationController,
          dependencies: AppDependency = AppDependency()) {
         self.navigationController = navigationController
@@ -22,7 +24,19 @@ final class WalletEditCoordinator: Coordinator {
         walletViewModel.delegate = self
         
         let controller = WalletEditViewController(viewModel: walletViewModel)
-        navigationController.setViewControllers([controller], animated: false)
+        navigationController.pushViewController(controller, animated: true)
+    }
+    
+    func start(isCreatingMode: Bool) {
+        walletViewModel.isCreatingMode = isCreatingMode
+        if isCreatingMode {
+            let viewModel = TextInputViewModel.makeWalletName(isModal: false)
+            viewModel.delegate = self
+            let controller = TextInputViewController(viewModel: viewModel)
+            navigationController.pushViewController(controller, animated: true)
+        } else {
+            start()
+        }
     }
 }
 
@@ -70,6 +84,11 @@ extension WalletEditCoordinator: TextInputViewModelDelegate {
         switch screen {
         case .walletName:
             walletViewModel.changeName(value)
+            
+            if walletViewModel.isCreatingMode && isFirstStart {
+                isFirstStart = false
+                self.start()
+            }
         case .walletLimit:
             walletViewModel.changeLimit(value)
         default:

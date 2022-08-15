@@ -5,7 +5,7 @@
 
 import Foundation
 
-enum OperationType: String, Codable {
+enum OperationType: String, Codable, CaseIterable {
     case INCOME, SPENDING
 }
 

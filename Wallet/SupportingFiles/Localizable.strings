@@ -37,3 +37,10 @@
 "wallets_expences" = "Общий расход";
 "wallets_button" = "Cоздать кошелёк";
 "wallets_empty_label" = "У вас пока нет созданных кошельков";
+
+// New category screen
+"newcategory_title" = "Новая категория";
+"newcategory_name" = "Название";
+"newcategory_type" = "Тип";
+"newcategory_icon" = "Иконка";
+"newcategory_select" = "Задать цвет";

@@ -28,9 +28,9 @@ final class AppCoordinator: Coordinator {
     
     func start() {
         // TODO: - Check if user is logged in
-        let onboardingCoordinator = OnboardingCoordinator(navigationController: navigationController, dependencies: dependencies)
-        childCoordinators.append(onboardingCoordinator)
-        onboardingCoordinator.start()
+        let coordinator = NewCategoryCoordinator(navigationController: navigationController, dependencies: dependencies)
+        childCoordinators.append(coordinator)
+        coordinator.start()
     }
     
 }

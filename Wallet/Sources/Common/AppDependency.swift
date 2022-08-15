@@ -11,7 +11,7 @@ protocol HasSpendChipModelBuilder {
 }
 
 protocol HasSignInService {
-    var signInService: SignInService { get }
+    var signInService: ISignInService { get }
 }
 
 final class AppDependency {
@@ -27,7 +27,7 @@ extension AppDependency: HasSpendChipModelBuilder {
 }
 
 extension AppDependency: HasSignInService {
-    var signInService: SignInService {
+    var signInService: ISignInService {
         return signIn
     }
 }

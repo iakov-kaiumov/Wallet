@@ -8,28 +8,20 @@
 import Foundation
 import GoogleSignIn
 
-class SignInService {
+protocol ISignInService {
+    func handle(_ url: URL) -> Bool
     
-    private func getSignInConfig() -> GIDConfiguration? {
-        guard let path = Bundle.main.path(forResource: "credentials", ofType: "plist") else {
-            return nil
-        }
-
-        guard let dictionary = NSDictionary(contentsOfFile: path) else {
-            return nil
-        }
-
-        if let clientId = dictionary.object(forKey: "CLIENT_ID") as? String {
-            return GIDConfiguration(clientID: clientId)
-        }
-        return nil
-    }
+    func checkSignInStatus(_ completion: @escaping (_ isSignedIn: Bool) -> Void)
     
-    private func signInServer(with idToken: String, completion: @escaping (_ success: Bool) -> Void) {
-        completion(true)
-        return
-        
-        // TODO: Add server authentication
+    func signOut()
+    
+    func signIn(presenting controller: UIViewController, completion: @escaping (_ success: Bool) -> Void)
+}
+
+class SignInService: ISignInService {
+    // MARK: - Public methods
+    func handle(_ url: URL) -> Bool {
+        return GIDSignIn.sharedInstance.handle(url)
     }
     
     func checkSignInStatus(_ completion: @escaping (_ isSignedIn: Bool) -> Void) {
@@ -71,5 +63,28 @@ class SignInService {
                 self?.signInServer(with: idToken, completion: completion)
             }
         }
+    }
+    
+    // MARK: - Private methods
+    private func getSignInConfig() -> GIDConfiguration? {
+        guard let path = Bundle.main.path(forResource: "credentials", ofType: "plist") else {
+            return nil
+        }
+
+        guard let dictionary = NSDictionary(contentsOfFile: path) else {
+            return nil
+        }
+
+        if let clientId = dictionary.object(forKey: "CLIENT_ID") as? String {
+            return GIDConfiguration(clientID: clientId)
+        }
+        return nil
+    }
+    
+    private func signInServer(with idToken: String, completion: @escaping (_ success: Bool) -> Void) {
+        completion(true)
+        return
+        
+        // TODO: Add server authentication
     }
 }

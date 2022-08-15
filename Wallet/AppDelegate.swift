@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
         // Handle Google SignIn url
-        if GIDSignIn.sharedInstance.handle(url) {
+        if SignInService().handle(url) {
             return true
         }
 

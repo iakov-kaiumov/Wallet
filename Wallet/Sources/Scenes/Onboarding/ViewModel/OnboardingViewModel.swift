@@ -29,7 +29,7 @@ final class OnboardingViewModel {
             if success {
                 self?.delegate?.onboardingViewModelSuccessfulSignIn()
             } else {
-                
+                // TODO: Handle error
             }
         }
     }

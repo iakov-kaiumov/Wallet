@@ -99,8 +99,6 @@ final class WalletsViewController: UIViewController {
         setupWalletsTableView()
         setupCreateWalletButton()
         setupEmptyLabel()
-        
-//        showErrorPopup()
     }
     
     private func setupSignOutButton() {

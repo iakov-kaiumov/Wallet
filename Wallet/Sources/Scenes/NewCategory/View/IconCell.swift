@@ -8,13 +8,13 @@ import SnapKit
 final class IconCell: UITableViewCell {
     
     struct IconCellModel {
-        var title: String?
-        var icon: UIImage?
+        let title: String?
+        let icon: IconView.IconModel
     }
     
     // MARK: - Properties
     private lazy var titleLabel: UILabel = UILabel()
-    private lazy var iconView: IconView = IconView()
+    private lazy var iconView: IconView = IconView(edge: 40.0)
     
     // MARK: - Init
     required init?(coder: NSCoder) {

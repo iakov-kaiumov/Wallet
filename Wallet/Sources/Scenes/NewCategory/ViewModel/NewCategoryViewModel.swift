@@ -23,6 +23,7 @@ struct NewCategoryItemIcon: NewCategoryItem {
     var type: NewCategoryFieldType
     var title: String
     var iconId: Int
+    var colorId: Int
 }
 
 final class NewCategoryViewModel {
@@ -32,6 +33,6 @@ final class NewCategoryViewModel {
     var tableItems: [NewCategoryItem] = [
         NewCategoryItemText(type: .name, title: R.string.localizable.newcategory_name(), value: "Новая категория"),
         NewCategoryItemText(type: .type, title: R.string.localizable.newcategory_type(), value: "Доход"),
-        NewCategoryItemIcon(type: .icon, title: R.string.localizable.newcategory_icon(), iconId: 2)
+        NewCategoryItemIcon(type: .icon, title: R.string.localizable.newcategory_icon(), iconId: 14, colorId: 6)
     ]
 }

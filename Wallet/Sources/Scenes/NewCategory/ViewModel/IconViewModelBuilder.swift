@@ -10,6 +10,7 @@ import UIKit
 class IconViewModelBuilder {
     func build(_ model: NewCategoryItemIcon) -> IconCell.IconCellModel {
         let icon = UIImage(named: "Icon-" + String(model.iconId))
-        return IconCell.IconCellModel(title: model.title, icon: icon)
+        let iconViewModel = IconView.IconModel(icon: icon, backgroundColor: UIColor(named: "Color-" + String(model.colorId)))
+        return IconCell.IconCellModel(title: model.title, icon: iconViewModel)
     }
 }

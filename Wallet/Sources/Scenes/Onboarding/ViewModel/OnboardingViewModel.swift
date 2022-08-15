@@ -4,15 +4,25 @@
 //
 
 import Foundation
+import UIKit
 
 protocol OnboardingViewModelDelegate: AnyObject {
-    func onboardingViewModelDidEnd(_ viewModel: OnboardingViewModel)
+    func onboardingViewModelSuccessfulSignIn()
 }
 
 final class OnboardingViewModel {
+    private let authUrl: String = ""
+    private let callbackUrlScheme: String = ""
+    
     weak var delegate: OnboardingViewModelDelegate?
     
-    func loginButtonDidTap() {
-        delegate?.onboardingViewModelDidEnd(self)
+    func loginButtonDidTap(presenting controller: UIViewController) {
+        SignInService.shared.signIn(presenting: controller) { [weak self] success in
+            if success {
+                self?.delegate?.onboardingViewModelSuccessfulSignIn()
+            } else {
+                
+            }
+        }
     }
 }

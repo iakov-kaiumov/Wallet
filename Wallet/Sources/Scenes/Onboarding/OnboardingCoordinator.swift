@@ -26,7 +26,7 @@ final class OnboardingCoordinator: Coordinator {
 }
 
 extension OnboardingCoordinator: OnboardingViewModelDelegate {
-    func onboardingViewModelDidEnd(_ viewModel: OnboardingViewModel) {
+    func onboardingViewModelSuccessfulSignIn() {
         let coordinator = WalletsCoordinator(navigationController: navigationController, dependencies: dependencies)
         childCoordinators.append(coordinator)
         coordinator.start()

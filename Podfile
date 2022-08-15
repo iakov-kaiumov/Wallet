@@ -8,5 +8,5 @@ target 'Wallet' do
   pod 'SwiftLint', '0.48.0'
   pod 'R.swift'
   pod 'SnapKit'
-
+  pod 'GoogleSignIn'
 end

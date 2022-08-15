@@ -32,7 +32,7 @@ final class OnboardingViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func loginButtonAction() {
-        viewModel.loginButtonDidTap()
+        viewModel.loginButtonDidTap(presenting: self)
     }
     
     // MARK: - Private Methods

@@ -6,17 +6,18 @@ import Foundation
 import UIKit
 
 protocol WalletsViewModelDelegate: AnyObject {
-    func walletsViewModelCreateWallet()
+    func walletsViewModel(_ viewModel: WalletsViewModel, didSelectWallet wallet: WalletModel)
+    func walletsViewModelDidAskToCreateWallet()
 }
 
 final class WalletsViewModel {
     
     // MARK: - Properties
+    weak var delegate: WalletsViewModelDelegate?
+    
     var wallets: [WalletModel] = []
     var userData: PersonModel
     var currencyData: CurrenciesModel
-    
-    weak var delegate: WalletsViewModelDelegate?
     
     // MARK: - Init
     init() {
@@ -25,11 +26,14 @@ final class WalletsViewModel {
         loadWallets()
     }
     
-    // MARK: - private methods
-    func loadWallets() {
-        for i in 1...10 {
-            wallets.append(WalletModel.getTestModel(i))
-        }
+    // MARK: - Public Methods
+    func selectWalletWithIndex(_ index: Int) {
+        guard wallets.count > index else { return }
+        delegate?.walletsViewModel(self, didSelectWallet: wallets[index])
+    }
+    
+    func createWalletButtonDidTap() {
+        delegate?.walletsViewModelDidAskToCreateWallet()
     }
     
     func onCellTapped(_ indexPath: IndexPath) {
@@ -47,8 +51,12 @@ final class WalletsViewModel {
     func onCellEdit(_ indexPath: IndexPath) {
         
     }
-        
-    func createWalletButtonDidTap() {
-        delegate?.walletsViewModelCreateWallet()
+    
+    // MARK: - Private Methods
+    private func loadWallets() {
+        for i in 1...10 {
+            wallets.append(WalletModel.getTestModel(i))
+        }
     }
+
 }

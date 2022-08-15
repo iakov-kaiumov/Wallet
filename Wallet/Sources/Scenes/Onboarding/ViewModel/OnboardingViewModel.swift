@@ -11,13 +11,21 @@ protocol OnboardingViewModelDelegate: AnyObject {
 }
 
 final class OnboardingViewModel {
-    private let authUrl: String = ""
-    private let callbackUrlScheme: String = ""
+    // MARK: - Properties
+    typealias Dependencies = HasSignInService
     
     weak var delegate: OnboardingViewModelDelegate?
     
+    private let dependencies: Dependencies
+    
+    // MARK: - Init
+    init(dependencies: Dependencies) {
+        self.dependencies = dependencies
+    }
+    
+    // MARK: - Public Methods
     func loginButtonDidTap(presenting controller: UIViewController) {
-        SignInService.shared.signIn(presenting: controller) { [weak self] success in
+        dependencies.signInService.signIn(presenting: controller) { [weak self] success in
             if success {
                 self?.delegate?.onboardingViewModelSuccessfulSignIn()
             } else {

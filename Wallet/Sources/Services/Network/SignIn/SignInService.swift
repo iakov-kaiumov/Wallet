@@ -9,9 +9,6 @@ import Foundation
 import GoogleSignIn
 
 class SignInService {
-    private init() {
-        
-    }
     
     private func getSignInConfig() -> GIDConfiguration? {
         guard let path = Bundle.main.path(forResource: "credentials", ofType: "plist") else {
@@ -33,20 +30,17 @@ class SignInService {
         return
         
         // TODO: Add server authentication
-        /*
-        guard let authData = try? JSONEncoder().encode(["idToken": idToken]) else {
-            return
+    }
+    
+    func checkSignInStatus(_ completion: @escaping (_ isSignedIn: Bool) -> Void) {
+        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+            let isSignedIn = error == nil && user != nil
+            completion(isSignedIn)
         }
-        let url = URL(string: "https://yourbackend.example.com/tokensignin")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let task = URLSession.shared.uploadTask(with: request, from: authData) { data, response, error in
-            // Handle response from your backend.
-        }
-        task.resume()
-         */
+    }
+    
+    func signOut() {
+        GIDSignIn.sharedInstance.signOut()
     }
     
     func signIn(presenting controller: UIViewController, completion: @escaping (_ success: Bool) -> Void) {
@@ -78,8 +72,4 @@ class SignInService {
             }
         }
     }
-}
-
-extension SignInService {
-    static let shared: SignInService = SignInService()
 }

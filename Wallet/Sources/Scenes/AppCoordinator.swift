@@ -4,7 +4,6 @@
 //
 
 import UIKit
-import GoogleSignIn
 
 final class AppCoordinator: Coordinator {
     init(navigationController: UINavigationController,
@@ -30,33 +29,42 @@ final class AppCoordinator: Coordinator {
     func start() {
         navigationController.navigationBar.tintColor = R.color.accentPurple()
         
-        GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
-            guard let self = self else {
-                return
-            }
-            
-            if error != nil || user == nil {
-                let coordinator = OnboardingCoordinator(navigationController: self.navigationController, dependencies: self.dependencies)
-                self.childCoordinators.append(coordinator)
-                coordinator.start()
+        dependencies.signInService.checkSignInStatus { [weak self] isSignedIn in
+            if isSignedIn {
+                self?.startWallets()
             } else {
-                let coordinator = WalletsCoordinator(navigationController: self.navigationController, dependencies: self.dependencies)
-                coordinator.delegate = self
-                self.childCoordinators.append(coordinator)
-                coordinator.start()
+                self?.startOnboarding()
             }
         }
+    }
+    
+    private func startOnboarding() {
+        let coordinator = OnboardingCoordinator(navigationController: navigationController,
+                                                dependencies: dependencies)
+        coordinator.delegate = self
+        self.childCoordinators.append(coordinator)
+        coordinator.start()
+    }
+    
+    private func startWallets() {
+        let coordinator = WalletsCoordinator(navigationController: navigationController,
+                                             dependencies: dependencies)
+        coordinator.delegate = self
+        self.childCoordinators.append(coordinator)
+        coordinator.start()
+    }
+}
+
+extension AppCoordinator: OnboardingCoordinatorDelegate {
+    func onboardingCoordinatorSuccessfulSignIn() {
+        startWallets()
     }
 }
 
 extension AppCoordinator: WalletsCoordinatorDelegate {
     func walletsCoordinatorSignOut() {
-        GIDSignIn.sharedInstance.signOut()
-        
+        dependencies.signInService.signOut()
         childCoordinators = []
-        
-        let coordinator = OnboardingCoordinator(navigationController: navigationController, dependencies: dependencies)
-        childCoordinators.append(coordinator)
-        coordinator.start()
+        startOnboarding()
     }
 }

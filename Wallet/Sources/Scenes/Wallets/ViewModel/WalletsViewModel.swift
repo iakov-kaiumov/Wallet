@@ -2,6 +2,9 @@
 //  WalletsViewModel.swift
 //  Wallet
 
+import Foundation
+import UIKit
+
 protocol WalletsViewModelDelegate: AnyObject {
     func walletsViewModelCreateWallet()
 }
@@ -42,6 +45,8 @@ final class WalletsViewModel {
     }
     
     func onCellEdit(_ indexPath: IndexPath) {
+        
+    }
         
     func createWalletButtonDidTap() {
         delegate?.walletsViewModelCreateWallet()

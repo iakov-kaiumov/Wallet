@@ -5,32 +5,29 @@
 import UIKit
 
 class DotView: UIView {
-    enum DotColor {
-        case red
-        case green
-        
-        func getColor() -> UIColor? {
-            switch self {
-            case .red:
-                return R.color.redDot()
-            case .green:
-                return R.color.greenDot()
-            }
-        }
+    // MARK: - Init
+    init(color: DotColor) {
+        super.init(frame: .zero)
+        setup()
+        setColor(color: color)
     }
     
-    init(color: DotColor) {
-        super.init(frame: CGRect(x: 0, y: 0, width: Constants.dotSize, height: Constants.dotSize))
-        setup(color: color)
+    init() {
+        super.init(frame: .zero)
+        setup()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
-    // MARK: - Private methods
-    private func setup(color: DotColor) {
+    // MARK: - Public Methods
+    func setColor(color: DotColor) {
         backgroundColor = color.getColor()
+    }
+    
+    // MARK: - Private methods
+    private func setup() {
         layer.cornerRadius = Constants.dotSize / 2.0
         translatesAutoresizingMaskIntoConstraints = false
         self.snp.makeConstraints {

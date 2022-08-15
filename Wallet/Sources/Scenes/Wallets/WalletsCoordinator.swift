@@ -20,14 +20,27 @@ final class WalletsCoordinator: Coordinator {
         let viewModel = WalletsViewModel()
         viewModel.delegate = self
         let viewController = WalletsViewController(viewModel: viewModel)
-        navigationController.setViewControllers([viewController], animated: true)
+        navigationController.pushViewController(viewController, animated: true)
+    }
+    
+    private func goToWalletDetails(wallet: WalletModel) {
+        let coordinator = WalletDetailsCoordinator(navigationController: navigationController,
+                                                   dependencies: dependencies)
+        childCoordinators.append(coordinator)
+        coordinator.start()
     }
 }
 
+// MARK: - WalletsViewModelDelegate
 extension WalletsCoordinator: WalletsViewModelDelegate {
-    func walletsViewModelCreateWallet() {
+    func walletsViewModel(_ viewModel: WalletsViewModel, didSelectWallet wallet: WalletModel) {
+        goToWalletDetails(wallet: wallet)
+    }
+    
+    func walletsViewModelDidAskToCreateWallet() {
         let coordinator = WalletEditCoordinator(navigationController: navigationController, dependencies: dependencies)
         childCoordinators.append(coordinator)
         coordinator.start(isCreatingMode: true)
     }
+    
 }

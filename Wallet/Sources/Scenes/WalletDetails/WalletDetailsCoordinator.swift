@@ -16,9 +16,9 @@ final class WalletDetailsCoordinator: Coordinator {
     }
     
     func start() {
-        let viewModel = WalletDetailesViewModel()
+        let viewModel = WalletDetailesViewModel(dependencies: dependencies)
         let viewController = WalletDetailesViewController(viewModel: viewModel)
-        navigationController.setViewControllers([viewController], animated: false)
+        navigationController.pushViewController(viewController, animated: true)
     }
     
 }

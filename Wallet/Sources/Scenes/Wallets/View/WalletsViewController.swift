@@ -15,6 +15,9 @@ final class WalletsViewController: UIViewController {
     private lazy var emptyLabel = UILabel()
     private lazy var walletsTableView: UITableView = UITableView(frame: .zero, style: .plain)
     
+    private var errorViewCenter: CGPoint = CGPoint()
+    private let errorViewHidingThreshold: CGFloat = 20
+    
     // MARK: - Init
     init(viewModel: WalletsViewModel) {
         self.viewModel = viewModel
@@ -32,6 +35,56 @@ final class WalletsViewController: UIViewController {
         setup()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.navigationBar.topItem?.title = ""
+    }
+    
+    // MARK: - Actions
+    @objc private func createWalletButtonAction() {
+        viewModel.createWalletButtonDidTap()
+    }
+    
+    @objc private func panGestureAction(_ gesture: UIPanGestureRecognizer) {
+        guard let errorView = gesture.view else { return }
+        let point = gesture.translation(in: view)
+        
+        if gesture.state == .began {
+            errorViewCenter = errorView.center
+        }
+        if gesture.state != .cancelled {
+            let alpha = max(0, 0.5 - abs(errorView.center.y - errorViewCenter.y) / view.bounds.height * 4)
+            errorView.center = CGPoint(x: errorView.center.x, y: errorView.center.y + point.y * alpha)
+            gesture.setTranslation(CGPoint.zero, in: view)
+        }
+        
+        if gesture.state == .cancelled || gesture.state == .ended {
+            if (errorViewCenter.y - errorView.center.y) > errorViewHidingThreshold {
+                hideErrorPopup(errorView)
+            } else {
+                resetErrorPopup(errorView)
+            }
+        }
+    }
+    
+    private func showDeleteAlert(for indexPath: IndexPath) {
+        let alertController = UIAlertController(
+            title: R.string.localizable.wallets_delete_alert(),
+            message: "",
+            preferredStyle: .alert
+        )
+        
+        let deleteAction = UIAlertAction(title: R.string.localizable.alert_delete_button(), style: .destructive) { [weak self] _ in
+            self?.viewModel.onCellDelete(indexPath)
+        }
+        let cancelAction = UIAlertAction(title: R.string.localizable.alert_cancel_button(), style: .cancel)
+        alertController.addAction(deleteAction)
+        alertController.addAction(cancelAction)
+
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     // MARK: - Private Methods
     private func setup() {
         setupHeaderView()
@@ -40,6 +93,8 @@ final class WalletsViewController: UIViewController {
         setupWalletsTableView()
         setupCreateWalletButton()
         setupEmptyLabel()
+        
+        showErrorPopup()
     }
     
     private func setupHeaderView() {
@@ -83,6 +138,8 @@ final class WalletsViewController: UIViewController {
             $0.trailing.equalToSuperview().inset(16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
         }
+        
+        createWalletButton.addTarget(self, action: #selector(createWalletButtonAction), for: .touchUpInside)
     }
     
     private func setupWalletsTableView() {
@@ -106,6 +163,44 @@ final class WalletsViewController: UIViewController {
             $0.centerY.equalToSuperview().offset(50)
         }
     }
+    
+    private func showErrorPopup() {
+        let errorPopup = ErrorPopup(message: "Что-то пошло не так")
+        view.addSubview(errorPopup)
+        errorPopup.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(0)
+            $0.height.equalTo(56)
+        }
+        errorPopup.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGestureAction)))
+    }
+    
+    private func hideErrorPopup(_ errorView: UIView) {
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0.0,
+            options: [.curveLinear],
+            animations: {
+                errorView.center.y -= 200
+            },
+            completion: { _ in
+                errorView.removeFromSuperview()
+            }
+        )
+    }
+    
+    private func resetErrorPopup(_ errorView: UIView) {
+        UIView.animate(
+            withDuration: 0.33,
+            delay: 0.0,
+            options: [.curveEaseInOut],
+            animations: { [weak self] in
+                guard let self = self else { return }
+                errorView.center = self.errorViewCenter
+            },
+            completion: nil
+        )
+    }
 }
 
 // MARK: - Extensions
@@ -117,6 +212,39 @@ extension WalletsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.selectWalletWithIndex(indexPath.row)
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        viewModel.onCellTapped(indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        // Hide/show action
+        let hide = UIContextualAction(style: .normal, title: "") { [weak self] (_, _, completionHandler) in
+            self?.viewModel.onCellHide(indexPath)
+            completionHandler(true)
+        }
+        hide.image = R.image.actionHide()
+        hide.backgroundColor = .systemBackground
+
+        // Edit action
+        let edit = UIContextualAction(style: .normal, title: "") { [weak self] (_, _, completionHandler) in
+            self?.viewModel.onCellEdit(indexPath)
+            completionHandler(true)
+        }
+        edit.image = R.image.actionEdit()
+        edit.backgroundColor = .systemBackground
+        
+        // Trash action
+        let trash = UIContextualAction(style: .destructive, title: "") { [weak self] (_, _, completionHandler) in
+            self?.showDeleteAlert(for: indexPath)
+            completionHandler(true)
+        }
+        trash.image = R.image.actionDelete()
+        trash.backgroundColor = .systemBackground
+        
+        let configuration = UISwipeActionsConfiguration(actions: [trash, edit, hide])
+
+        return configuration
     }
 }
 

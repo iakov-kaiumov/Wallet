@@ -2,17 +2,24 @@
 //  WalletsViewModel.swift
 //  Wallet
 
+import Foundation
+import UIKit
+
 protocol WalletsViewModelDelegate: AnyObject {
     func walletsViewModel(_ viewModel: WalletsViewModel, didSelectWallet wallet: WalletModel)
+    func walletsViewModelDidAskToCreateWallet()
 }
 
 final class WalletsViewModel {
+    
     // MARK: - Properties
     weak var delegate: WalletsViewModelDelegate?
     
     var wallets: [WalletModel] = []
     var userData: PersonModel
     var currencyData: CurrenciesModel
+    
+    weak var delegate: WalletsViewModelDelegate?
     
     // MARK: - Init
     init() {
@@ -32,5 +39,25 @@ final class WalletsViewModel {
         for i in 1...10 {
             wallets.append(WalletModel.getTestModel(i))
         }
+    }
+    
+    func onCellTapped(_ indexPath: IndexPath) {
+        
+    }
+    
+    func onCellDelete(_ indexPath: IndexPath) {
+        
+    }
+    
+    func onCellHide(_ indexPath: IndexPath) {
+        
+    }
+    
+    func onCellEdit(_ indexPath: IndexPath) {
+        
+    }
+        
+    func createWalletButtonDidTap() {
+        delegate?.walletsViewModelCreateWallet()
     }
 }

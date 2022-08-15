@@ -13,6 +13,7 @@ final class WalletsViewController: UIViewController {
     private lazy var currenciesView = CurrenciesView()
     private lazy var createWalletButton = ButtonFactory.makeGrayButton()
     private lazy var emptyLabel = UILabel()
+    private lazy var signOutButton = UIBarButtonItem()
     private lazy var walletsTableView: UITableView = UITableView(frame: .zero, style: .plain)
     
     private var errorViewCenter: CGPoint = CGPoint()
@@ -37,13 +38,17 @@ final class WalletsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.navigationBar.topItem?.title = ""
     }
     
     // MARK: - Actions
     @objc private func createWalletButtonAction() {
         viewModel.createWalletButtonDidTap()
+    }
+    
+    @objc private func signOutButtonTapped() {
+        viewModel.signOut()
     }
     
     @objc private func panGestureAction(_ gesture: UIPanGestureRecognizer) {
@@ -87,19 +92,26 @@ final class WalletsViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setup() {
+        setupSignOutButton()
         setupHeaderView()
         setupTableView()
         setupCurrenciesView()
         setupWalletsTableView()
         setupCreateWalletButton()
         setupEmptyLabel()
-        
-        showErrorPopup()
+    }
+    
+    private func setupSignOutButton() {
+        signOutButton.title = R.string.localizable.onboarding_logout_button()
+        signOutButton.style = .plain
+        signOutButton.target = self
+        signOutButton.action = #selector(signOutButtonTapped)
+        signOutButton.tintColor = .systemBackground
+        navigationItem.rightBarButtonItem = signOutButton
     }
     
     private func setupHeaderView() {
         view.addSubview(headerView)
-        headerView.translatesAutoresizingMaskIntoConstraints = false
         headerView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
         }
@@ -118,7 +130,6 @@ final class WalletsViewController: UIViewController {
     
     private func setupCurrenciesView() {
         view.addSubview(currenciesView)
-        currenciesView.translatesAutoresizingMaskIntoConstraints = false
         currenciesView.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().inset(16)
@@ -132,7 +143,6 @@ final class WalletsViewController: UIViewController {
         createWalletButton.setTitle(R.string.localizable.wallets_button(), for: .normal)
         
         view.addSubview(createWalletButton)
-        createWalletButton.translatesAutoresizingMaskIntoConstraints = false
         createWalletButton.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().inset(16)
@@ -144,7 +154,6 @@ final class WalletsViewController: UIViewController {
     
     private func setupWalletsTableView() {
         view.addSubview(walletsTableView)
-        walletsTableView.translatesAutoresizingMaskIntoConstraints = false
         walletsTableView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalToSuperview()
             $0.top.equalTo(currenciesView.snp.bottom).offset(25)
@@ -152,16 +161,17 @@ final class WalletsViewController: UIViewController {
     }
     
     private func setupEmptyLabel() {
-        emptyLabel.text = R.string.localizable.wallets_empty_label()
-        emptyLabel.font = .systemFont(ofSize: 16)
-        emptyLabel.textColor = .systemGray
-        emptyLabel.numberOfLines = 2
         view.addSubview(emptyLabel)
-        emptyLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         emptyLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.centerY.equalToSuperview().offset(50)
         }
+        
+        emptyLabel.text = R.string.localizable.wallets_empty_label()
+        emptyLabel.font = .systemFont(ofSize: 16)
+        emptyLabel.textColor = .systemGray
+        emptyLabel.numberOfLines = 2
     }
     
     private func showErrorPopup() {

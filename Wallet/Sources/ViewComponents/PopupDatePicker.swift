@@ -10,21 +10,19 @@ class PopupDatePicker: UIView {
     var onValueChanged: ((Date) -> Void)?
     var onDismissed: (() -> Void)?
 
-    private let datePicker: UIDatePicker = {
-        let v = UIDatePicker()
-        return v
-    }()
+    private lazy var datePicker: UIDatePicker = UIDatePicker()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        commonInit()
-    }
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        commonInit()
+        setup()
     }
     
-    func commonInit() {
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+    
+    func setup() {
         let blurEffect = UIBlurEffect(style: .dark)
         let blurredEffectView = UIVisualEffectView(effect: blurEffect)
 
@@ -34,32 +32,23 @@ class PopupDatePicker: UIView {
             v.layer.cornerRadius = 8
             return v
         }()
-        
-        [blurredEffectView, pickerHolderView, datePicker].forEach { v in
-            v.translatesAutoresizingMaskIntoConstraints = false
-        }
 
         addSubview(blurredEffectView)
         pickerHolderView.addSubview(datePicker)
         addSubview(pickerHolderView)
         
-        NSLayoutConstraint.activate([
-            
-            blurredEffectView.topAnchor.constraint(equalTo: topAnchor),
-            blurredEffectView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            blurredEffectView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            blurredEffectView.bottomAnchor.constraint(equalTo: bottomAnchor),
-
-            pickerHolderView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20.0),
-            pickerHolderView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20.0),
-            pickerHolderView.centerYAnchor.constraint(equalTo: centerYAnchor),
-
-            datePicker.topAnchor.constraint(equalTo: pickerHolderView.topAnchor, constant: 20.0),
-            datePicker.leadingAnchor.constraint(equalTo: pickerHolderView.leadingAnchor, constant: 20.0),
-            datePicker.trailingAnchor.constraint(equalTo: pickerHolderView.trailingAnchor, constant: -20.0),
-            datePicker.bottomAnchor.constraint(equalTo: pickerHolderView.bottomAnchor, constant: -20.0)
-
-        ])
+        blurredEffectView.snp.makeConstraints {
+            $0.leading.trailing.top.bottom.equalToSuperview()
+        }
+        
+        pickerHolderView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.centerY.equalToSuperview()
+        }
+        
+        datePicker.snp.makeConstraints {
+            $0.leading.trailing.top.bottom.equalTo(pickerHolderView).inset(20)
+        }
         
         if #available(iOS 14.0, *) {
             datePicker.preferredDatePickerStyle = .inline

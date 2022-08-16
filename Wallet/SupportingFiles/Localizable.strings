@@ -66,3 +66,8 @@
 "newcategory_select" = "Задать цвет";
 
 "category_picker_title" = "Выберите категорию";
+
+// Icon picker screen
+"icon_picker_title" = "Новая иконка";
+"icon_picker_section_color" = "Выберите цвет";
+"icon_picker_section_icon" = "Выберите иконку";

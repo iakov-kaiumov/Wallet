@@ -18,29 +18,6 @@ final class PopupViewHolder {
         self.parent = parent
     }
     
-    // MARK: - Actions
-    @objc private func panGestureAction(_ gesture: UIPanGestureRecognizer) {
-        guard let errorView = gesture.view else { return }
-        let point = gesture.translation(in: parent)
-        
-        if gesture.state == .began {
-            initialViewCenter = errorView.center
-        }
-        if gesture.state != .cancelled {
-            let alpha = max(0, 0.5 - abs(errorView.center.y - initialViewCenter.y) / parent.bounds.height * 4)
-            errorView.center = CGPoint(x: errorView.center.x, y: errorView.center.y + point.y * alpha)
-            gesture.setTranslation(CGPoint.zero, in: parent)
-        }
-        
-        if gesture.state == .cancelled || gesture.state == .ended {
-            if (initialViewCenter.y - errorView.center.y) > hidingThreshold {
-                hide(errorView)
-            } else {
-                reset(errorView)
-            }
-        }
-    }
-    
     // MARK: Public methods
     func show(message: String, image: UIImage? = R.image.alertImage()) {
         parent.addSubview(popupView)
@@ -67,6 +44,29 @@ final class PopupViewHolder {
     
     func hide() {
         hide(popupView)
+    }
+    
+    // MARK: - Actions
+    @objc private func panGestureAction(_ gesture: UIPanGestureRecognizer) {
+        guard let errorView = gesture.view else { return }
+        let point = gesture.translation(in: parent)
+        
+        if gesture.state == .began {
+            initialViewCenter = errorView.center
+        }
+        if gesture.state != .cancelled {
+            let alpha = max(0, 0.5 - abs(errorView.center.y - initialViewCenter.y) / parent.bounds.height * 4)
+            errorView.center = CGPoint(x: errorView.center.x, y: errorView.center.y + point.y * alpha)
+            gesture.setTranslation(CGPoint.zero, in: parent)
+        }
+        
+        if gesture.state == .cancelled || gesture.state == .ended {
+            if (initialViewCenter.y - errorView.center.y) > hidingThreshold {
+                hide(errorView)
+            } else {
+                reset(errorView)
+            }
+        }
     }
     
     // MARK: Private methods

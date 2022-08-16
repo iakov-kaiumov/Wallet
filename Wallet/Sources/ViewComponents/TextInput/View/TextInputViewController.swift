@@ -50,7 +50,7 @@ final class TextInputViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         if !viewModel.isModal {
-            self.navigationItem.title = viewModel.title
+            title = viewModel.title
         }
         
         setupCloseButton()

@@ -27,10 +27,50 @@ final class AppCoordinator: Coordinator {
     var window: UIWindow?
     
     func start() {
-        // TODO: - Check if user is logged in
-        let coordinator = NewCategoryCoordinator(navigationController: navigationController, dependencies: dependencies)
-        childCoordinators.append(coordinator)
+        navigationController.navigationBar.tintColor = R.color.accentPurple()
+        
+        dependencies.signInService.checkSignInStatus { [weak self] isSignedIn in
+            if isSignedIn {
+                self?.startWallets()
+            } else {
+                self?.startOnboarding()
+            }
+        }
+        
+//        let coordinator = OperationEditCoordinator(navigationController: navigationController,
+//                                                dependencies: dependencies)
+//        self.childCoordinators.append(coordinator)
+//        coordinator.start()
+    }
+    
+    private func startOnboarding() {
+        let coordinator = OnboardingCoordinator(navigationController: navigationController,
+                                                dependencies: dependencies)
+        coordinator.delegate = self
+        self.childCoordinators.append(coordinator)
         coordinator.start()
+    }
+    
+    private func startWallets() {
+        let coordinator = WalletsCoordinator(navigationController: navigationController,
+                                             dependencies: dependencies)
+        coordinator.delegate = self
+        self.childCoordinators.append(coordinator)
+        coordinator.start()
+    }
+}
+
+extension AppCoordinator: OnboardingCoordinatorDelegate {
+    func onboardingCoordinatorSuccessfulSignIn() {
+        startWallets()
+    }
+}
+
+extension AppCoordinator: WalletsCoordinatorDelegate {
+    func walletsCoordinatorSignOut() {
+        dependencies.signInService.signOut()
+        childCoordinators = []
+        startOnboarding()
     }
     
 }

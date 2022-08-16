@@ -6,6 +6,17 @@
 import UIKit
 import SnapKit
 
+struct DefaultEditCellConfiguration {
+    var title: String
+    var subtitle: String = ""
+    
+    var titleFont: UIFont? = .systemFont(ofSize: 17, weight: UIFont.Weight.regular)
+    var titleColor: UIColor? = .label
+    
+    var subtitleFont: UIFont? = .systemFont(ofSize: 17, weight: UIFont.Weight.regular)
+    var subtitleColor: UIColor? = .secondaryLabel
+}
+
 final class DefaultEditCell: UITableViewCell {
     
     // MARK: - Properties
@@ -31,9 +42,14 @@ final class DefaultEditCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure(title: String, subtitle: String) {
-        titleLabel.text = title
-        subtitleLabel.text = subtitle
+    func configure(with configuration: DefaultEditCellConfiguration) {
+        titleLabel.textColor = configuration.titleColor
+        titleLabel.font = configuration.titleFont
+        titleLabel.text = configuration.title
+        
+        subtitleLabel.textColor = configuration.subtitleColor
+        subtitleLabel.font = configuration.subtitleFont
+        subtitleLabel.text = configuration.subtitle
     }
     
     // MARK: - Private Methods
@@ -44,8 +60,6 @@ final class DefaultEditCell: UITableViewCell {
             $0.centerY.equalToSuperview()
         }
         
-        titleLabel.textColor = UIColor.label
-        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         titleLabel.numberOfLines = 1
         
         contentView.addSubview(subtitleLabel)
@@ -55,8 +69,6 @@ final class DefaultEditCell: UITableViewCell {
             $0.leading.equalTo(titleLabel.snp.trailing).offset(8)
         }
         
-        subtitleLabel.textColor = UIColor.secondaryLabel
-        subtitleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         subtitleLabel.numberOfLines = 1
         subtitleLabel.textAlignment = .right
     }

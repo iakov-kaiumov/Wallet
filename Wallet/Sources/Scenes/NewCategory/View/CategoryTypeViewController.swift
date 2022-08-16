@@ -1,14 +1,14 @@
 //
-//  OperationTypeViewController.swift
+//  CategoryTypeViewController.swift
 //  Wallet
 //
 
 import UIKit
 import SnapKit
 
-final class OperationTypeViewController: UIViewController {
+final class CategoryTypeViewController: UIViewController {
     // MARK: - Properties
-    private let viewModel: OperationTypeViewModel
+    private let viewModel: CategoryTypeViewModel
     
     private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
     private lazy var closeButton = UIButton(type: .system)
@@ -27,7 +27,7 @@ final class OperationTypeViewController: UIViewController {
     }()
     
     // MARK: - Init
-    init(viewModel: OperationTypeViewModel) {
+    init(viewModel: CategoryTypeViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -94,7 +94,7 @@ final class OperationTypeViewController: UIViewController {
     }
 }
 
-extension OperationTypeViewController: UITableViewDataSource {
+extension CategoryTypeViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         1
@@ -136,6 +136,6 @@ extension OperationTypeViewController: UITableViewDataSource {
     }
 }
 
-extension OperationTypeViewController: UITableViewDelegate {
+extension CategoryTypeViewController: UITableViewDelegate {
     
 }

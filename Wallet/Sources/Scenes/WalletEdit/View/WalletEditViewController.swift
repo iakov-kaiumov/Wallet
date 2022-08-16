@@ -45,16 +45,15 @@ final class WalletEditViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
-        
-        if viewModel.isCreatingMode {
-            navigationController?.navigationBar.topItem?.title = R.string.localizable.wallet_edit_add_title()
-        } else {
-            navigationController?.navigationBar.topItem?.title = R.string.localizable.wallet_edit_edit_title()
-        }
     }
 
     // MARK: - Private Methods
     private func setup() {
+        if viewModel.isCreatingMode {
+            title = R.string.localizable.wallet_edit_add_title()
+        } else {
+            title = R.string.localizable.wallet_edit_edit_title()
+        }
         view.backgroundColor = .systemBackground
 
         setupTableView()
@@ -106,7 +105,7 @@ extension WalletEditViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: DefaultEditCell.identifier, for: indexPath)
         if let cell = cell as? DefaultEditCell {
             let model = viewModel.tableItems[indexPath.row]
-            cell.configure(title: model.title, subtitle: model.value)
+            cell.configure(with: DefaultEditCellConfiguration(title: model.title, subtitle: model.value))
 
             let disabled = !viewModel.isCreatingMode && model.type == .currency
             cell.enabled(!disabled)

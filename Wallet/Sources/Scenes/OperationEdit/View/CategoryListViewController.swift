@@ -1,17 +1,16 @@
 //
-//  OperationTypeViewController.swift
+//  CategoryListViewController.swift
 //  Wallet
 //
 
 import UIKit
 import SnapKit
 
-final class OperationTypeViewController: UIViewController {
+final class CategoryListViewController: UIViewController {
     // MARK: - Properties
-    private let viewModel: OperationTypeViewModel
+    private let viewModel: CategoryViewModel
     
     private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
-    private lazy var closeButton = UIButton(type: .system)
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         
@@ -21,13 +20,14 @@ final class OperationTypeViewController: UIViewController {
         tableView.allowsMultipleSelection = false
         tableView.separatorStyle = .none
         
+        tableView.register(IconCell.self, forCellReuseIdentifier: IconCell.identifier)
         tableView.register(DefaultEditCell.self, forCellReuseIdentifier: DefaultEditCell.identifier)
         
         return tableView
     }()
     
     // MARK: - Init
-    init(viewModel: OperationTypeViewModel) {
+    init(viewModel: CategoryViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -43,10 +43,6 @@ final class OperationTypeViewController: UIViewController {
     }
     
     // MARK: - Actions
-    @objc private func closeButtonAction(sender: UIButton!) {
-        viewModel.closeButtonDidTap()
-    }
-    
     @objc private func nextButtonAction(sender: UIButton!) {
         viewModel.closeButtonDidTap()
     }
@@ -54,32 +50,20 @@ final class OperationTypeViewController: UIViewController {
     // MARK: - Private Methods
     private func setup() {
         view.backgroundColor = .systemBackground
-        navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        setupCloseButton()
+        title = R.string.localizable.category_picker_title()
         setupTableView()
         setupNextButton()
         
-    }
-    
-    private func setupCloseButton() {
-        view.addSubview(closeButton)
-        
-        closeButton.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(16)
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(16)
+        viewModel.reloadData = { [weak self] in
+            self?.tableView.reloadData()
         }
-        
-        closeButton.setTitle(R.string.localizable.modal_close_button(), for: .normal)
-        closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
     }
     
     private func setupTableView() {
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints {
-            $0.leading.trailing.bottom.equalToSuperview()
-            $0.top.equalTo(closeButton.snp.bottom).offset(16)
+            $0.leading.trailing.top.bottom.equalToSuperview()
         }
     }
     
@@ -94,41 +78,49 @@ final class OperationTypeViewController: UIViewController {
     }
 }
 
-extension OperationTypeViewController: UITableViewDataSource {
+extension CategoryListViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        1
+        2
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.types.count
+        if section == 0 {
+            return viewModel.categories.count
+        }
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: DefaultEditCell.identifier, for: indexPath)
-        let type = viewModel.types[indexPath.row]
-        let localizedString = type == .INCOME ? R.string.localizable.operation_type_income() : R.string.localizable.operation_type_spending()
-        
-        if let cell = cell as? DefaultEditCell {
-            cell.configure(with: DefaultEditCellConfiguration(title: localizedString))
-            cell.accessoryType = type == viewModel.chosenType ? .checkmark : .none
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: IconCell.identifier, for: indexPath)
+            let model = viewModel.categories[indexPath.row]
+            if let cell = cell as? IconCell {
+                cell.configure(viewModel.iconBuilder.build(model, iconAlignment: .leading))
+            }
+            cell.accessoryType = model.id == viewModel.chosenCategory?.id ? .checkmark : .none
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: DefaultEditCell.identifier, for: indexPath)
+            if let cell = cell as? DefaultEditCell {
+                cell.configure(with: DefaultEditCellConfiguration(title: "Создать категорию", titleColor: R.color.accentPurple()))
+            }
+            return cell
         }
-        
-        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let type = viewModel.types[indexPath.row]
-        if let oldIndex = viewModel.types.firstIndex(of: viewModel.chosenType) {
-            
-            let oldPath = IndexPath(row: oldIndex, section: 0)
-            tableView.cellForRow(at: oldPath)?.accessoryType = .none
+        if indexPath.section == 0 {
+            if let oldRow = viewModel.categories.firstIndex(where: { $0.id == viewModel.chosenCategory?.id }) {
+                let oldPath = IndexPath(row: oldRow, section: 0)
+                tableView.cellForRow(at: oldPath)?.accessoryType = .none
+            }
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
-        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        viewModel.chosenType = type
-        viewModel.onTypeChanged()
+        
+        viewModel.cellDidTap(at: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -136,6 +128,6 @@ extension OperationTypeViewController: UITableViewDataSource {
     }
 }
 
-extension OperationTypeViewController: UITableViewDelegate {
+extension CategoryListViewController: UITableViewDelegate {
     
 }

@@ -5,6 +5,10 @@
 
 import UIKit
 
+protocol OnboardingCoordinatorDelegate: AnyObject {
+    func onboardingCoordinatorSuccessfulSignIn()
+}
+
 final class OnboardingCoordinator: Coordinator {
     init(navigationController: UINavigationController,
          dependencies: AppDependency = AppDependency()) {
@@ -16,8 +20,10 @@ final class OnboardingCoordinator: Coordinator {
     var navigationController: UINavigationController
     var dependencies: AppDependency
     
+    var delegate: OnboardingCoordinatorDelegate?
+    
     func start() {
-        let viewModel = OnboardingViewModel()
+        let viewModel = OnboardingViewModel(dependencies: dependencies)
         viewModel.delegate = self
         let viewController = OnboardingViewController(viewModel: viewModel)
         
@@ -26,9 +32,7 @@ final class OnboardingCoordinator: Coordinator {
 }
 
 extension OnboardingCoordinator: OnboardingViewModelDelegate {
-    func onboardingViewModelDidEnd(_ viewModel: OnboardingViewModel) {
-        let coordinator = WalletsCoordinator(navigationController: navigationController, dependencies: dependencies)
-        childCoordinators.append(coordinator)
-        coordinator.start()
+    func onboardingViewModelSuccessfulSignIn() {
+        delegate?.onboardingCoordinatorSuccessfulSignIn()
     }
 }

@@ -10,6 +10,7 @@ final class NewCategoryViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: NewCategoryViewModel
     private lazy var tableView: UITableView = UITableView()
+    private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
     
     // MARK: - Init
     init(viewModel: NewCategoryViewModel) {
@@ -27,11 +28,21 @@ final class NewCategoryViewController: UIViewController {
         setup()
     }
     
+    // MARK: - Actions
+    @objc private func nextButtonAction() {
+        viewModel.createCategory()
+    }
+    
     // MARK: - Private methods
     private func setup() {
         view.backgroundColor = .systemBackground
-        navigationController?.navigationBar.topItem?.title = R.string.localizable.newcategory_title()
+        title = R.string.localizable.newcategory_title()
         setupTableView()
+        setupNextButton()
+        
+        viewModel.onItemChanged = { [weak self] row in
+            self?.tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
+        }
     }
     
     private func setupTableView() {
@@ -48,6 +59,16 @@ final class NewCategoryViewController: UIViewController {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
         }
     }
+    
+    private func setupNextButton() {
+        view.addSubview(nextButton)
+        nextButton.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
+        }
+        nextButton.setTitle(R.string.localizable.default_save_button(), for: .normal)
+        nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -57,21 +78,20 @@ extension NewCategoryViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 2 {
+        let item = viewModel.tableItems[indexPath.row]
+        if item.type == .icon {
             let cell = tableView.dequeueReusableCell(withIdentifier: IconCell.identifier, for: indexPath)
             
-            if let cell = cell as? IconCell,
-               let model = viewModel.tableItems[indexPath.row] as?  NewCategoryItemIcon {
-                cell.configure(viewModel.iconBuilder.build(model))
+            if let cell = cell as? IconCell {
+                cell.configure(viewModel.iconBuilder.build(viewModel.model))
             }
             
             cell.accessoryType = .disclosureIndicator
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: DefaultEditCell.identifier, for: indexPath)
-            if let cell = cell as? DefaultEditCell,
-               let model = viewModel.tableItems[indexPath.row] as? NewCategoryItemText {
-                cell.configure(title: model.title, subtitle: model.value)
+            if let cell = cell as? DefaultEditCell {
+                cell.configure(with: DefaultEditCellConfiguration(title: item.title, subtitle: item.value))
             }
             
             cell.accessoryType = .disclosureIndicator
@@ -81,6 +101,8 @@ extension NewCategoryViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        viewModel.cellDidTap(at: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

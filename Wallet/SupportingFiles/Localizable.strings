@@ -8,6 +8,7 @@
 "onboarding_title" = "Добро пожаловать в КошелОК";
 "onboarding_description" = "Тут вы сможете контролировать свои доходы и расходы";
 "onboarding_login_button" = "Войти с помощью Google";
+"onboarding_logout_button" = "Выйти";
 
 "modal_close_button" = "Закрыть";
 "default_next_button" = "Далее";
@@ -43,6 +44,7 @@
 "wallets_delete_alert" = "Уверены, что хотите удалить кошелек?";
 
 "operation_edit_add_title" = "Новая операция";
+"operation_edit_edit_title" = "Новая операция";
 "operation_edit_add_button" = "Создать операцию";
 "operation_edit_save_button" = "Сохранить";
 "operation_edit_amount" = "Сумма";
@@ -62,3 +64,5 @@
 "newcategory_type" = "Тип";
 "newcategory_icon" = "Иконка";
 "newcategory_select" = "Задать цвет";
+
+"category_picker_title" = "Выберите категорию";

@@ -14,6 +14,7 @@ final class AppCoordinator: Coordinator {
     
     convenience init(scene: UIWindowScene) {
         let window = UIWindow(windowScene: scene)
+        window.backgroundColor = .systemBackground
         let rootViewController = UINavigationController()
         self.init(navigationController: rootViewController)
         window.rootViewController = rootViewController
@@ -26,6 +27,8 @@ final class AppCoordinator: Coordinator {
     var dependencies: AppDependency
     var window: UIWindow?
     
+    var errorPopupViewModel: ErrorPopupViewModel?
+    
     func start() {
         navigationController.navigationBar.tintColor = R.color.accentPurple()
         
@@ -34,6 +37,17 @@ final class AppCoordinator: Coordinator {
                 self?.startWallets()
             } else {
                 self?.startOnboarding()
+            }
+        }
+        
+        if let window = window {
+            errorPopupViewModel = ErrorPopupViewModel(parent: window)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.errorPopupViewModel?.showErrorPopup()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.errorPopupViewModel?.hideErrorPopup()
             }
         }
     }

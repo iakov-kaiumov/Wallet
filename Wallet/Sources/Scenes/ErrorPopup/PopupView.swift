@@ -5,20 +5,23 @@
 
 import UIKit
 
-class ErrorPopup: UIView {
-    private var message: String
-    
+class PopupView: UIView {
     private lazy var label: UILabel = UILabel()
     private lazy var imageView: UIImageView = UIImageView()
     
-    init(message: String) {
-        self.message = message
+    init() {
         super.init(frame: .zero)
         setup()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Public methods
+    func configure(message: String, image: UIImage?) {
+        label.text = message
+        imageView.image = image
     }
     
     // MARK: - Private methods
@@ -46,7 +49,7 @@ class ErrorPopup: UIView {
         
         label.font = .systemFont(ofSize: 17)
         label.textColor = .label
-        label.text = message
+        
     }
     
     private func setupImage() {
@@ -57,7 +60,6 @@ class ErrorPopup: UIView {
             $0.centerY.equalToSuperview()
             $0.width.height.equalTo(24)
         }
-        imageView.image = R.image.alertImage()
     }
     
 }

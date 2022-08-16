@@ -22,6 +22,8 @@ protocol NewCategoryViewModelDelegate: AnyObject {
     func newCategoryViewModelEnterType(_ currentValue: CategoryType)
     
     func newCategoryViewModelEnterIcon()
+    
+    func newCategoryViewModelCreateCategory(_ newCategory: CategoryModel)
 }
 
 final class NewCategoryViewModel {
@@ -90,5 +92,9 @@ final class NewCategoryViewModel {
     
     func changeIcon(iconId: Int, colorId: Int) {
         
+    }
+    
+    func createCategory() {
+        delegate?.newCategoryViewModelCreateCategory(model)
     }
 }

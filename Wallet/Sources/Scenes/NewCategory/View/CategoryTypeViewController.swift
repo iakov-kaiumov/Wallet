@@ -110,7 +110,7 @@ extension CategoryTypeViewController: UITableViewDataSource {
         let localizedString = type == .INCOME ? R.string.localizable.operation_type_income() : R.string.localizable.operation_type_spending()
         
         if let cell = cell as? DefaultEditCell {
-            cell.configure(title: localizedString, subtitle: "")
+            cell.configure(with: DefaultEditCellConfiguration(title: localizedString))
             cell.accessoryType = type == viewModel.chosenType ? .checkmark : .none
         }
         
@@ -129,6 +129,10 @@ extension CategoryTypeViewController: UITableViewDataSource {
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         viewModel.chosenType = type
         viewModel.onTypeChanged()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        56
     }
 }
 

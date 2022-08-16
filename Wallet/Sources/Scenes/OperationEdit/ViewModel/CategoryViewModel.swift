@@ -22,6 +22,8 @@ final class CategoryViewModel {
     
     var reloadData: (() -> Void)?
     
+    lazy var iconBuilder = IconViewModelBuilder()
+    
     init() {
         loadData()
     }

@@ -32,14 +32,12 @@ final class WalletsViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = R.color.background()
         setup()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
-        navigationController?.navigationBar.topItem?.title = ""
     }
     
     // MARK: - Actions
@@ -92,6 +90,9 @@ final class WalletsViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setup() {
+        title = ""
+        view.backgroundColor = R.color.background()
+        
         setupSignOutButton()
         setupHeaderView()
         setupTableView()
@@ -106,7 +107,7 @@ final class WalletsViewController: UIViewController {
         signOutButton.style = .plain
         signOutButton.target = self
         signOutButton.action = #selector(signOutButtonTapped)
-        signOutButton.tintColor = .systemBackground
+        signOutButton.tintColor = .white
         navigationItem.rightBarButtonItem = signOutButton
     }
     

@@ -4,6 +4,10 @@
 
 import UIKit
 
+protocol NewCategoryCoordinatorDelegate: AnyObject {
+    func newCategoryCoordinatorCategoryCreated(_ newCategory: CategoryModel)
+}
+
 final class NewCategoryCoordinator: Coordinator {
     init(navigationController: UINavigationController,
          dependencies: AppDependency) {
@@ -14,6 +18,8 @@ final class NewCategoryCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     var dependencies: AppDependency
+    
+    var delegate: NewCategoryCoordinatorDelegate?
     
     var newCategoryViewModel: NewCategoryViewModel?
     
@@ -48,6 +54,10 @@ extension NewCategoryCoordinator: NewCategoryViewModelDelegate {
     
     func newCategoryViewModelEnterIcon() {
         
+    }
+    
+    func newCategoryViewModelCreateCategory(_ newCategory: CategoryModel) {
+        delegate?.newCategoryCoordinatorCategoryCreated(newCategory)
     }
 }
 

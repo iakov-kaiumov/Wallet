@@ -10,6 +10,7 @@ final class NewCategoryViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: NewCategoryViewModel
     private lazy var tableView: UITableView = UITableView()
+    private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
     
     // MARK: - Init
     init(viewModel: NewCategoryViewModel) {
@@ -27,11 +28,17 @@ final class NewCategoryViewController: UIViewController {
         setup()
     }
     
+    // MARK: - Actions
+    @objc private func nextButtonAction() {
+        viewModel.createCategory()
+    }
+    
     // MARK: - Private methods
     private func setup() {
         view.backgroundColor = .systemBackground
-        navigationController?.navigationBar.topItem?.title = R.string.localizable.newcategory_title()
+        title = R.string.localizable.newcategory_title()
         setupTableView()
+        setupNextButton()
         
         viewModel.onItemChanged = { [weak self] row in
             self?.tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
@@ -52,6 +59,16 @@ final class NewCategoryViewController: UIViewController {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
         }
     }
+    
+    private func setupNextButton() {
+        view.addSubview(nextButton)
+        nextButton.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
+        }
+        nextButton.setTitle(R.string.localizable.default_save_button(), for: .normal)
+        nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -66,7 +83,7 @@ extension NewCategoryViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: IconCell.identifier, for: indexPath)
             
             if let cell = cell as? IconCell {
-                cell.configure(viewModel.iconBuilder.build(item))
+                cell.configure(viewModel.iconBuilder.build(viewModel.model))
             }
             
             cell.accessoryType = .disclosureIndicator
@@ -74,7 +91,7 @@ extension NewCategoryViewController: UITableViewDataSource {
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: DefaultEditCell.identifier, for: indexPath)
             if let cell = cell as? DefaultEditCell {
-                cell.configure(title: item.title, subtitle: item.value)
+                cell.configure(with: DefaultEditCellConfiguration(title: item.title, subtitle: item.value))
             }
             
             cell.accessoryType = .disclosureIndicator

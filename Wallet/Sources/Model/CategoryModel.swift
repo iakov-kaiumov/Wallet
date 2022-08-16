@@ -25,7 +25,7 @@ struct CategoryModel: Codable {
             id: id,
             name: "Категория №\(id)",
             type: Bool.random() ? CategoryType.INCOME : CategoryType.SPENDING,
-            colorId: 10,
+            colorId: Int.random(in: 0...5),
             iconId: Int.random(in: 0...5)
         )
     }
@@ -35,7 +35,7 @@ struct CategoryModel: Codable {
             id: 0,
             name: "Новая категория",
             type: .INCOME,
-            colorId: Int.random(in: 0...8),
+            colorId: Int.random(in: 0...5),
             iconId: Int.random(in: 0...15)
         )
     }

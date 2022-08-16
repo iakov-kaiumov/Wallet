@@ -44,6 +44,7 @@
 "wallets_delete_alert" = "Уверены, что хотите удалить кошелек?";
 
 "operation_edit_add_title" = "Новая операция";
+"operation_edit_edit_title" = "Новая операция";
 "operation_edit_add_button" = "Создать операцию";
 "operation_edit_save_button" = "Сохранить";
 "operation_edit_amount" = "Сумма";
@@ -63,3 +64,5 @@
 "newcategory_type" = "Тип";
 "newcategory_icon" = "Иконка";
 "newcategory_select" = "Задать цвет";
+
+"category_picker_title" = "Выберите категорию";

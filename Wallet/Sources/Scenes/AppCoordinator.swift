@@ -36,6 +36,11 @@ final class AppCoordinator: Coordinator {
                 self?.startOnboarding()
             }
         }
+        
+//        let coordinator = OperationEditCoordinator(navigationController: navigationController,
+//                                                dependencies: dependencies)
+//        self.childCoordinators.append(coordinator)
+//        coordinator.start()
     }
     
     private func startOnboarding() {

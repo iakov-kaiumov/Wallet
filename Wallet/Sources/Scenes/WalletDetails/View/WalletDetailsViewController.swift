@@ -47,7 +47,6 @@ final class WalletDetailesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.navigationBar.topItem?.title = ""
     }
     
     // MARK: - Actions
@@ -55,9 +54,14 @@ final class WalletDetailesViewController: UIViewController {
         print("Tapped")
     }
     
+    @objc private func addOperationButtonTapped() {
+        viewModel.addOperationButtonDidTap()
+    }
+    
     // MARK: - Private Methods
     private func setup() {
         view.backgroundColor = R.color.background()
+        title = ""
         setupSettingsButton()
         setupWalletNameLabel()
         setupWalletAmountLabel()
@@ -120,6 +124,8 @@ final class WalletDetailesViewController: UIViewController {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
         }
+        
+        addOperationButton.addTarget(self, action: #selector(addOperationButtonTapped), for: .touchUpInside)
     }
     
 }

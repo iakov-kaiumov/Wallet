@@ -91,7 +91,10 @@ final class NewCategoryViewModel {
     }
     
     func changeIcon(iconId: Int, colorId: Int) {
-        
+        model.colorId = colorId
+        model.iconId = iconId
+        tableItems[2].value = formatter.formatType(model)
+        onItemChanged?(2)
     }
     
     func createCategory() {

@@ -10,6 +10,7 @@ final class IconPickerViewController: UIViewController {
     
     var viewModel: IconPickerViewModel
     private lazy var tableView: UITableView = UITableView()
+    private lazy var saveButton: UIButton = ButtonFactory.makeGrayButton()
     
     // MARK: - Init
     
@@ -35,12 +36,14 @@ final class IconPickerViewController: UIViewController {
         navigationController?.navigationBar.topItem?.title = R.string.localizable.icon_picker_title()
         view.backgroundColor = R.color.background()
         setupTableView()
+        setupSaveButton()
     }
     
     private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0)
 
         tableView.register(CollectionCell.self, forCellReuseIdentifier: CollectionCell.identifier)
         
@@ -48,6 +51,22 @@ final class IconPickerViewController: UIViewController {
         tableView.snp.makeConstraints {
             $0.leading.top.trailing.bottom.equalToSuperview()
         }
+    }
+    
+    private func setupSaveButton() {
+        view.addSubview(saveButton)
+        saveButton.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
+        }
+        saveButton.setTitle(R.string.localizable.icon_picker_save_button(), for: .normal)
+        saveButton.addTarget(self, action: #selector(saveButtonAction), for: .touchUpInside)
+    }
+    
+    // MARK: - Actions
+    
+    @objc private func saveButtonAction() {
+        viewModel.saveChoosedIcon()
     }
 }
 
@@ -62,7 +81,7 @@ extension IconPickerViewController: UITableViewDataSource {
         }
     }
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return viewModel.model.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

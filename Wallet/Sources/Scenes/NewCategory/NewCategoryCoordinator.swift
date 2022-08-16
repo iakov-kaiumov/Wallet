@@ -53,7 +53,13 @@ extension NewCategoryCoordinator: NewCategoryViewModelDelegate {
     }
     
     func newCategoryViewModelEnterIcon() {
-        
+        let iconViewModel = IconPickerViewModel()
+        iconViewModel.delegate = self
+        if let viewModel = newCategoryViewModel {
+            iconViewModel.setIcon(icon: viewModel.model.iconId ?? 0, color: viewModel.model.colorId ?? 0)
+        }
+        let viewController = IconPickerViewController(viewModel: iconViewModel)
+        navigationController.pushViewController(viewController, animated: true)
     }
     
     func newCategoryViewModelCreateCategory(_ newCategory: CategoryModel) {
@@ -81,5 +87,12 @@ extension NewCategoryCoordinator: CategoryTypeViewModelDelegate {
     
     func categoryTypeViewModelValueChanged(_ value: CategoryType?) {
         newCategoryViewModel?.changeType(value)
+    }
+}
+
+extension NewCategoryCoordinator: IconPickerViewModelDelegate {
+    func iconPickerViewModelChangeIcon(iconId: Int, colorId: Int) {
+        newCategoryViewModel?.changeIcon(iconId: iconId, colorId: colorId)
+        navigationController.popViewController(animated: true)
     }
 }

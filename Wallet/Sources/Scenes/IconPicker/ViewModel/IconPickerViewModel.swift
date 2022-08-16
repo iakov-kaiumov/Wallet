@@ -2,6 +2,10 @@
 //  IconPickerViewModel.swift
 //  Wallet
 
+protocol IconPickerViewModelDelegate: AnyObject {
+    func iconPickerViewModelChangeIcon(iconId: Int, colorId: Int)
+}
+
 final class IconPickerViewModel {
     
     // MARK: - Properties
@@ -12,6 +16,7 @@ final class IconPickerViewModel {
         var isActive: Bool
     }
     
+    var delegate: IconPickerViewModelDelegate?
     var selectedColor: Int = 0
     var selectedIcon: Int = 0
     
@@ -48,6 +53,15 @@ final class IconPickerViewModel {
         selectedIcon = id
     }
     
+    func saveChoosedIcon() {
+        delegate?.iconPickerViewModelChangeIcon(iconId: selectedIcon, colorId: selectedColor)
+    }
+    
+    func setIcon(icon: Int, color: Int) {
+        didChooseColor(id: color)
+        didChooseIcon(id: icon)
+    }
+    
     // MARK: - Private methods
     
     private func setupModel() {
@@ -65,8 +79,5 @@ final class IconPickerViewModel {
         }
         
         model = [colors, icons]
-        
-        model[0][0].isActive = true
-        model[1][0].isActive = true
     }
 }

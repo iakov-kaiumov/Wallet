@@ -29,18 +29,18 @@ final class AppCoordinator: Coordinator {
     func start() {
         navigationController.navigationBar.tintColor = R.color.accentPurple()
         
-//        dependencies.signInService.checkSignInStatus { [weak self] isSignedIn in
-//            if isSignedIn {
-//                self?.startWallets()
-//            } else {
-//                self?.startOnboarding()
-//            }
-//        }
+        dependencies.signInService.checkSignInStatus { [weak self] isSignedIn in
+            if isSignedIn {
+                self?.startWallets()
+            } else {
+                self?.startOnboarding()
+            }
+        }
         
-        let coordinator = IconPickerCoordinator(navigationController: navigationController,
-                                                dependencies: dependencies)
-        self.childCoordinators.append(coordinator)
-        coordinator.start()
+//        let coordinator = IconPickerCoordinator(navigationController: navigationController,
+//                                                dependencies: dependencies)
+//        self.childCoordinators.append(coordinator)
+//        coordinator.start()
     }
     
     private func startOnboarding() {

@@ -14,6 +14,9 @@
 "default_next_button" = "Далее";
 "default_save_button" = "Сохранить";
 
+"error_unknown_title" = "Что-то пошло не так";
+"error_connection_title" = "Нет соединения с интернетом";
+
 "alert_delete_button" = "Удалить";
 "alert_cancel_button" = "Отмена";
 

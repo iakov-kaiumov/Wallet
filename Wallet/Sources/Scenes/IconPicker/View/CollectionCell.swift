@@ -30,6 +30,10 @@ final class CollectionCell: UITableViewCell {
         collectionView?.reloadData()
     }
     
+    func reloadCollectionViewData() {
+        collectionView?.reloadData()
+    }
+    
     // MARK: - Private methods
     private func setup() {
         setupCollectionView()
@@ -43,8 +47,8 @@ final class CollectionCell: UITableViewCell {
         }
         
         collectionView.isScrollEnabled = false
-        collectionView.register(UICollectionViewCell.self,
-                                forCellWithReuseIdentifier: "Cell")
+        collectionView.register(IconCollectionViewCell.self,
+                                forCellWithReuseIdentifier: IconCollectionViewCell.reuseIdentifier)
         contentView.addSubview(collectionView)
         collectionView.snp.makeConstraints {
             $0.leading.top.trailing.bottom.equalToSuperview()

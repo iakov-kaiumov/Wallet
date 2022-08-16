@@ -76,10 +76,6 @@ extension IconPickerViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CollectionCell.identifier, for: indexPath)
-        
-        if let cell = cell as? CollectionCell {
-        }
-        
         return cell
     }
     
@@ -89,9 +85,9 @@ extension IconPickerViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
-            return Constants.colorTableCellHeight(viewModel.model[collectionView.tag].count, view.bounds.width)
+            return Constants.colorTableCellHeight(viewModel.model[indexPath.section].count, view.bounds.width)
         } else {
-            return Constants.iconTableCellHeight(viewModel.model[collectionView.tag].count, view.bounds.width)
+            return Constants.iconTableCellHeight(viewModel.model[indexPath.section].count, view.bounds.width)
         }
     }
 }
@@ -109,10 +105,11 @@ extension IconPickerViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell",
-                                                      for: indexPath)
-        cell.backgroundColor = .blue
-        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IconCollectionViewCell.reuseIdentifier, for: indexPath)
+        if let cell = cell as? IconCollectionViewCell {
+            let model = viewModel.collectionCellModelBuilder.build(viewModel.model[collectionView.tag][indexPath.row])
+            cell.configure(model)
+        }
         return cell
     }
     
@@ -121,7 +118,14 @@ extension IconPickerViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 
 extension IconPickerViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView.tag == 0 {
+            viewModel.didChooseColor(id: indexPath.row)
+        } else {
+            viewModel.didChooseIcon(id: indexPath.row)
+        }
+        tableView.reloadData()
+    }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
@@ -133,9 +137,9 @@ extension IconPickerViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         if collectionView.tag == 0 {
-            return Constants.colorSpacing
+            return Constants.colorSpacing(self.view.bounds.width)
         } else {
-            return Constants.iconSpacing
+            return Constants.iconSpacing(self.view.bounds.width)
         }
     }
     
@@ -158,17 +162,16 @@ extension IconPickerViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-
 // MARK: - Constants
 
 fileprivate extension Constants {
-    static let cellSize = 40.0
+    static let cellSize: CGFloat = 50.0
     
-    static let colorRowLength: Int = 4
+    static let colorRowLength: CGFloat = 4.0
     
-    static let iconRowLength = 5
+    static let iconRowLength: CGFloat = 5.0
     
-    static let minimumSpacing = 5
+    static let minimumSpacing: CGFloat = 5.0
     
     static let colorSpacing = { (width: CGFloat) -> CGFloat in
         max((width - cellSize * colorRowLength) / (colorRowLength + 2), minimumSpacing)
@@ -178,10 +181,10 @@ fileprivate extension Constants {
     }
     
     static let colorTableCellHeight = { (colorsCount: Int, width: CGFloat) -> CGFloat in
-        colorsCount / colorRowLength * (cellSize + colorSpacing(width)) - colorSpacing(width)
+        CGFloat(colorsCount) / colorRowLength * (cellSize + colorSpacing(width)) - colorSpacing(width)
     }
     
     static let iconTableCellHeight = { (iconsCount: Int, width: CGFloat) -> CGFloat in
-        iconsCount / iconRowLength * (cellSize + iconSpacing(width)) - iconSpacing(width)
+        CGFloat(iconsCount) / iconRowLength * (cellSize + iconSpacing(width)) - iconSpacing(width)
     }
 }

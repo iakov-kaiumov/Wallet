@@ -26,6 +26,11 @@ class ErrorPopup: UIView {
         backgroundColor = .systemBackground
         layer.cornerRadius = 16
         
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.3
+        layer.shadowOffset = .zero
+        layer.shadowRadius = 10
+        
         setupImage()
         setupLabel()
     }

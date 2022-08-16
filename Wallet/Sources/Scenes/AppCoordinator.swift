@@ -26,6 +26,8 @@ final class AppCoordinator: Coordinator {
     var dependencies: AppDependency
     var window: UIWindow?
     
+    var errorPopupView: ErrorPopupController?
+    
     func start() {
         navigationController.navigationBar.tintColor = R.color.accentPurple()
         
@@ -36,6 +38,17 @@ final class AppCoordinator: Coordinator {
                 self?.startOnboarding()
             }
         }
+        
+        showErrorPopup()
+    }
+    
+    private func showErrorPopup() {
+        guard let window = window else {
+            return
+        }
+
+        errorPopupView = ErrorPopupController(window: window)
+        errorPopupView?.show()
     }
     
     private func startOnboarding() {

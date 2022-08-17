@@ -14,6 +14,9 @@
 "default_next_button" = "Далее";
 "default_save_button" = "Сохранить";
 
+"error_unknown_title" = "Что-то пошло не так";
+"error_connection_title" = "Нет соединения с интернетом";
+
 "alert_delete_button" = "Удалить";
 "alert_cancel_button" = "Отмена";
 
@@ -44,6 +47,7 @@
 "wallets_delete_alert" = "Уверены, что хотите удалить кошелек?";
 
 "operation_edit_add_title" = "Новая операция";
+"operation_edit_edit_title" = "Новая операция";
 "operation_edit_add_button" = "Создать операцию";
 "operation_edit_save_button" = "Сохранить";
 "operation_edit_amount" = "Сумма";
@@ -56,3 +60,18 @@
 
 "operation_type_spending" = "Расход";
 "operation_type_income" = "Доход";
+
+// New category screen
+"newcategory_title" = "Новая категория";
+"newcategory_name" = "Название";
+"newcategory_type" = "Тип";
+"newcategory_icon" = "Иконка";
+"newcategory_select" = "Задать цвет";
+
+"category_picker_title" = "Выберите категорию";
+
+// Icon picker screen
+"icon_picker_title" = "Новая иконка";
+"icon_picker_section_color" = "Выберите цвет";
+"icon_picker_section_icon" = "Выберите иконку";
+"icon_picker_save_button" = "Coхранить";

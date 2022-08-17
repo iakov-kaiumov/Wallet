@@ -5,6 +5,10 @@
 
 import Foundation
 
+protocol WalletDetailesViewModelDelegate: AnyObject {
+    func walletDetailsViewModelAddOperation()
+}
+
 final class WalletDetailesViewModel {
     // MARK: - Properties
     typealias Dependencies = HasSpendChipModelBuilder & HasOperationCellModelBuilder
@@ -17,6 +21,8 @@ final class WalletDetailesViewModel {
     var walletAmount: String?
     var walletName: String?
     
+    weak var delegate: WalletDetailesViewModelDelegate?
+    
     private let dependencies: Dependencies
     
     // MARK: - Init
@@ -28,6 +34,10 @@ final class WalletDetailesViewModel {
     func load() {
         loadWalletInfo()
         loadOperations()
+    }
+    
+    func addOperationButtonDidTap() {
+        delegate?.walletDetailsViewModelAddOperation()
     }
     
     // MARK: - Private Methods

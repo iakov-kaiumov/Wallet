@@ -16,9 +16,6 @@ final class WalletsViewController: UIViewController {
     private lazy var signOutButton = UIBarButtonItem()
     private lazy var walletsTableView: UITableView = UITableView(frame: .zero, style: .plain)
     
-    private var errorViewCenter: CGPoint = CGPoint()
-    private let errorViewHidingThreshold: CGFloat = 20
-    
     // MARK: - Init
     init(viewModel: WalletsViewModel) {
         self.viewModel = viewModel
@@ -32,14 +29,12 @@ final class WalletsViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = R.color.background()
         setup()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
-        navigationController?.navigationBar.topItem?.title = ""
     }
     
     // MARK: - Actions
@@ -49,28 +44,6 @@ final class WalletsViewController: UIViewController {
     
     @objc private func signOutButtonTapped() {
         viewModel.signOut()
-    }
-    
-    @objc private func panGestureAction(_ gesture: UIPanGestureRecognizer) {
-        guard let errorView = gesture.view else { return }
-        let point = gesture.translation(in: view)
-        
-        if gesture.state == .began {
-            errorViewCenter = errorView.center
-        }
-        if gesture.state != .cancelled {
-            let alpha = max(0, 0.5 - abs(errorView.center.y - errorViewCenter.y) / view.bounds.height * 4)
-            errorView.center = CGPoint(x: errorView.center.x, y: errorView.center.y + point.y * alpha)
-            gesture.setTranslation(CGPoint.zero, in: view)
-        }
-        
-        if gesture.state == .cancelled || gesture.state == .ended {
-            if (errorViewCenter.y - errorView.center.y) > errorViewHidingThreshold {
-                hideErrorPopup(errorView)
-            } else {
-                resetErrorPopup(errorView)
-            }
-        }
     }
     
     private func showDeleteAlert(for indexPath: IndexPath) {
@@ -92,6 +65,9 @@ final class WalletsViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setup() {
+        title = ""
+        view.backgroundColor = R.color.background()
+        
         setupSignOutButton()
         setupHeaderView()
         setupTableView()
@@ -106,7 +82,7 @@ final class WalletsViewController: UIViewController {
         signOutButton.style = .plain
         signOutButton.target = self
         signOutButton.action = #selector(signOutButtonTapped)
-        signOutButton.tintColor = .systemBackground
+        signOutButton.tintColor = .white
         navigationItem.rightBarButtonItem = signOutButton
     }
     
@@ -172,44 +148,6 @@ final class WalletsViewController: UIViewController {
         emptyLabel.font = .systemFont(ofSize: 16)
         emptyLabel.textColor = .systemGray
         emptyLabel.numberOfLines = 2
-    }
-    
-    private func showErrorPopup() {
-        let errorPopup = ErrorPopup(message: "Что-то пошло не так")
-        view.addSubview(errorPopup)
-        errorPopup.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(16)
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(0)
-            $0.height.equalTo(56)
-        }
-        errorPopup.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGestureAction)))
-    }
-    
-    private func hideErrorPopup(_ errorView: UIView) {
-        UIView.animate(
-            withDuration: 0.3,
-            delay: 0.0,
-            options: [.curveLinear],
-            animations: {
-                errorView.center.y -= 200
-            },
-            completion: { _ in
-                errorView.removeFromSuperview()
-            }
-        )
-    }
-    
-    private func resetErrorPopup(_ errorView: UIView) {
-        UIView.animate(
-            withDuration: 0.33,
-            delay: 0.0,
-            options: [.curveEaseInOut],
-            animations: { [weak self] in
-                guard let self = self else { return }
-                errorView.center = self.errorViewCenter
-            },
-            completion: nil
-        )
     }
 }
 

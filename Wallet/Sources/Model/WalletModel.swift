@@ -35,6 +35,8 @@ struct WalletModel: Codable {
 
     var spendings: Double?
     
+    var isHidden: Bool
+    
     var formattedBalance: String {
         String(format: "%.2f ₽", balance ?? 0)
     }
@@ -48,7 +50,8 @@ struct WalletModel: Codable {
             limit: Double.random(in: 100000...1000000),
             balance: Double.random(in: 10000...100000),
             income: Double.random(in: 10000...100000),
-            spendings: Double.random(in: 10000...100000)
+            spendings: Double.random(in: 10000...100000),
+            isHidden: Bool.random()
         )
     }
 }

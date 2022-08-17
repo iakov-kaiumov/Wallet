@@ -71,4 +71,10 @@ final class CurrenciesViewModel {
             delegate?.currenciesViewModelValueChanged(nil)
         }
     }
+    
+    func getShowMoreCellModel() -> ShowMoreCell.Model {
+        let text = isShortMode ? R.string.localizable.currencies_show_more_button() : R.string.localizable.currencies_show_less_button()
+        
+        return ShowMoreCell.Model(text: text, isShowMore: isShortMode)
+    }
 }

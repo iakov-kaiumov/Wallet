@@ -16,6 +16,9 @@ final class WalletsViewController: UIViewController {
     private lazy var signOutButton = UIBarButtonItem()
     private lazy var walletsTableView: UITableView = UITableView(frame: .zero, style: .plain)
     
+    private let blurView = UIView()
+    private var isBlurApplied = false
+    
     // MARK: - Init
     init(viewModel: WalletsViewModel) {
         self.viewModel = viewModel
@@ -35,6 +38,15 @@ final class WalletsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if !isBlurApplied {
+            blurView.applyBlur()
+            isBlurApplied = true
+        }
     }
     
     // MARK: - Actions
@@ -66,9 +78,9 @@ final class WalletsViewController: UIViewController {
     // MARK: - Private Methods
     private func setup() {
         title = ""
+        view.backgroundColor = .systemBackground
         viewModel.onHide = deleteAllHiddenWallets
         viewModel.onShow = insertAllHiddenWallets
-        view.backgroundColor = R.color.background()
         
         setupSignOutButton()
         setupHeaderView()
@@ -123,9 +135,16 @@ final class WalletsViewController: UIViewController {
     }
     
     private func setupCreateWalletButton() {
+        view.addSubview(createWalletButton)
+        
+        view.addSubview(blurView)
+        blurView.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+            $0.top.equalTo(createWalletButton.snp.top).offset(-16)
+        }
+        
         createWalletButton.setTitle(R.string.localizable.wallets_button(), for: .normal)
         
-        view.addSubview(createWalletButton)
         createWalletButton.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().inset(16)
@@ -133,6 +152,8 @@ final class WalletsViewController: UIViewController {
         }
         
         createWalletButton.addTarget(self, action: #selector(createWalletButtonAction), for: .touchUpInside)
+        
+        view.bringSubviewToFront(createWalletButton)
     }
     
     private func setupWalletsTableView() {

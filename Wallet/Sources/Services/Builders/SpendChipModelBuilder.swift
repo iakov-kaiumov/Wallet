@@ -13,8 +13,9 @@ protocol SpendChipBuilderProtocol {
 final class SpendChipModelBuilder: SpendChipBuilderProtocol {
     func buildIncomeSpendChipModel(income: Decimal) -> SpendChipView.Model {
         let incomeMoney = income.displayString()
+        let titleLabel = R.string.localizable.operations_income_chip()
         return SpendChipView.Model(dotColor: .green,
-                                   titleLabelText: "Доход",
+                                   titleLabelText: titleLabel,
                                    spendMoneyText: .normal(incomeMoney))
         
     }
@@ -22,7 +23,7 @@ final class SpendChipModelBuilder: SpendChipBuilderProtocol {
     func buildExpenseSpendChipModel(spending: Decimal, limit: Decimal?) -> SpendChipView.Model {
         let spentMoney = spending.displayString()
         let dotColor: DotColor = .red
-        let titleLabel = "Расход"
+        let titleLabel = R.string.localizable.operations_spendings_chip()
         guard let limit = limit else {
             return SpendChipView.Model(dotColor: dotColor,
                                        titleLabelText: titleLabel,

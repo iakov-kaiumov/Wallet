@@ -34,12 +34,20 @@ final class OperationTableHeaderView: UITableViewHeaderFooterView {
     }
     
     // MARK: - Public Methods
-    func configure(with model: Model) {
-        incomeChipView.configure(with: model.incomeChipModel)
-        expenseChipView.configure(with: model.expenseChipModel)
-        walletAmountLabel.text = model.walletAmount
-        walletNameLabel.text = model.walletName
-        limitLabel.isHidden = !model.isLimitExceeded
+    func configure(with model: Model?) {
+        walletAmountLabel.showSkeleton(model == nil)
+        walletNameLabel.showSkeleton(model == nil)
+        limitLabel.showSkeleton(model == nil)
+        incomeChipView.showSkeleton(model == nil)
+        expenseChipView.showSkeleton(model == nil)
+        
+        if let model = model {
+            incomeChipView.configure(with: model.incomeChipModel)
+            expenseChipView.configure(with: model.expenseChipModel)
+            walletAmountLabel.text = model.walletAmount
+            walletNameLabel.text = model.walletName
+            limitLabel.isHidden = !model.isLimitExceeded
+        }
     }
     
     // MARK: - Private Methods
@@ -59,17 +67,21 @@ final class OperationTableHeaderView: UITableViewHeaderFooterView {
         walletNameLabel.snp.makeConstraints {
             $0.leading.top.trailing.equalToSuperview().inset(16)
         }
+        
+//        walletNameLabel.setupSkeleton()
     }
     
     private func setupWalletAmountLabel() {
         contentView.addSubview(walletAmountLabel)
         // TODO: Get rid of stub
-        walletAmountLabel.text = "118 000 ₽"
+        walletAmountLabel.text = "-"
         walletAmountLabel.font = .systemFont(ofSize: 32, weight: .semibold)
         walletAmountLabel.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.top.equalTo(walletNameLabel.snp.bottom).offset(16)
         }
+        
+        walletAmountLabel.setupSkeleton(cornerRadius: 8)
     }
     
     private func setupVerticalContainer() {
@@ -93,6 +105,9 @@ final class OperationTableHeaderView: UITableViewHeaderFooterView {
         chipsContainer.spacing = 8
         chipsContainer.addArrangedSubview(incomeChipView)
         chipsContainer.addArrangedSubview(expenseChipView)
+        
+        incomeChipView.setupSkeleton(cornerRadius: 7)
+        expenseChipView.setupSkeleton(cornerRadius: 7)
     }
     
     private func setupLimitLabel() {
@@ -103,11 +118,13 @@ final class OperationTableHeaderView: UITableViewHeaderFooterView {
         limitLabel.layer.masksToBounds = true
         limitLabel.layer.cornerRadius = 8
         limitLabel.textAlignment = .center
-        // TODO: Get rid of stub
-        limitLabel.text = "Вы превысили лимит на траты"
+        
+        limitLabel.text = R.string.localizable.operations_limit_label()
         limitLabel.snp.makeConstraints {
             $0.height.equalTo(52)
         }
+        
+        limitLabel.setupSkeleton(cornerRadius: 8)
     }
     
 }

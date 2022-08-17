@@ -10,11 +10,12 @@ final class WalletDetailesViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: WalletDetailesViewModel
     
-    private let settingsButton = UIBarButtonItem()
-    private let tableHeaderView = OperationTableHeaderView()
-    private let operationTableView = UITableView()
-    private let addOperationButton = ButtonFactory.makeGrayButton()
-    private let blurView = UIView()
+    private lazy var settingsButton = UIBarButtonItem()
+    private lazy var tableHeaderView = OperationTableHeaderView()
+    private lazy var operationTableView = UITableView()
+    private lazy var emptyLabel = UILabel()
+    private lazy var addOperationButton = ButtonFactory.makeGrayButton()
+    private lazy var blurView = UIView()
     private var isBlurApplied = false
     
     private var lastHeaderViewY: CGFloat = 0
@@ -40,6 +41,15 @@ final class WalletDetailesViewController: UIViewController {
         viewModel.onDidUpdateOperations = { [weak self] in
             self?.operationTableView.reloadData()
         }
+        viewModel.onDidDeleteOperaion = { [weak self] indexPath in
+            self?.operationTableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+        viewModel.onDidDeleteSection = { [weak self] section in
+            self?.operationTableView.beginUpdates()
+            self?.operationTableView.deleteRows(at: [IndexPath(row: 0, section: section)], with: .fade)
+            self?.operationTableView.deleteSections(IndexSet(integer: section), with: .fade)
+            self?.operationTableView.endUpdates()
+        }
         viewModel.load()
     }
     
@@ -62,6 +72,9 @@ final class WalletDetailesViewController: UIViewController {
                 headerView.frame = headerFrame
                 operationTableView.tableHeaderView = headerView
             }
+            operationTableView.scrollIndicatorInsets = UIEdgeInsets(
+                top: height + 16, left: 0, bottom: 0, right: 0
+            )
         }
     }
     
@@ -72,7 +85,7 @@ final class WalletDetailesViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func settingsButtonTapped() {
-        print("Tapped")
+        viewModel.settingButtonDidTap()
     }
     
     @objc private func addOperationButtonTapped() {
@@ -83,12 +96,11 @@ final class WalletDetailesViewController: UIViewController {
     private func setup() {
         view.backgroundColor = R.color.background()
         title = ""
-        view.addSubview(addOperationButton)
+        
         setupSettingsButton()
         setupOperationTableView()
-        setupBlurView()
+        setupEmptyLabel()
         setupAddOperationButton()
-        view.bringSubviewToFront(addOperationButton)
     }
     
     private func setupSettingsButton() {
@@ -115,21 +127,37 @@ final class WalletDetailesViewController: UIViewController {
         }
     }
     
-    private func setupBlurView() {
+    private func setupEmptyLabel() {
+        view.addSubview(emptyLabel)
+        
+        emptyLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.centerY.equalToSuperview().offset(50)
+        }
+        
+        emptyLabel.text = R.string.localizable.operations_empty_label()
+        emptyLabel.font = .systemFont(ofSize: 16)
+        emptyLabel.textColor = .systemGray
+        emptyLabel.numberOfLines = 2
+    }
+    
+    private func setupAddOperationButton() {
+        view.addSubview(addOperationButton)
+        
         view.addSubview(blurView)
         blurView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalToSuperview()
             $0.top.equalTo(addOperationButton.snp.top).offset(-16)
         }
-    }
-    
-    private func setupAddOperationButton() {
-        addOperationButton.setTitle("Добавить операцию", for: .normal)
+        
+        addOperationButton.setTitle(R.string.localizable.operations_create_button(), for: .normal)
         addOperationButton.addTarget(self, action: #selector(addOperationButtonTapped), for: .touchUpInside)
         addOperationButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
         }
+        
+        view.bringSubviewToFront(addOperationButton)
     }
     
     private func setNavigationTitle() {
@@ -161,7 +189,7 @@ extension WalletDetailesViewController: UITableViewDelegate {
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.text = viewModel.operationSections[section].sectionName
         let container = UIView()
-        container.backgroundColor = R.color.background()?.withAlphaComponent(0.85)
+        container.backgroundColor = .systemBackground.withAlphaComponent(0.85)
         container.addSubview(label)
         label.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(16)
@@ -175,7 +203,9 @@ extension WalletDetailesViewController: UITableViewDelegate {
 // MARK: - UITableViewDataSource
 extension WalletDetailesViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        viewModel.operationSections.count
+        emptyLabel.layer.opacity = viewModel.operationSections.isEmpty ? 1.0 : 0.0
+        tableView.isScrollEnabled = !viewModel.operationSections.isEmpty
+        return viewModel.operationSections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -186,7 +216,16 @@ extension WalletDetailesViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: OperationCellView.uniqueIdentifier,
                                                  for: indexPath)
         if let cell = cell as? OperationCellView {
-            cell.configure(with: viewModel.operationSections[indexPath.section].operationModels[indexPath.row])
+            let model = viewModel.operationSections[indexPath.section].operationModels[indexPath.row]
+            
+            if !model.isSkeleton {
+                cell.configure(with: model)
+            }
+            cell.setupSkeleton(
+                insets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16),
+                cornerRadius: 16
+            )
+            cell.showSkeleton(model.isSkeleton)
         }
         return cell
     }
@@ -209,4 +248,20 @@ extension WalletDetailesViewController: UITableViewDataSource {
         
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let trash = UIContextualAction(style: .destructive, title: "") { [weak self] (_, _, completionHandler) in
+            self?.viewModel.deleteOperation(at: indexPath)
+            completionHandler(true)
+        }
+        trash.image = R.image.actionDelete()
+        trash.backgroundColor = .systemBackground
+        
+        let configuration = UISwipeActionsConfiguration(actions: [trash])
+        return configuration
+    }
 }

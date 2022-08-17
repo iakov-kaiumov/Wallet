@@ -15,10 +15,8 @@ protocol GoogleSignInServiceProtocol {
     
     func signOut()
     
-    func signIn(presenting controller: UIViewController, completion: @escaping (_ success: Bool) -> Void)
+    func signIn(presenting controller: UIViewController, completion: @escaping (_ result: Result<String, NetworkError>) -> Void)
     
-    func signInServer(with idToken: String,
-                      completion: @escaping (_ success: Bool) -> Void)
 }
 
 class SignInService: GoogleSignInServiceProtocol {
@@ -38,32 +36,32 @@ class SignInService: GoogleSignInServiceProtocol {
         GIDSignIn.sharedInstance.signOut()
     }
     
-    func signIn(presenting controller: UIViewController, completion: @escaping (_ success: Bool) -> Void) {
+    func signIn(presenting controller: UIViewController, completion: @escaping (_ result: Result<String, NetworkError>) -> Void) {
         guard let signInConfig = getSignInConfig() else {
-            completion(false)
+            completion(.failure(.noData))
             return
         }
         GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: controller) { [weak self] user, error in
             guard error == nil else {
-                completion(false)
+                completion(.failure(.noData))
                 return
             }
             guard let user = user else {
-                completion(false)
+                completion(.failure(.noData))
                 return
             }
 
             user.authentication.do { authentication, error in
                 guard error == nil else {
-                    completion(false)
+                    completion(.failure(.noData))
                     return
                 }
                 guard let authentication = authentication, let idToken = authentication.idToken else {
-                    completion(false)
+                    completion(.failure(.noData))
                     return
                 }
+                completion(.success(idToken))
                 
-                self?.signInServer(with: idToken, completion: completion)
             }
         }
     }
@@ -82,12 +80,5 @@ class SignInService: GoogleSignInServiceProtocol {
             return GIDConfiguration(clientID: clientId)
         }
         return nil
-    }
-    
-   func signInServer(with idToken: String, completion: @escaping (_ success: Bool) -> Void) {
-        completion(true)
-        return
-        
-        // TODO: Add server authentication
     }
 }

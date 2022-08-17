@@ -13,4 +13,5 @@ struct WalletApiModel: Codable {
     let balance: Decimal?
     let income: Decimal?
     let spendings: Decimal?
+    let isHidden: Bool?
 }

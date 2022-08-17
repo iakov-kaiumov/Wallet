@@ -40,7 +40,8 @@ struct WalletModel: Codable {
                        amountLimit: limit,
                        balance: balance,
                        income: income,
-                       spendings: spendings)
+                       spendings: spendings,
+                       isHidden: isHidden)
     }
     
     static func makeCleanModel(_ id: Int = 0) -> WalletModel {
@@ -52,7 +53,8 @@ struct WalletModel: Codable {
             limit: nil,
             balance: 0,
             income: 0,
-            spendings: 0
+            spendings: 0,
+            isHidden: Bool.random()
         )
         
     }

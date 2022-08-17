@@ -18,10 +18,8 @@ extension ProxyService: GoogleSignInServiceProtocol {
         networkService.signOut()
     }
     
-    func signIn(presenting controller: UIViewController,
-                completion: @escaping (Bool) -> Void) {
-        networkService.signIn(presenting: controller,
-                              completion: completion)
+    func signIn(presenting controller: UIViewController, completion: @escaping (Result<String, NetworkError>) -> Void) {
+        networkService.signIn(presenting: controller)
     }
     
     func signInServer(with idToken: String, completion: @escaping (Bool) -> Void) {

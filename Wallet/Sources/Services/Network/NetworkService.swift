@@ -15,7 +15,8 @@ class NetworkService {
         let configuration: URLSessionConfiguration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = [
             "accept": "application/json",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "email": UserDefaults.standard.string(forKey: "token")
         ]
         let session = URLSession(configuration: configuration)
         

@@ -25,7 +25,8 @@ extension NetworkService: WalletServiceProtocol {
               let currencyType = CurrencyType(rawValue: currency),
               let balance = wallet.balance,
               let income = wallet.income,
-              let spendings = wallet.spendings else {
+              let spendings = wallet.spendings,
+              let isHidden = wallet.isHidden else {
             return nil
         }
         
@@ -36,7 +37,8 @@ extension NetworkService: WalletServiceProtocol {
                            limit: wallet.amountLimit,
                            balance: balance,
                            income: income,
-                           spendings: spendings)
+                           spendings: spendings,
+                           isHidden: isHidden)
     }
     
     func walletServiceCreate(_ wallet: WalletApiModel,

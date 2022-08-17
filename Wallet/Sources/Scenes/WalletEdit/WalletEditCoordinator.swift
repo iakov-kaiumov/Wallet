@@ -39,7 +39,7 @@ final class WalletEditCoordinator: Coordinator {
             navigationController.pushViewController(controller, animated: true)
         } else {
             if let wallet = wallet {
-                walletViewModel = WalletEditViewModel(wallet: wallet)
+                walletViewModel = WalletEditViewModel(dependencies: dependencies, wallet: wallet)
             }
             start()
         }

@@ -40,7 +40,7 @@ final class AppCoordinator: Coordinator {
         navigationController.navigationBar.tintColor = R.color.accentPurple()
         
         dependencies.signInService.checkSignInStatus { [weak self] isSignedIn in
-            if isSignedIn {
+            if !isSignedIn {
                 self?.startWallets()
             } else {
                 self?.startOnboarding()

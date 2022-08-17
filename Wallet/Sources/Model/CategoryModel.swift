@@ -5,10 +5,6 @@
 
 import Foundation
 
-enum CategoryType: String, Codable, CaseIterable {
-    case INCOME, SPENDING
-}
-
 struct CategoryModel: Codable {
     var id: Int
     

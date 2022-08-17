@@ -14,6 +14,8 @@ final class WalletDetailesViewController: UIViewController {
     private let tableHeaderView = OperationTableHeaderView()
     private let operationTableView = UITableView()
     private let addOperationButton = ButtonFactory.makeGrayButton()
+    private let blurView = UIView()
+    private var isBlurApplied = false
     
     private var lastHeaderViewY: CGFloat = 0
     
@@ -44,9 +46,14 @@ final class WalletDetailesViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        if !isBlurApplied {
+            blurView.applyBlur()
+            isBlurApplied = true
+        }
+        
         if let headerView = operationTableView.tableHeaderView {
 
-            let height = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+            let height = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height + 8
             var headerFrame = headerView.frame
 
             // Comparison necessary to avoid infinite loop
@@ -76,9 +83,12 @@ final class WalletDetailesViewController: UIViewController {
     private func setup() {
         view.backgroundColor = R.color.background()
         title = ""
+        view.addSubview(addOperationButton)
         setupSettingsButton()
         setupOperationTableView()
+        setupBlurView()
         setupAddOperationButton()
+        view.bringSubviewToFront(addOperationButton)
     }
     
     private func setupSettingsButton() {
@@ -100,19 +110,26 @@ final class WalletDetailesViewController: UIViewController {
         operationTableView.tableHeaderView = tableHeaderView
         operationTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
         operationTableView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview()
+        }
+    }
+    
+    private func setupBlurView() {
+        view.addSubview(blurView)
+        blurView.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+            $0.top.equalTo(addOperationButton.snp.top).offset(-16)
         }
     }
     
     private func setupAddOperationButton() {
-        view.addSubview(addOperationButton)
         addOperationButton.setTitle("Добавить операцию", for: .normal)
+        addOperationButton.addTarget(self, action: #selector(addOperationButtonTapped), for: .touchUpInside)
         addOperationButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
         }
-        
-        addOperationButton.addTarget(self, action: #selector(addOperationButtonTapped), for: .touchUpInside)
     }
     
     private func setNavigationTitle() {
@@ -176,8 +193,8 @@ extension WalletDetailesViewController: UITableViewDataSource {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let currentHeaderViewY = scrollView.contentOffset.y
-        let headerViewHeightNeededForAnimation = tableHeaderView.frame.height / 2
-        
+        let headerViewHeightNeededForAnimation: CGFloat = 10
+
         if lastHeaderViewY <= headerViewHeightNeededForAnimation,
            currentHeaderViewY > headerViewHeightNeededForAnimation {
             setNavigationTitle()

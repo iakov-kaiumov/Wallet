@@ -45,6 +45,8 @@
 "wallets_button" = "Create wallet";
 "wallets_empty_label" = "You don't have any wallets yet";
 "wallets_delete_alert" = "Are you sure you want to delete your wallet?";
+"wallets_hidden_wallets" = "Hidden wallets";
+"wallets_hide" = "Hide";
 
 "operation_edit_add_title" = "New transaction";
 "operation_edit_edit_title" = "Transaction";

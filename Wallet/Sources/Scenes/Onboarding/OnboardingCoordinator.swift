@@ -31,10 +31,6 @@ final class OnboardingCoordinator: Coordinator {
         
         navigationController.setViewControllers([viewController], animated: true)
     }
-    
-    func callBanner(type: ErrorPopupType) {
-        parent?.callBanner(type: type)
-    }
 }
 
 extension OnboardingCoordinator: OnboardingViewModelDelegate {

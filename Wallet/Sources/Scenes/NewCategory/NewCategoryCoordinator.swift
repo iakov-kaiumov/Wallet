@@ -34,10 +34,6 @@ final class NewCategoryCoordinator: Coordinator {
             navigationController.pushViewController(viewController, animated: true)
         }
     }
-    
-    func callBanner(type: ErrorPopupType) {
-        parent?.callBanner(type: type)
-    }
 }
 
 extension NewCategoryCoordinator: NewCategoryViewModelDelegate {

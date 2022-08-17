@@ -41,7 +41,7 @@ class SignInService: GoogleSignInServiceProtocol {
             completion(.failure(.noData))
             return
         }
-        GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: controller) { [weak self] user, error in
+        GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: controller) { user, error in
             guard error == nil else {
                 completion(.failure(.noData))
                 return
@@ -51,18 +51,11 @@ class SignInService: GoogleSignInServiceProtocol {
                 return
             }
 
-            user.authentication.do { authentication, error in
-                guard error == nil else {
-                    completion(.failure(.noData))
-                    return
-                }
-                guard let authentication = authentication, let idToken = authentication.idToken else {
-                    completion(.failure(.noData))
-                    return
-                }
-                completion(.success(idToken))
-                
+            guard let email = user.profile?.email else {
+                completion(.failure(.noData))
+                return
             }
+            completion(.success(email))
         }
     }
     

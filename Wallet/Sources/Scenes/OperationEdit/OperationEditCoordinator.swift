@@ -29,10 +29,6 @@ final class OperationEditCoordinator: Coordinator {
         let controller = OperationViewController(viewModel: operationViewModel)
         navigationController.pushViewController(controller, animated: true)
     }
-    
-    func callBanner(type: ErrorPopupType) {
-        parent?.callBanner(type: type)
-    }
 }
 
 extension OperationEditCoordinator: OperationViewModelDelegate {

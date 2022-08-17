@@ -52,10 +52,6 @@ final class WalletEditCoordinator: Coordinator {
         coordinator.parent = self
         coordinator.start()
     }
-    
-    func callBanner(type: ErrorPopupType) {
-        parent?.callBanner(type: type)
-    }
 }
 
 extension WalletEditCoordinator: WalletEditViewModelDelegate {

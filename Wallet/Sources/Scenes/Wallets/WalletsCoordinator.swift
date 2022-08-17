@@ -31,10 +31,6 @@ final class WalletsCoordinator: Coordinator {
         navigationController.setViewControllers([viewController], animated: true)
     }
     
-    func callBanner(type: ErrorPopupType) {
-        parent?.callBanner(type: type)
-    }
-    
     // MARK: - Private Methods
     private func goToWalletDetails(wallet: WalletModel) {
         let coordinator = WalletDetailsCoordinator(navigationController: navigationController,

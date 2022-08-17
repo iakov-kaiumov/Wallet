@@ -10,10 +10,6 @@ protocol HasSignInService {
     var signInService: GoogleSignInServiceProtocol { get }
 }
 
-protocol HasPersonNetworkServiceProtocol {
-    var personNetworkService: PersonNetworkServiceProtocol { get }
-}
-
 protocol HasWalletServiceProtocol {
     var walletNetworkService: WalletServiceProtocol { get }
 }
@@ -45,13 +41,6 @@ final class AppDependency {
 // MARK: - HasSignInService
 extension AppDependency: HasSignInService {
     var signInService: GoogleSignInServiceProtocol {
-        return proxyService
-    }
-}
-
-// MARK: - HasPersonNetworkServiceProtocol
-extension AppDependency: HasPersonNetworkServiceProtocol {
-    var personNetworkService: PersonNetworkServiceProtocol {
         proxyService
     }
 }

@@ -22,10 +22,6 @@ final class WalletDetailsCoordinator: Coordinator {
         let viewController = WalletDetailesViewController(viewModel: viewModel)
         navigationController.pushViewController(viewController, animated: true)
     }
-    
-    func callBanner(type: ErrorPopupType) {
-        parent?.callBanner(type: type)
-    }
 }
 
 extension WalletDetailsCoordinator: WalletDetailesViewModelDelegate {

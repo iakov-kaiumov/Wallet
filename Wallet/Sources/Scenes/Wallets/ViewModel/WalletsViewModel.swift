@@ -114,7 +114,9 @@ final class WalletsViewModel {
             switch result {
             case .success(let walletModels):
                 self.wallets = walletModels
-                self.reloadData?()
+                DispatchQueue.main.async {
+                    self.reloadData?()
+                }
             case .failure(let error):
                 self.delegate?.walletsViewModel(self, didReceiveError: error)
             }

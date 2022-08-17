@@ -43,7 +43,6 @@ final class RequestProcessor: IRequestProcessor {
             }
             
             do {
-                print(String(decoding: data, as: UTF8.self))
                 let json = try self.decoder.decode(T.Model.self, from: data)
                 completion(.success(json))
             } catch {

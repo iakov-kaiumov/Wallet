@@ -19,14 +19,16 @@ extension ProxyService: GoogleSignInServiceProtocol {
     }
     
     func signIn(presenting controller: UIViewController, completion: @escaping (Result<String, NetworkError>) -> Void) {
-        networkService.signIn(presenting: controller)
-    }
-    
-    func signInServer(with idToken: String, completion: @escaping (Bool) -> Void) {
-        networkService.signInServer(with: idToken) { result in
-            // TODO: - Cache token
+        networkService.signIn(presenting: controller) { [weak self] result in
+            switch result {
+            case .success(let token):
+                UserDefaults.standard.set(token, forKey: "token")
+                self?.networkService.setup()
+            case .failure(let error):
+                print(error)
+            }
+            
             completion(result)
         }
     }
-    
 }

@@ -15,3 +15,9 @@ protocol Coordinator: AnyObject {
     func start()
     func callBanner(type: ErrorPopupType)
 }
+
+extension Coordinator {
+    func callBanner(type: ErrorPopupType) {
+        parent?.callBanner(type: type)
+    }
+}

@@ -71,7 +71,7 @@ final class WalletsViewController: UIViewController {
         let cancelAction = UIAlertAction(title: R.string.localizable.alert_cancel_button(), style: .cancel)
         alertController.addAction(deleteAction)
         alertController.addAction(cancelAction)
-
+        
         self.present(alertController, animated: true, completion: nil)
     }
     
@@ -79,6 +79,8 @@ final class WalletsViewController: UIViewController {
     private func setup() {
         title = ""
         view.backgroundColor = .systemBackground
+        viewModel.onHide = deleteAllHiddenWallets
+        viewModel.onShow = insertAllHiddenWallets
         
         setupSignOutButton()
         setupHeaderView()
@@ -114,6 +116,7 @@ final class WalletsViewController: UIViewController {
         walletsTableView.delegate = self
         
         walletsTableView.register(WalletCell.self, forCellReuseIdentifier: WalletCell.reuseIdentifier)
+        walletsTableView.register(ShowMoreCell.self, forCellReuseIdentifier: ShowMoreCell.identifier)
     }
     
     private func setupCurrenciesView() {
@@ -170,16 +173,37 @@ final class WalletsViewController: UIViewController {
         emptyLabel.textColor = .systemGray
         emptyLabel.numberOfLines = 2
     }
+    
+    private func deleteAllHiddenWallets() {
+        let section = 2
+        let count = walletsTableView.numberOfRows(inSection: section)
+        let indexPaths = (0..<count).map { IndexPath(row: $0, section: section) }
+        walletsTableView.deleteRows(at: indexPaths, with: .fade)
+        walletsTableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
+    }
+    
+    private func insertAllHiddenWallets() {
+        let section = 2
+        let count = viewModel.hiddenWallets.count
+        let indexPaths = (0..<count).map { IndexPath(row: $0, section: section) }
+        walletsTableView.insertRows(at: indexPaths, with: .fade)
+        walletsTableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
+    }
 }
 
 // MARK: - Extensions
 extension WalletsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 1 {
+            return 60
+        }
         return 80
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.selectWalletWithIndex(indexPath.row)
+        if indexPath.section != 1 {
+            viewModel.selectWalletWithIndex(indexPath.row, section: indexPath.section)
+        }
         tableView.deselectRow(at: indexPath, animated: true)
         
         viewModel.onCellTapped(indexPath)
@@ -187,14 +211,19 @@ extension WalletsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
+        if indexPath.section == 1 {
+            return nil
+        }
+        
         // Hide/show action
         let hide = UIContextualAction(style: .normal, title: "") { [weak self] (_, _, completionHandler) in
             self?.viewModel.onCellHide(indexPath)
+            self?.moveRows(indexPath: indexPath)
             completionHandler(true)
         }
         hide.image = R.image.actionHide()
         hide.backgroundColor = .systemBackground
-
+        
         // Edit action
         let edit = UIContextualAction(style: .normal, title: "") { [weak self] (_, _, completionHandler) in
             self?.viewModel.onCellEdit(indexPath)
@@ -212,24 +241,79 @@ extension WalletsViewController: UITableViewDelegate {
         trash.backgroundColor = .systemBackground
         
         let configuration = UISwipeActionsConfiguration(actions: [trash, edit, hide])
-
+        
         return configuration
+    }
+    
+    private func moveRows(indexPath: IndexPath) {
+        walletsTableView.beginUpdates()
+        if viewModel.isHidden {
+            walletsTableView.deleteRows(at: [indexPath], with: .fade)
+        } else {
+            var section: Int
+            if indexPath.section == 0 {
+                section = 2
+            } else {
+                section = 0
+            }
+            let row = walletsTableView.numberOfRows(inSection: section)
+            walletsTableView.moveRow(at: indexPath, to: IndexPath(row: row, section: section))
+        }
+        if walletsTableView.numberOfRows(inSection: 1) == 1 && !viewModel.haveHiddenWallets() {
+            walletsTableView.deleteRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
+        } else if walletsTableView.numberOfRows(inSection: 1) == 0 && viewModel.haveHiddenWallets() {
+            walletsTableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
+        }
+        walletsTableView.endUpdates()
     }
 }
 
 extension WalletsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        emptyLabel.layer.opacity = viewModel.wallets.isEmpty ? 1.0 : 0.0
-        return viewModel.wallets.count
+        emptyLabel.layer.opacity = viewModel.shownWallets.isEmpty && viewModel.hiddenWallets.isEmpty ? 1.0 : 0.0
+        switch section {
+        case 0:
+            return viewModel.shownWallets.count
+        case 1:
+            return viewModel.haveHiddenWallets() ? 1 : 0
+        case 2:
+            return viewModel.hiddenWallets.count
+        default:
+            return 0
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath)
         
-        if let cell = cell as? WalletCell {
-            cell.configure(model: viewModel.wallets[indexPath.row])
-        }
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath)
             
-        return cell
+            if let cell = cell as? WalletCell {
+                cell.configure(model: viewModel.shownWallets[indexPath.row])
+            }
+            
+            return cell
+        } else if indexPath.section == 1 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ShowMoreCell.identifier, for: indexPath)
+            
+            if let cell = cell as? ShowMoreCell {
+                cell.configure(viewModel.makeShowMoreCellModel())
+            }
+            
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath)
+            
+            if let cell = cell as? WalletCell {
+                cell.configure(model: viewModel.hiddenWallets[indexPath.row])
+            }
+            
+            return cell
+        }
+
     }
 }

@@ -51,4 +51,10 @@ extension WalletsCoordinator: WalletsViewModelDelegate {
     func walletsViewModelSignOut() {
         delegate?.walletsCoordinatorSignOut()
     }
+    
+    func walletsViewModelEditWallet(wallet: WalletModel) {
+        let coordinator = WalletEditCoordinator(navigationController: navigationController, dependencies: dependencies)
+        childCoordinators.append(coordinator)
+        coordinator.start(isCreatingMode: false, wallet: wallet)
+    }
 }

@@ -57,6 +57,12 @@
 "operation_edit_category" = "Категория";
 "operation_edit_date" = "Дата операции";
 
+"operations_empty_label" = "У вас пока нет записей";
+"operations_create_button" = "Добавить операцию";
+"operations_limit_label" = "Вы превысили лимит на траты";
+"operations_income_chip" = "Доход";
+"operations_spendings_chip" = "Расход";
+
 "operation_amount_title" = "Введите сумму";
 "operation_amount_prompt" = "Сумма операции";
 

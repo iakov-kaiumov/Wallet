@@ -7,6 +7,8 @@ import UIKit
 
 protocol OperationCellModelBuilderProtocol {
     func buildOperationCellModel(from operationModel: OperationModel) -> OperationCellView.Model
+    
+    func buildSkeletonCellModel() -> OperationCellView.Model
 }
 
 final class OperationCellModelBuilder: OperationCellModelBuilderProtocol {
@@ -28,6 +30,10 @@ final class OperationCellModelBuilder: OperationCellModelBuilderProtocol {
                                        moneySpend: moneySpend,
                                        timestamp: timestamp,
                                        icon: icon)
+    }
+    
+    func buildSkeletonCellModel() -> OperationCellView.Model {
+        return OperationCellView.Model.makeSkeleton()
     }
     
 }

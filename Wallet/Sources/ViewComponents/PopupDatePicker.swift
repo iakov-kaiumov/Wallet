@@ -28,7 +28,7 @@ class PopupDatePicker: UIView {
 
         let pickerHolderView: UIView = {
             let v = UIView()
-            v.backgroundColor = .white
+            v.backgroundColor = .systemBackground
             v.layer.cornerRadius = 8
             return v
         }()

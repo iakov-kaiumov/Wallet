@@ -14,8 +14,10 @@ final class IconCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Properties
     
+    static var reuseIdentifier: String {
+        return String(describing: self)
+    }
     private lazy var iconView = IconView(edge: 40.0)
-    static let reuseIdentifier = "IconCollectionViewCell"
     
     // MARK: - Init
     override init(frame: CGRect) {

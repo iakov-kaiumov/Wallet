@@ -8,7 +8,7 @@ final class IconPickerViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel: IconPickerViewModel
+    private let viewModel: IconPickerViewModel
     private lazy var tableView: UITableView = UITableView()
     private lazy var saveButton: UIButton = ButtonFactory.makeGrayButton()
     
@@ -30,6 +30,12 @@ final class IconPickerViewController: UIViewController {
         setup()
     }
     
+    // MARK: - Actions
+    
+    @objc private func saveButtonAction() {
+        viewModel.saveChoosedIcon()
+    }
+    
     // MARK: - Private methods
     
     private func setup() {
@@ -43,9 +49,9 @@ final class IconPickerViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
 
-        tableView.register(CollectionCell.self, forCellReuseIdentifier: CollectionCell.identifier)
+        tableView.register(CollectionContainerCell.self, forCellReuseIdentifier: CollectionContainerCell.identifier)
         
         view.addSubview(tableView)
         tableView.snp.makeConstraints {
@@ -61,12 +67,6 @@ final class IconPickerViewController: UIViewController {
         }
         saveButton.setTitle(R.string.localizable.icon_picker_save_button(), for: .normal)
         saveButton.addTarget(self, action: #selector(saveButtonAction), for: .touchUpInside)
-    }
-    
-    // MARK: - Actions
-    
-    @objc private func saveButtonAction() {
-        viewModel.saveChoosedIcon()
     }
 }
 
@@ -89,12 +89,12 @@ extension IconPickerViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let collectionCell = cell as? CollectionCell else { return }
+        guard let collectionCell = cell as? CollectionContainerCell else { return }
         collectionCell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, forRow: indexPath.section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CollectionCell.identifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: CollectionContainerCell.identifier, for: indexPath)
         return cell
     }
     
@@ -126,8 +126,7 @@ extension IconPickerViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: IconCollectionViewCell.reuseIdentifier, for: indexPath)
         if let cell = cell as? IconCollectionViewCell {
-            let model = viewModel.collectionCellModelBuilder.build(viewModel.model[collectionView.tag][indexPath.row])
-            cell.configure(model)
+            cell.configure(viewModel.getCollectionCellModel(section: collectionView.tag, row: indexPath.row))
         }
         return cell
     }

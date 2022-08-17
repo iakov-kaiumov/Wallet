@@ -19,6 +19,7 @@ final class CategoryListViewController: UIViewController {
         tableView.allowsSelection = true
         tableView.allowsMultipleSelection = false
         tableView.separatorStyle = .none
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
         
         tableView.register(IconCell.self, forCellReuseIdentifier: IconCell.identifier)
         tableView.register(DefaultEditCell.self, forCellReuseIdentifier: DefaultEditCell.identifier)

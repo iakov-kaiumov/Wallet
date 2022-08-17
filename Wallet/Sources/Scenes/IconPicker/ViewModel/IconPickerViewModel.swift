@@ -21,7 +21,7 @@ final class IconPickerViewModel {
     var selectedIcon: Int = 0
     
     var model: [[Item]] = []
-    lazy var collectionCellModelBuilder = IconCollectionViewCellModelBuilder()
+    private lazy var collectionCellModelBuilder = IconCollectionViewCellModelBuilder()
     
     // MARK: - Init
     
@@ -32,6 +32,7 @@ final class IconPickerViewModel {
     // MARK: - Public methods
     
     func didChooseColor(id: Int) {
+        guard model.count >= 2, id < model[0].count else { return }
         for colorId in 0...(model[0].count - 1) {
             model[0][colorId].isActive = false
         }
@@ -45,10 +46,10 @@ final class IconPickerViewModel {
     }
     
     func didChooseIcon(id: Int) {
+        guard model.count >= 2, id < model[1].count else { return }
         for iconId in 0...(model[1].count - 1) {
             model[1][iconId].isActive = false
         }
-        
         model[1][id].isActive = true
         selectedIcon = id
     }
@@ -60,6 +61,10 @@ final class IconPickerViewModel {
     func setIcon(icon: Int, color: Int) {
         didChooseColor(id: color)
         didChooseIcon(id: icon)
+    }
+    
+    func getCollectionCellModel(section: Int, row: Int) -> IconCollectionViewCell.Model {
+        return collectionCellModelBuilder.build(model[section][row])
     }
     
     // MARK: - Private methods

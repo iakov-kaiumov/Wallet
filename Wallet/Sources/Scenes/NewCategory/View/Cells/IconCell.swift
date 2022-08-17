@@ -69,7 +69,6 @@ final class IconCell: UITableViewCell {
         switch alignment {
         case .leading:
             titleLabel.snp.makeConstraints {
-//                $0.trailing.greaterThanOrEqualToSuperview().inset(16)
                 $0.centerY.equalToSuperview()
                 $0.leading.equalTo(iconView.snp.trailing).offset(8)
             }

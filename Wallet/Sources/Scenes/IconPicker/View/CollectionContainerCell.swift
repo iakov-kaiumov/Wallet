@@ -5,7 +5,7 @@
 import UIKit
 import SnapKit
 
-final class CollectionCell: UITableViewCell {
+final class CollectionContainerCell: UITableViewCell {
     
     // MARK: - Properties
     private var collectionView: UICollectionView?

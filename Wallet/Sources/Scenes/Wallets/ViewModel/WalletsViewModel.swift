@@ -9,6 +9,7 @@ protocol WalletsViewModelDelegate: AnyObject {
     func walletsViewModel(_ viewModel: WalletsViewModel, didSelectWallet wallet: WalletModel)
     func walletsViewModelDidAskToCreateWallet()
     func walletsViewModelSignOut()
+    func walletsViewModelEditWallet(wallet: WalletModel)
 }
 
 final class WalletsViewModel {
@@ -76,12 +77,7 @@ final class WalletsViewModel {
     }
     
     func onCellHide(_ indexPath: IndexPath) {
-        var wallet: WalletModel
-        if indexPath.section == 0 {
-            wallet = shownWallets[indexPath.row]
-        } else {
-            wallet = hiddenWallets[indexPath.row]
-        }
+        let wallet = findWalletByIndexPath(indexPath: indexPath)
         
         for i in 0..<wallets.count where wallets[i].id == wallet.id {
             wallets[i].isHidden.toggle()
@@ -94,7 +90,8 @@ final class WalletsViewModel {
     }
     
     func onCellEdit(_ indexPath: IndexPath) {
-        
+        let wallet = findWalletByIndexPath(indexPath: indexPath)
+        delegate?.walletsViewModelEditWallet(wallet: wallet)
     }
     
     func signOut() {
@@ -121,5 +118,13 @@ final class WalletsViewModel {
     
     private func updateShownWallets() {
         shownWallets = wallets.filter { !$0.isHidden }
+    }
+    
+    private func findWalletByIndexPath(indexPath: IndexPath) -> WalletModel {
+        if indexPath.section == 0 {
+            return shownWallets[indexPath.row]
+        } else {
+            return hiddenWallets[indexPath.row]
+        }
     }
 }

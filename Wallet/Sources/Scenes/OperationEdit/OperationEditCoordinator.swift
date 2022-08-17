@@ -53,11 +53,16 @@ extension OperationEditCoordinator: OperationViewModelDelegate {
     }
     
     func operationViewModelEnterCategory(_ currentValue: CategoryModel?) {
+        let viewModel = CategoryViewModel()
+        viewModel.delegate = self
+        viewModel.chosenCategory = currentValue
         
+        let controller = CategoryListViewController(viewModel: viewModel)
+        navigationController.pushViewController(controller, animated: true)
     }
     
     func operationViewModelDidFinish() {
-        
+        navigationController.popViewController(animated: true)
     }
     
 }
@@ -89,5 +94,31 @@ extension OperationEditCoordinator: OperationTypeViewModelDelegate {
     
     func operationTypeViewModelValueChanged(_ value: OperationType?) {
         operationViewModel?.changeType(value)
+    }
+}
+
+extension OperationEditCoordinator: CategoryViewModelDelegate {
+    func categoryViewModelCloseButtonDidTap() {
+        navigationController.dismiss(animated: true)
+    }
+    
+    func categoryViewModelValueChanged(_ value: CategoryModel?) {
+        operationViewModel?.changeCategory(value)
+    }
+    
+    func categoryViewModelCreateCategory() {
+        let coordinator = NewCategoryCoordinator(navigationController: navigationController,
+                                                 dependencies: dependencies)
+        coordinator.delegate = self
+        childCoordinators.append(coordinator)
+        coordinator.start()
+    }
+}
+
+extension OperationEditCoordinator: NewCategoryCoordinatorDelegate {
+    func newCategoryCoordinatorCategoryCreated(_ newCategory: CategoryModel) {
+        navigationController.popViewController(animated: true)
+        navigationController.popViewController(animated: true)
+        operationViewModel?.changeCategory(newCategory)
     }
 }

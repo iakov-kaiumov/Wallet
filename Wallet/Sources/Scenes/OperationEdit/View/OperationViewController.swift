@@ -53,9 +53,9 @@ final class OperationViewController: UIViewController {
     private func setup() {
         view.backgroundColor = .systemBackground
         if viewModel.isCreatingMode {
-            navigationController?.navigationBar.topItem?.title = R.string.localizable.wallet_edit_add_title()
+            title = R.string.localizable.operation_edit_add_title()
         } else {
-            navigationController?.navigationBar.topItem?.title = R.string.localizable.wallet_edit_edit_title()
+            title = R.string.localizable.operation_edit_edit_title()
         }
 
         setupTableView()
@@ -64,7 +64,6 @@ final class OperationViewController: UIViewController {
 
         viewModel.onItemChanged = { [weak self] _ in
             self?.tableView.reloadData()
-//            self?.tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
         }
     }
 
@@ -85,7 +84,7 @@ final class OperationViewController: UIViewController {
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
         }
 
-        let title = viewModel.isCreatingMode ? R.string.localizable.wallet_edit_add_button() : R.string.localizable.wallet_edit_save_button()
+        let title = viewModel.isCreatingMode ? R.string.localizable.operation_edit_add_button() : R.string.localizable.operation_edit_edit_title()
         nextButton.setTitle(title, for: .normal)
         nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
     }
@@ -140,7 +139,7 @@ extension OperationViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: DefaultEditCell.identifier, for: indexPath)
         if let cell = cell as? DefaultEditCell {
             let model = viewModel.tableItems[indexPath.row]
-            cell.configure(title: model.title, subtitle: model.value)
+            cell.configure(with: DefaultEditCellConfiguration(title: model.title, subtitle: model.value))
         }
         cell.accessoryType = .disclosureIndicator
 

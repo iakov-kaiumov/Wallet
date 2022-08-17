@@ -30,7 +30,7 @@ final class CategoryViewModel {
     
     func loadData() {
         for i in 0..<10 {
-            categories.append(CategoryModel.getTestModel(i))
+            categories.append(CategoryModel.makeTestModel(i))
         }
         reloadData?()
     }

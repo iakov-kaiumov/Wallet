@@ -23,7 +23,7 @@ final class OperationViewModelFormatter: IOperationViewModelFormatter {
         guard let amount = operation?.operationBalance else {
             return ""
         }
-        return String(format: "%.2f", amount) + " $"
+        return amount.displayString()
     }
     
     func formatType(_ operation: OperationModel?) -> String {

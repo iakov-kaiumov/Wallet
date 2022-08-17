@@ -31,11 +31,24 @@ final class WalletEditViewModel {
     
     var onDataChanged: (() -> Void)?
     
-    var tableItems: [WalletEditTableItem] = [
-        WalletEditTableItem(type: .name, title: R.string.localizable.wallet_edit_name(), value: "Новый кошелек 1"),
-        WalletEditTableItem(type: .currency, title: R.string.localizable.wallet_edit_currency(), value: "USD"),
-        WalletEditTableItem(type: .limit, title: R.string.localizable.wallet_edit_limit(), value: "")
-    ]
+    var tableItems: [WalletEditTableItem]
+    
+    // MARK: - init
+    init() {
+        tableItems = [
+            WalletEditTableItem(type: .name, title: R.string.localizable.wallet_edit_name(), value: "Новый кошелек 1"),
+            WalletEditTableItem(type: .currency, title: R.string.localizable.wallet_edit_currency(), value: "USD"),
+            WalletEditTableItem(type: .limit, title: R.string.localizable.wallet_edit_limit(), value: "")
+        ]
+    }
+    
+    init(wallet: WalletModel) {
+        tableItems = [
+            WalletEditTableItem(type: .name, title: R.string.localizable.wallet_edit_name(), value: wallet.name ?? "Новый кошелек 1"),
+            WalletEditTableItem(type: .currency, title: R.string.localizable.wallet_edit_currency(), value: wallet.currency?.rawValue ?? "USD"),
+            WalletEditTableItem(type: .limit, title: R.string.localizable.wallet_edit_limit(), value: String(format: "%.2f", wallet.limit ?? 0.0))
+        ]
+    }
     
     // MARK: - Public
     func itemIndex(for type: WalletEditFieldType) -> Int? {

@@ -19,7 +19,7 @@ final class OperationEditCoordinator: Coordinator {
     }
     
     func start() {
-        let model = OperationModel.getTestModel()
+        let model = OperationModel.makeTestModel()
         operationViewModel = OperationViewModel(model: model)
         operationViewModel?.delegate = self
         guard let operationViewModel = operationViewModel else {
@@ -31,19 +31,19 @@ final class OperationEditCoordinator: Coordinator {
 }
 
 extension OperationEditCoordinator: OperationViewModelDelegate {
-    func operationViewModelEnterAmount(_ currentValue: Double?) {
+    func operationViewModelEnterAmount(_ currentValue: Decimal?) {
         let viewModel = TextInputViewModel.makeOperationAmount(isModal: true)
         viewModel.delegate = self
         viewModel.text = ""
         if let currentValue = currentValue {
-            viewModel.text = String(format: "%.2f", currentValue)
+            viewModel.text = currentValue.displayString()
         }
         
         let controller = TextInputViewController(viewModel: viewModel)
         navigationController.present(controller, animated: true)
     }
     
-    func operationViewModelEnterType(_ currentValue: OperationType) {
+    func operationViewModelEnterType(_ currentValue: MoneyOperationType) {
         let viewModel = OperationTypeViewModel(isModal: true)
         viewModel.delegate = self
         viewModel.chosenType = currentValue
@@ -76,7 +76,7 @@ extension OperationEditCoordinator: TextInputViewModelDelegate {
         switch screen {
         case .operationAmount:
             if let value = value {
-                operationViewModel?.changeAmount(Double(value))
+                operationViewModel?.changeAmount(Decimal(Double(value) ?? 0))
             } else {
                 operationViewModel?.changeAmount(0.0)
             }
@@ -92,7 +92,7 @@ extension OperationEditCoordinator: OperationTypeViewModelDelegate {
         navigationController.dismiss(animated: true)
     }
     
-    func operationTypeViewModelValueChanged(_ value: OperationType?) {
+    func operationTypeViewModelValueChanged(_ value: MoneyOperationType?) {
         operationViewModel?.changeType(value)
     }
 }

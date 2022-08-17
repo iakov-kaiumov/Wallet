@@ -16,6 +16,8 @@ class ButtonFactory {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         button.backgroundColor = R.color.loginButton()
         button.setTitleColor(.white, for: .normal)
+        
         return button
     }
+
 }

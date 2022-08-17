@@ -12,7 +12,6 @@ protocol WalletsViewModelDelegate: AnyObject {
 }
 
 final class WalletsViewModel {
-    
     // MARK: - Properties
     weak var delegate: WalletsViewModelDelegate?
     

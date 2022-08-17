@@ -90,9 +90,11 @@ final class SpendChipView: UIView {
         addSubview(spendMoneyLabel)
         spendMoneyLabel.font = .systemFont(ofSize: 16, weight: .semibold)
         spendMoneyLabel.textColor = R.color.background()
+        spendMoneyLabel.numberOfLines = 2
         spendMoneyLabel.snp.makeConstraints {
-            $0.top.lessThanOrEqualTo(indicatorView.snp.bottom).inset(-16)
-            $0.bottom.leading.trailing.equalToSuperview().inset(16)
+            $0.top.equalTo(titleLabel.snp.bottom).inset(-12)
+            $0.bottom.lessThanOrEqualToSuperview().inset(16)
+            $0.leading.trailing.equalToSuperview().inset(16)
         }
     }
     

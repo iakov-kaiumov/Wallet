@@ -11,13 +11,15 @@ protocol WalletDetailesViewModelDelegate: AnyObject {
 
 final class WalletDetailesViewModel {
     // MARK: - Properties
-    typealias Dependencies = HasSpendChipModelBuilder
+    typealias Dependencies = HasSpendChipModelBuilder & HasOperationCellModelBuilder
     
-    var onDidUpdateIncomeChip: (() -> Void)?
-    var onDidUpdateExpenseChip: (() -> Void)?
+    var onDidUpdateWalletInfo: (() -> Void)?
+    var onDidUpdateOperations: (() -> Void)?
     
-    var incomeChipModel: SpendChipView.Model?
-    var expenseChipModel: SpendChipView.Model?
+    var walletInfoModel: OperationTableHeaderView.Model?
+    var operationSections: [OperationCellSection] = []
+    var walletAmount: String?
+    var walletName: String?
     
     weak var delegate: WalletDetailesViewModelDelegate?
     
@@ -30,19 +32,61 @@ final class WalletDetailesViewModel {
     
     // MARK: - Public Methods
     func load() {
-        // TODO: - Load chips from Network, replace stubs
-        let income = Decimal(130_000)
-        incomeChipModel = dependencies.spendChipModelBuilder.buildIncomeSpendChipModel(income: income)
-        
-        let spent = Decimal(120_000)
-        let limit = Decimal(100_000)
-        expenseChipModel = dependencies.spendChipModelBuilder.buildExpenseSpendChipModel(spending: spent,
-                                                                                       limit: limit)
-        onDidUpdateIncomeChip?()
-        onDidUpdateExpenseChip?()
+        loadWalletInfo()
+        loadOperations()
     }
     
     func addOperationButtonDidTap() {
         delegate?.walletDetailsViewModelAddOperation()
     }
+    
+    // MARK: - Private Methods
+    private func loadWalletInfo() {
+        // TODO: - Load info from Network, replace stubs
+        let income = Decimal(130_000)
+        let incomeChipModel = dependencies.spendChipModelBuilder.buildIncomeSpendChipModel(income: income)
+        
+        let spent = Decimal(120_000)
+        let limit = Decimal(100_000)
+        
+        let walletAmount = Decimal(200_000)
+        let walletName = "Кошелек 1"
+        self.walletAmount = walletAmount.displayString()
+        self.walletName = walletName
+        let expenseChipModel = dependencies.spendChipModelBuilder.buildExpenseSpendChipModel(spending: spent,
+                                                                                       limit: limit)
+        walletInfoModel = OperationTableHeaderView.Model(walletName: walletName,
+                                                    walletAmount: walletAmount.displayString(),
+            incomeChipModel: incomeChipModel,
+                                                  expenseChipModel: expenseChipModel,
+                                                  isLimitExceeded: true)
+        onDidUpdateWalletInfo?()
+    }
+    
+    private func loadOperations() {
+        // TODO: - Load operations from Network, replace stubs
+        operationSections = []
+        // first section
+        var firstSectionsModels: [OperationCellView.Model] = []
+        for _ in 0..<5 {
+            let model = OperationModel.makeTestModel()
+            let cellModel = dependencies.operationCellModelBuilder.buildOperationCellModel(from: model)
+            firstSectionsModels.append(cellModel)
+        }
+        operationSections.append(OperationCellSection(sectionName: "Сегодня",
+                                                      operationModels: firstSectionsModels))
+        
+        // second section
+        var secondSectionsModels: [OperationCellView.Model] = []
+        for _ in 0..<7 {
+            let model = OperationModel.makeTestModel()
+            let cellModel = dependencies.operationCellModelBuilder.buildOperationCellModel(from: model)
+            secondSectionsModels.append(cellModel)
+        }
+        operationSections.append(OperationCellSection(sectionName: "Вчера",
+                                                      operationModels: secondSectionsModels))
+        
+        onDidUpdateOperations?()
+    }
+    
 }

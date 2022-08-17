@@ -83,8 +83,9 @@ final class WalletsViewModel {
             wallet = hiddenWallets[indexPath.row]
         }
         
-        var walletToChange = wallets.filter { $0.id == wallet.id }.first
-        walletToChange?.isHidden.toggle()
+        for i in 0..<wallets.count where wallets[i].id == wallet.id {
+            wallets[i].isHidden.toggle()
+        }
         updateShownWallets()
         
         if !isHidden {

@@ -197,6 +197,21 @@ extension WalletsViewController: UITableViewDelegate {
         // Hide/show action
         let hide = UIContextualAction(style: .normal, title: "") { [weak self] (_, _, completionHandler) in
             self?.viewModel.onCellHide(indexPath)
+            
+            if let vc = self {
+                if vc.viewModel.isHidden {
+                    vc.walletsTableView.deleteRows(at: [indexPath], with: .fade)
+                } else {
+                    var section: Int
+                    if indexPath.section == 0 {
+                        section = 2
+                    } else {
+                        section = 0
+                    }
+                    let row = vc.walletsTableView.numberOfRows(inSection: section)
+                    vc.walletsTableView.moveRow(at: indexPath, to: IndexPath(row: row, section: section))
+                }
+            }
             completionHandler(true)
         }
         hide.image = R.image.actionHide()

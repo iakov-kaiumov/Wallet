@@ -76,6 +76,7 @@ final class SpendChipView: UIView {
     }
     
     private func setupTitleLabel() {
+        titleLabel.text = "-"
         titleLabel.font = .systemFont(ofSize: 13)
         titleLabel.layer.opacity = 0.6
         titleLabel.textColor = R.color.background()
@@ -88,6 +89,7 @@ final class SpendChipView: UIView {
     
     private func setupSpendMoneyLabel() {
         addSubview(spendMoneyLabel)
+        spendMoneyLabel.text = "-"
         spendMoneyLabel.font = .systemFont(ofSize: 16, weight: .semibold)
         spendMoneyLabel.textColor = R.color.background()
         spendMoneyLabel.numberOfLines = 2

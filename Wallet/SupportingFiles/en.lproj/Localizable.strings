@@ -1,0 +1,83 @@
+/* 
+  Localizable.strings
+  Wallet
+  
+*/
+
+
+"onboarding_title" = "Welcome to the Wallet";
+"onboarding_description" = "Here you can control your income and expenses";
+"onboarding_login_button" = "Sign in with Google";
+"onboarding_logout_button" = "Quit";
+
+"modal_close_button" = "Close";
+"default_next_button" = "Next";
+"default_save_button" = "Save";
+
+"error_unknown_title" = "Something went wrong";
+"error_connection_title" = "No internet connection";
+
+"alert_delete_button" = "Delete";
+"alert_cancel_button" = "Cancel";
+
+"currencies_show_more_button" = "Show more";
+"currencies_show_less_button" = "Show less";
+
+"wallet_edit_add_title" = "New wallet";
+"wallet_edit_edit_title" = "Wallet";
+"wallet_edit_add_button" = "Create wallet";
+"wallet_edit_save_button" = "Save";
+"wallet_edit_name" = "Name";
+"wallet_edit_currency" = "Currency";
+"wallet_edit_limit" = "Limit";
+
+"wallet_name_title" = "Enter wallet name";
+"wallet_name_prompt" = "Wallet name";
+"wallet_name_button_title" = "Next";
+
+"wallet_limit_title" = "Spending limits";
+"wallet_limit_prompt" = "Spending limits";
+
+// Wallets screen
+"wallets_balance" = "Total balance";
+"wallets_income" = "Total income";
+"wallets_expences" = "Total spendings";
+"wallets_button" = "Create wallet";
+"wallets_empty_label" = "You don't have any wallets yet";
+"wallets_delete_alert" = "Are you sure you want to delete your wallet?";
+
+"operation_edit_add_title" = "New transaction";
+"operation_edit_edit_title" = "Transaction";
+"operation_edit_add_button" = "Create transaction";
+"operation_edit_save_button" = "Save";
+"operation_edit_amount" = "Amount";
+"operation_edit_type" = "Type";
+"operation_edit_category" = "Category";
+"operation_edit_date" = "Date";
+
+"operations_empty_label" = "You don't have any transactions yet";
+"operations_create_button" = "Add operation";
+"operations_limit_label" = "You have exceeded the spending limit";
+"operations_income_chip" = "Income";
+"operations_spendings_chip" = "Spendings";
+
+"operation_amount_title" = "Enter the amount";
+"operation_amount_prompt" = "Transaction amount";
+
+"operation_type_spending" = "Spendings";
+"operation_type_income" = "Income";
+
+// New category screen
+"newcategory_title" = "New category";
+"newcategory_name" = "Name";
+"newcategory_type" = "Type";
+"newcategory_icon" = "Icon";
+"newcategory_select" = "Color";
+
+"category_picker_title" = "Select a category";
+
+// Icon picker screen
+"icon_picker_title" = "New icon";
+"icon_picker_section_color" = "Select color";
+"icon_picker_section_icon" = "Select icon";
+"icon_picker_save_button" = "Save";

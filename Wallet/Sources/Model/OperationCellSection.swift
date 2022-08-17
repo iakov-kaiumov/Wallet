@@ -7,5 +7,5 @@ import Foundation
 
 struct OperationCellSection {
     let sectionName: String
-    let operationModels: [OperationCellView.Model]
+    var operationModels: [OperationCellView.Model]
 }

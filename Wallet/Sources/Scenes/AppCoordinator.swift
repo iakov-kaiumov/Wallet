@@ -33,7 +33,7 @@ final class AppCoordinator: Coordinator {
         navigationController.navigationBar.tintColor = R.color.accentPurple()
         
         dependencies.signInService.checkSignInStatus { [weak self] isSignedIn in
-            if !isSignedIn {
+            if isSignedIn {
                 self?.startWallets()
             } else {
                 self?.startOnboarding()
@@ -46,7 +46,7 @@ final class AppCoordinator: Coordinator {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.errorPopupViewModel?.showErrorPopup()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
                 self.errorPopupViewModel?.hideErrorPopup()
             }
         }

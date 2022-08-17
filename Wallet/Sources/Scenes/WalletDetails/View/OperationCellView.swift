@@ -16,13 +16,17 @@ final class OperationCellView: UITableViewCell {
         let moneySpend: String
         let timestamp: String
         let icon: UIImage?
-        
+        var isSkeleton: Bool = false
         static func makeTestModel() -> Model {
             Model(title: "Супермаркеты",
                   operationType: "Траты",
                   moneySpend: "100 000 ₽",
                   timestamp: "15:00",
                   icon: R.image.settingsButton())
+        }
+        
+        static func makeSkeleton() -> Model {
+            Model(title: "", operationType: "", moneySpend: "", timestamp: "", icon: nil, isSkeleton: true)
         }
     }
     // MARK: - Properties

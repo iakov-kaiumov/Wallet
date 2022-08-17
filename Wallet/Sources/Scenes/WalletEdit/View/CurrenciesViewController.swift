@@ -143,7 +143,7 @@ extension CurrenciesViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: ShowMoreCell.identifier, for: indexPath)
             
             if let cell = cell as? ShowMoreCell {
-                cell.configure(isShortMode: viewModel.isShortMode)
+                cell.configure(viewModel.getShowMoreCellModel())
             }
             
             return cell

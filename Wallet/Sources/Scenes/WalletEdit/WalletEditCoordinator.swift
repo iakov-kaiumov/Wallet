@@ -30,7 +30,7 @@ final class WalletEditCoordinator: Coordinator {
         navigationController.pushViewController(controller, animated: true)
     }
     
-    func start(isCreatingMode: Bool) {
+    func start(isCreatingMode: Bool, wallet: WalletModel? = nil) {
         walletViewModel.isCreatingMode = isCreatingMode
         if isCreatingMode {
             let viewModel = TextInputViewModel.makeWalletName(isModal: false)
@@ -38,6 +38,9 @@ final class WalletEditCoordinator: Coordinator {
             let controller = TextInputViewController(viewModel: viewModel)
             navigationController.pushViewController(controller, animated: true)
         } else {
+            if let wallet = wallet {
+                walletViewModel = WalletEditViewModel(wallet: wallet)
+            }
             start()
         }
     }

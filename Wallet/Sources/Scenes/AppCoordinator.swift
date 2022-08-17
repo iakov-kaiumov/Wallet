@@ -87,4 +87,5 @@ extension AppCoordinator: WalletsCoordinatorDelegate {
         childCoordinators = []
         startOnboarding()
     }
+    
 }

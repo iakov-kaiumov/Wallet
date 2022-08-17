@@ -43,3 +43,10 @@ class DataService {
     }
 
 }
+
+extension DataService {
+    func getPerson() -> CDPerson? {
+        let request = CDPerson.fetchRequest()
+        return try? persistentContainer.viewContext.fetch(request).first
+    }
+}

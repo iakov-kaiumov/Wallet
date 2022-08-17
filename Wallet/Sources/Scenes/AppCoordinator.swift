@@ -30,6 +30,8 @@ final class AppCoordinator: Coordinator {
     var errorPopupViewModel: ErrorPopupViewModel?
     
     func start() {
+        showLaunchScreen()
+        
         navigationController.navigationBar.tintColor = R.color.accentPurple()
         
         dependencies.signInService.checkSignInStatus { [weak self] isSignedIn in
@@ -51,11 +53,24 @@ final class AppCoordinator: Coordinator {
             }
         }
         
-        createUser()
+//        createUser()
     }
     
     func createUser() {
-        dependencies.dataService.createUser(email: "test@example.com")
+        dependencies.dataService.createUser(email: "test@example.com") {
+            self.dependencies.dataService.getCategories(for: .SPENDING) { values in
+                print("Categories")
+                values.forEach {
+                    print($0.name)
+                }
+            }
+        }
+    }
+    
+    private func showLaunchScreen() {
+        let storyboard = UIStoryboard(name: "LaunchScreen", bundle: nil)
+        let launchScreen = storyboard.instantiateViewController(withIdentifier: "LaunchScreen") as UIViewController
+        navigationController.setViewControllers([launchScreen], animated: false)
     }
     
     private func startOnboarding() {

@@ -20,6 +20,8 @@ final class WalletsViewModel {
     var userData: PersonModel
     var currencyData: CurrenciesModel
     
+    var reloadData: (() -> Void)?
+    
     // MARK: - Init
     init() {
         userData = PersonModel.getTestModel()
@@ -59,9 +61,12 @@ final class WalletsViewModel {
     
     // MARK: - Private Methods
     private func loadWallets() {
-        for i in 1...10 {
-            wallets.append(WalletModel.getTestModel(i))
+        // TODO: - Add proxy services loading
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            for i in 1...10 {
+                self.wallets.append(WalletModel.getTestModel(i))
+            }
+            self.reloadData?()
         }
     }
-
 }

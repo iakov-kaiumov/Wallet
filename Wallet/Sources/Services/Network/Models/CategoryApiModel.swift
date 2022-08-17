@@ -9,9 +9,9 @@ public struct CategoryApiModel: Codable {
         case income = "INCOME"
         case spending = "SPENDING"
     }
-    public var id: Int?
+    public var id: Int64?
     public var name: String
     public var type: CategoryType?
     public var color: String
-    public var iconId: Int?
+    public var iconId: Int64?
 }

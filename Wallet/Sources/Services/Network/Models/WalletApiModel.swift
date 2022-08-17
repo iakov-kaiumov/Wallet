@@ -5,8 +5,8 @@
 import Foundation
 
 public struct WalletApiModel: Codable {
-    public var id: Int?
-    public var personId: Int?
+    public var id: Int64?
+    public var personId: Int64?
     public var name: String
     public var currency: String?
     public var amountLimit: Decimal?

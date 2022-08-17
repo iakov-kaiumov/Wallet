@@ -75,6 +75,10 @@ final class WalletsViewController: UIViewController {
         setupWalletsTableView()
         setupCreateWalletButton()
         setupEmptyLabel()
+        
+        viewModel.reloadData = { [weak self] in
+            self?.walletsTableView.reloadData()
+        }
     }
     
     private func setupSignOutButton() {

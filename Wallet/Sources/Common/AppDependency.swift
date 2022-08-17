@@ -39,14 +39,6 @@ final class AppDependency {
         let cacheService = CacheService()
         self.proxyService = ProxyService(networkService: networkService,
                                          cacheService: cacheService)
-        self.spendChipBuilder = SpendChipModelBuilder()
-    }
-}
-
-// MARK: - HasSpendChipModelBuilder
-extension AppDependency: HasSpendChipModelBuilder {
-    var spendChipModelBuilder: SpendChipModelBuilder {
-        return spendChipBuilder
     }
 }
 

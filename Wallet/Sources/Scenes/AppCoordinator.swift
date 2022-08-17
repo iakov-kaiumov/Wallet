@@ -20,6 +20,7 @@ final class AppCoordinator: Coordinator {
          dependencies: AppDependency = AppDependency()) {
         self.navigationController = navigationController
         self.dependencies = dependencies
+        setupNavigationBar()
     }
     
     convenience init(scene: UIWindowScene) {
@@ -39,7 +40,7 @@ final class AppCoordinator: Coordinator {
         navigationController.navigationBar.tintColor = R.color.accentPurple()
         
         dependencies.signInService.checkSignInStatus { [weak self] isSignedIn in
-            if !isSignedIn {
+            if isSignedIn {
                 self?.startWallets()
             } else {
                 self?.startOnboarding()
@@ -82,6 +83,13 @@ final class AppCoordinator: Coordinator {
         coordinator.parent = self
         self.childCoordinators.append(coordinator)
         coordinator.start()
+    }
+    
+    private func setupNavigationBar() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.backgroundColor = R.color.accentColor()
+        navigationController.navigationBar.standardAppearance = appearance
     }
 }
 

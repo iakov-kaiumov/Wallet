@@ -199,6 +199,7 @@ extension WalletsViewController: UITableViewDelegate {
             self?.viewModel.onCellHide(indexPath)
             
             if let vc = self {
+                vc.walletsTableView.beginUpdates()
                 if vc.viewModel.isHidden {
                     vc.walletsTableView.deleteRows(at: [indexPath], with: .fade)
                 } else {
@@ -211,6 +212,12 @@ extension WalletsViewController: UITableViewDelegate {
                     let row = vc.walletsTableView.numberOfRows(inSection: section)
                     vc.walletsTableView.moveRow(at: indexPath, to: IndexPath(row: row, section: section))
                 }
+                if vc.walletsTableView.numberOfRows(inSection: 1) == 1 && !vc.viewModel.haveHiddenWallets() {
+                    vc.walletsTableView.deleteRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
+                } else if vc.walletsTableView.numberOfRows(inSection: 1) == 0 && vc.viewModel.haveHiddenWallets() {
+                    vc.walletsTableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
+                }
+                vc.walletsTableView.endUpdates()
             }
             completionHandler(true)
         }

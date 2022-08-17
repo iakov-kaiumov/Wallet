@@ -107,7 +107,7 @@ final class WalletsViewModel {
     
     // MARK: - Private Methods
     private func loadWallets() {
-        for i in 1...15 {
+        for i in 1...5 {
             wallets.append(WalletModel.getTestModel(i))
         }
         

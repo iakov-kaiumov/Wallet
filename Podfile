@@ -9,4 +9,5 @@ target 'Wallet' do
   pod 'R.swift'
   pod 'SnapKit'
   pod 'GoogleSignIn'
+  pod 'SwiftKeychainWrapper'
 end

@@ -50,6 +50,12 @@ final class AppCoordinator: Coordinator {
                 self.errorPopupViewModel?.hideErrorPopup()
             }
         }
+        
+        createUser()
+    }
+    
+    func createUser() {
+        dependencies.dataService.createUser(email: "test@example.com")
     }
     
     private func startOnboarding() {

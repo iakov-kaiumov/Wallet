@@ -17,6 +17,8 @@ protocol HasSignInService {
 final class AppDependency {
     private let spendChipBuilder = SpendChipModelBuilder()
     private let signIn = SignInService()
+    
+    let dataService: ProxyService = ProxyService()
 }
 
 // MARK: Has Protocols Implementations

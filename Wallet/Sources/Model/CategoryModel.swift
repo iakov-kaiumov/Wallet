@@ -10,7 +10,7 @@ enum CategoryType: String, Codable {
 }
 
 struct CategoryModel: Codable {
-    var id: Int
+    var id: Int?
     
     var name: String?
     

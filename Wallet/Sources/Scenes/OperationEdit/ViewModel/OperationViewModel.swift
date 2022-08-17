@@ -16,9 +16,9 @@ struct OperationEditTableItem {
 }
 
 protocol OperationViewModelDelegate: AnyObject {
-    func operationViewModelEnterAmount(_ currentValue: Double?)
+    func operationViewModelEnterAmount(_ currentValue: Decimal?)
     
-    func operationViewModelEnterType(_ currentValue: OperationType)
+    func operationViewModelEnterType(_ currentValue: MoneyOperationType)
     
     func operationViewModelEnterCategory(_ currentValue: CategoryModel?)
     
@@ -93,14 +93,14 @@ final class OperationViewModel {
         delegate?.operationViewModelDidFinish()
     }
     
-    func changeAmount(_ value: Double?) {
+    func changeAmount(_ value: Decimal?) {
         guard let index = itemIndex(for: .amount) else { return }
         model.operationBalance = value
         tableItems[index].value = formatter.formatAmount(model)
         onItemChanged?(index)
     }
     
-    func changeType(_ value: OperationType?) {
+    func changeType(_ value: MoneyOperationType?) {
         guard let index = itemIndex(for: .type) else { return }
         model.type = value
         tableItems[index].value = formatter.formatType(model)

@@ -50,7 +50,7 @@ extension NewCategoryCoordinator: NewCategoryViewModelDelegate {
         navigationController.present(controller, animated: true)
     }
     
-    func newCategoryViewModelEnterType(_ currentValue: CategoryType) {
+    func newCategoryViewModelEnterType(_ currentValue: MoneyOperationType) {
         let viewModel = CategoryTypeViewModel(isModal: true)
         viewModel.delegate = self
         viewModel.chosenType = currentValue
@@ -92,7 +92,7 @@ extension NewCategoryCoordinator: CategoryTypeViewModelDelegate {
         navigationController.dismiss(animated: true)
     }
     
-    func categoryTypeViewModelValueChanged(_ value: CategoryType?) {
+    func categoryTypeViewModelValueChanged(_ value: MoneyOperationType?) {
         newCategoryViewModel?.changeType(value)
     }
 }

@@ -6,10 +6,6 @@
 import Foundation
 
 // MARK: Has Protocols
-protocol HasSpendChipModelBuilder {
-    var spendChipModelBuilder: SpendChipModelBuilder { get }
-}
-
 protocol HasSignInService {
     var signInService: GoogleSignInServiceProtocol { get }
 }
@@ -22,11 +18,20 @@ protocol HasWalletServiceProtocol {
     var walletNetworkService: WalletServiceProtocol { get }
 }
 
+protocol HasSpendChipModelBuilder {
+    var spendChipModelBuilder: SpendChipBuilderProtocol { get }
+}
+
+protocol HasOperationCellModelBuilder {
+    var operationCellModelBuilder: OperationCellModelBuilderProtocol { get }
+}
+
 final class AppDependency {
     private let proxyService: ProxyService
     
     // Builders
-    private let spendChipBuilder: SpendChipModelBuilder
+    private let spendChipBuilder = SpendChipModelBuilder()
+    private let operationCellBuilder = OperationCellModelBuilder()
     
     init() {
         let signInService = SignInService()
@@ -63,5 +68,19 @@ extension AppDependency: HasPersonNetworkServiceProtocol {
 extension AppDependency: HasWalletServiceProtocol {
     var walletNetworkService: WalletServiceProtocol {
         proxyService
+    }
+}
+
+// MARK: HasSpendChipModelBuilder
+extension AppDependency: HasSpendChipModelBuilder {
+    var spendChipModelBuilder: SpendChipBuilderProtocol {
+        return spendChipBuilder
+    }
+}
+
+// MARK: OperationCellModelBuilder
+extension AppDependency: HasOperationCellModelBuilder {
+    var operationCellModelBuilder: OperationCellModelBuilderProtocol {
+        return operationCellBuilder
     }
 }

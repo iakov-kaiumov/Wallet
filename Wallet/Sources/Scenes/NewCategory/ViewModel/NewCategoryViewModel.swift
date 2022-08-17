@@ -19,7 +19,7 @@ struct NewCategoryItem {
 protocol NewCategoryViewModelDelegate: AnyObject {
     func newCategoryViewModelEnterName(_ currentValue: String?)
     
-    func newCategoryViewModelEnterType(_ currentValue: CategoryType)
+    func newCategoryViewModelEnterType(_ currentValue: MoneyOperationType)
     
     func newCategoryViewModelEnterIcon()
     
@@ -83,7 +83,7 @@ final class NewCategoryViewModel {
         onItemChanged?(index)
     }
     
-    func changeType(_ value: CategoryType?) {
+    func changeType(_ value: MoneyOperationType?) {
         guard let index = itemIndex(for: .type) else { return }
         model.type = value
         tableItems[index].value = formatter.formatType(model)

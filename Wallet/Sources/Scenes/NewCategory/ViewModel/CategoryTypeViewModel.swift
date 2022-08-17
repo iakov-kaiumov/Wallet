@@ -8,15 +8,15 @@ import Foundation
 protocol CategoryTypeViewModelDelegate: AnyObject {
     func categoryTypeViewModelCloseButtonDidTap()
     
-    func categoryTypeViewModelValueChanged(_ value: CategoryType?)
+    func categoryTypeViewModelValueChanged(_ value: MoneyOperationType?)
 }
 
 final class CategoryTypeViewModel {
     var isModal: Bool
     
-    var types: [CategoryType] = CategoryType.allCases
+    var types: [MoneyOperationType] = MoneyOperationType.allCases
     
-    var chosenType: CategoryType = .INCOME
+    var chosenType: MoneyOperationType = .INCOME
     
     weak var delegate: CategoryTypeViewModelDelegate?
     

@@ -8,15 +8,15 @@ import Foundation
 protocol OperationTypeViewModelDelegate: AnyObject {
     func operationTypeViewModelCloseButtonDidTap()
     
-    func operationTypeViewModelValueChanged(_ value: OperationType?)
+    func operationTypeViewModelValueChanged(_ value: MoneyOperationType?)
 }
 
 final class OperationTypeViewModel {
     var isModal: Bool
     
-    var types: [OperationType] = OperationType.allCases
+    var types: [MoneyOperationType] = MoneyOperationType.allCases
     
-    var chosenType: OperationType = .INCOME
+    var chosenType: MoneyOperationType = .INCOME
     
     weak var delegate: OperationTypeViewModelDelegate?
     

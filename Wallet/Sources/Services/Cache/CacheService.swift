@@ -6,13 +6,13 @@
 import Foundation
 import CoreData
 
-class DataService {
+class CacheService {
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "wallet")
         container.loadPersistentStores(completionHandler: { (_, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
-                 
+                
                 /*
                  Typical reasons for an error here include:
                  * The parent directory does not exist, cannot be created, or disallows writing.
@@ -26,10 +26,10 @@ class DataService {
         })
         return container
     }()
-
+    
     // MARK: - Core Data Saving support
-
-    func saveContext () {
+    
+    private func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
             do {
@@ -41,12 +41,5 @@ class DataService {
             }
         }
     }
-
-}
-
-extension DataService {
-    func getPerson() -> CDPerson? {
-        let request = CDPerson.fetchRequest()
-        return try? persistentContainer.viewContext.fetch(request).first
-    }
+    
 }

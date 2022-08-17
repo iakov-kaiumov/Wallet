@@ -53,18 +53,17 @@ final class AppCoordinator: Coordinator {
             }
         }
         
-//        createUser()
     }
     
     func createUser() {
-        dependencies.dataService.createUser(email: "test@example.com") {
-            self.dependencies.dataService.getCategories(for: .SPENDING) { values in
-                print("Categories")
-                values.forEach {
-                    print($0.name)
-                }
-            }
-        }
+//        dependencies.dataService.createUser(email: "test@example.com") {
+//            self.dependencies.dataService.getCategories(for: .SPENDING) { values in
+//                print("Categories")
+//                values.forEach {
+//                    print($0.name)
+//                }
+//            }
+//        }
     }
     
     private func showLaunchScreen() {

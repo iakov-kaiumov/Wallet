@@ -9,6 +9,11 @@ final class ShowMoreCell: UITableViewCell {
     
     // MARK: - Properties
     
+    struct Model {
+        var text: String?
+        var isShowMore: Bool
+    }
+    
     private let titleLabel: UILabel = UILabel()
     
     private let arrowImage: UIImageView = UIImageView()
@@ -24,9 +29,9 @@ final class ShowMoreCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure(isShortMode: Bool) {
-        titleLabel.text = isShortMode ? R.string.localizable.currencies_show_more_button() : R.string.localizable.currencies_show_less_button()
-        arrowImage.image = isShortMode ? R.image.arrow_down() : R.image.arrow_up()
+    func configure(_ model: Model) {
+        titleLabel.text = model.text
+        arrowImage.image = model.isShowMore ? R.image.arrow_down() : R.image.arrow_up()
     }
     
     // MARK: - Private Methods

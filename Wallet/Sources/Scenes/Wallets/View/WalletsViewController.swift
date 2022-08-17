@@ -37,6 +37,10 @@ final class WalletsViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
+    override func viewDidLayoutSubviews() {
+        
+    }
+    
     // MARK: - Actions
     @objc private func createWalletButtonAction() {
         viewModel.createWalletButtonDidTap()
@@ -207,6 +211,14 @@ extension WalletsViewController: UITableViewDataSource {
         
         if let cell = cell as? WalletCell {
             cell.configure(model: viewModel.wallets[indexPath.row])
+            cell.setupSkeleton(
+                insets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16),
+                cornerRadius: 16
+            )
+            cell.showSkeleton(true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                cell.showSkeleton(false)
+            }
         }
             
         return cell

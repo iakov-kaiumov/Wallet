@@ -20,10 +20,11 @@ protocol WalletEditViewModelDelegate: AnyObject {
     
     func walletEditViewModelEnterLimit(_ currentValue: String?)
     
-    func walletEditViewModelDidFinish()
+    func walletEditViewModelDidFinish(walletID: Int)
 }
 
 final class WalletEditViewModel {
+    typealias Dependencies = HasWalletServiceProtocol
     // MARK: - Properties
     var isCreatingMode: Bool = true
     
@@ -31,13 +32,24 @@ final class WalletEditViewModel {
     
     var onDataChanged: (() -> Void)?
     
+    var walletModel: WalletModel
+    
     var tableItems: [WalletEditTableItem] = [
         WalletEditTableItem(type: .name, title: R.string.localizable.wallet_edit_name(), value: "Новый кошелек 1"),
         WalletEditTableItem(type: .currency, title: R.string.localizable.wallet_edit_currency(), value: "USD"),
         WalletEditTableItem(type: .limit, title: R.string.localizable.wallet_edit_limit(), value: "")
     ]
     
-    // MARK: - Public
+    private var dependencies: Dependencies
+    
+    // MARK: - Init
+    init(dependencies: Dependencies,
+         wallet: WalletModel = .makeCleanModel()) {
+        self.dependencies = dependencies
+        self.walletModel = wallet
+    }
+        
+    // MARK: - Public Methods
     func itemIndex(for type: WalletEditFieldType) -> Int? {
         return tableItems.firstIndex(where: { $0.type == type })
     }
@@ -53,8 +65,20 @@ final class WalletEditViewModel {
         }
     }
     
-    func nextButtonDidTap() {
-        delegate?.walletEditViewModelDidFinish()
+    func mainButtonDidTap() {
+        if isCreatingMode {
+            dependencies.walletNetworkService.walletServiceCreate(walletModel.makeApiModel()) { result in
+                switch result {
+                case .success(let model):
+                    print("Nice. \(model)")
+                    self.delegate?.walletEditViewModelDidFinish(walletID: model.id)
+                case .failure(let error):
+                    print("\(error)")
+                }
+            }
+             
+        }
+ 
     }
     
     func changeName(_ value: String?) {

@@ -6,6 +6,7 @@
 import UIKit
 
 final class OperationEditCoordinator: Coordinator {
+    weak var parent: Coordinator?
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     var dependencies: AppDependency
@@ -27,6 +28,10 @@ final class OperationEditCoordinator: Coordinator {
         }
         let controller = OperationViewController(viewModel: operationViewModel)
         navigationController.pushViewController(controller, animated: true)
+    }
+    
+    func callBanner(type: ErrorPopupType) {
+        parent?.callBanner(type: type)
     }
 }
 

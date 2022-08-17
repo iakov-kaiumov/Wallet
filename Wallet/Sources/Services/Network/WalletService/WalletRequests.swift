@@ -8,7 +8,7 @@ import Foundation
 final class WalletRequestsFactory {
     private static let basePath = "/wallet"
     
-    static func makeGetRequest(walletId: Int, personId: Int) -> some IRequest {
+    static func makeGetRequest(walletId: Int, personId: Int) -> DefaultSimpleRequest<WalletApiModel> {
         DefaultSimpleRequest<WalletApiModel>(
             httpMethod: .GET,
             path: "\(basePath)/\(walletId)",
@@ -16,15 +16,15 @@ final class WalletRequestsFactory {
         )
     }
     
-    static func makeGetAllReqeust(personId: Int) -> some IRequest {
-        DefaultSimpleRequest<WalletApiModel>(
+    static func makeGetAllReqeust(personId: Int) -> DefaultSimpleRequest<[WalletModel]> {
+        DefaultSimpleRequest<[WalletModel]>(
             httpMethod: .GET,
             path: basePath,
             queryParameters: ["person_id": "\(personId)"]
         )
     }
     
-    static func makeCreateReqeust(personId: Int, wallet: WalletApiModel) -> some IRequest {
+    static func makeCreateReqeust(personId: Int, wallet: WalletApiModel) -> DefaultBodyRequest<WalletApiModel, WalletApiModel> {
         DefaultBodyRequest<WalletApiModel, WalletApiModel>(
             httpMethod: .POST,
             path: basePath,
@@ -34,7 +34,7 @@ final class WalletRequestsFactory {
         )
     }
     
-    static func makeUpdateReqeust(walletId: Int, personId: Int, wallet: WalletApiModel) -> some IRequest {
+    static func makeUpdateReqeust(walletId: Int, personId: Int, wallet: WalletApiModel) -> DefaultBodyRequest<WalletApiModel, WalletApiModel> {
         DefaultBodyRequest<WalletApiModel, WalletApiModel>(
             httpMethod: .POST,
             path: "\(basePath)/\(walletId)",
@@ -44,7 +44,7 @@ final class WalletRequestsFactory {
         )
     }
     
-    static func makeDeleteRequest(walletId: Int, personId: Int) -> some IRequest {
+    static func makeDeleteRequest(walletId: Int, personId: Int) -> DefaultSimpleRequest<WalletApiModel> {
         DefaultSimpleRequest<WalletApiModel>(
             httpMethod: .DELETE,
             path: "\(basePath)/\(walletId)",

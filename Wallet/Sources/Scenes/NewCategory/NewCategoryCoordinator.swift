@@ -9,11 +9,7 @@ protocol NewCategoryCoordinatorDelegate: AnyObject {
 }
 
 final class NewCategoryCoordinator: Coordinator {
-    init(navigationController: UINavigationController,
-         dependencies: AppDependency) {
-        self.navigationController = navigationController
-        self.dependencies = dependencies
-    }
+    weak var parent: Coordinator?
     
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
@@ -23,6 +19,13 @@ final class NewCategoryCoordinator: Coordinator {
     
     var newCategoryViewModel: NewCategoryViewModel?
     
+    // MARK: - Init
+    init(navigationController: UINavigationController,
+         dependencies: AppDependency) {
+        self.navigationController = navigationController
+        self.dependencies = dependencies
+    }
+    
     func start() {
         newCategoryViewModel = NewCategoryViewModel(model: CategoryModel.newCategory())
         newCategoryViewModel?.delegate = self
@@ -30,6 +33,10 @@ final class NewCategoryCoordinator: Coordinator {
             let viewController = NewCategoryViewController(viewModel: newCategoryViewModel)
             navigationController.pushViewController(viewController, animated: true)
         }
+    }
+    
+    func callBanner(type: ErrorPopupType) {
+        parent?.callBanner(type: type)
     }
 }
 

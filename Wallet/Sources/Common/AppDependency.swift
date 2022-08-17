@@ -11,25 +11,27 @@ protocol HasSpendChipModelBuilder {
 }
 
 protocol HasSignInService {
-    var signInService: ISignInService { get }
+    var signInService: GoogleSignInServiceProtocol { get }
 }
 
 protocol HasPersonNetworkServiceProtocol {
     var personNetworkService: PersonNetworkServiceProtocol { get }
 }
 
+protocol HasWalletServiceProtocol {
+    var walletNetworkService: WalletServiceProtocol { get }
+}
+
 final class AppDependency {
-    private let signIn: SignInService
-    
     private let proxyService: ProxyService
     
     // Builders
     private let spendChipBuilder: SpendChipModelBuilder
     
     init() {
-        let networkService = NetworkService()
+        let signInService = SignInService()
+        let networkService = NetworkService(signInService: signInService)
         let cacheService = CacheService()
-        self.signIn = SignInService()
         self.proxyService = ProxyService(networkService: networkService,
                                          cacheService: cacheService)
         self.spendChipBuilder = SpendChipModelBuilder()
@@ -45,14 +47,21 @@ extension AppDependency: HasSpendChipModelBuilder {
 
 // MARK: - HasSignInService
 extension AppDependency: HasSignInService {
-    var signInService: ISignInService {
-        return signIn
+    var signInService: GoogleSignInServiceProtocol {
+        return proxyService
     }
 }
 
 // MARK: - HasPersonNetworkServiceProtocol
 extension AppDependency: HasPersonNetworkServiceProtocol {
     var personNetworkService: PersonNetworkServiceProtocol {
+        proxyService
+    }
+}
+
+// MARK: - HasWalletServiceProtocol
+extension AppDependency: HasWalletServiceProtocol {
+    var walletNetworkService: WalletServiceProtocol {
         proxyService
     }
 }

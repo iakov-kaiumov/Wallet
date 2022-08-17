@@ -8,7 +8,7 @@
 import Foundation
 import GoogleSignIn
 
-protocol ISignInService {
+protocol GoogleSignInServiceProtocol {
     func handle(_ url: URL) -> Bool
     
     func checkSignInStatus(_ completion: @escaping (_ isSignedIn: Bool) -> Void)
@@ -16,9 +16,12 @@ protocol ISignInService {
     func signOut()
     
     func signIn(presenting controller: UIViewController, completion: @escaping (_ success: Bool) -> Void)
+    
+    func signInServer(with idToken: String,
+                      completion: @escaping (_ success: Bool) -> Void)
 }
 
-class SignInService: ISignInService {
+class SignInService: GoogleSignInServiceProtocol {
     // MARK: - Public methods
     func handle(_ url: URL) -> Bool {
         return GIDSignIn.sharedInstance.handle(url)
@@ -81,7 +84,7 @@ class SignInService: ISignInService {
         return nil
     }
     
-    private func signInServer(with idToken: String, completion: @escaping (_ success: Bool) -> Void) {
+   func signInServer(with idToken: String, completion: @escaping (_ success: Bool) -> Void) {
         completion(true)
         return
         

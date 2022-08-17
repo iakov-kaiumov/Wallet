@@ -6,6 +6,7 @@
 import UIKit
 
 final class WalletDetailsCoordinator: Coordinator {
+    weak var parent: Coordinator?
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     var dependencies: AppDependency
@@ -20,6 +21,10 @@ final class WalletDetailsCoordinator: Coordinator {
         viewModel.delegate = self
         let viewController = WalletDetailesViewController(viewModel: viewModel)
         navigationController.pushViewController(viewController, animated: true)
+    }
+    
+    func callBanner(type: ErrorPopupType) {
+        parent?.callBanner(type: type)
     }
 }
 

@@ -6,10 +6,12 @@
 import Foundation
 
 class NetworkService {
-    private let requestConstructor: IRequestConstructor = RequestConstructor()
+    let signInService: SignInService
     let requestProcessor: IRequestProcessor
+    private let requestConstructor: IRequestConstructor = RequestConstructor()
     
-    init() {
+    init(signInService: SignInService) {
+        self.signInService = signInService
         let configuration: URLSessionConfiguration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = [
             "accept": "application/json",

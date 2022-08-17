@@ -6,11 +6,13 @@
 import UIKit
 
 final class WalletEditCoordinator: Coordinator {
+    weak var parent: Coordinator?
+    
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     var dependencies: AppDependency
     
-    private var walletViewModel: WalletEditViewModel = WalletEditViewModel()
+    private var walletViewModel: WalletEditViewModel
     
     private var isFirstStart: Bool = true
     
@@ -18,6 +20,7 @@ final class WalletEditCoordinator: Coordinator {
          dependencies: AppDependency = AppDependency()) {
         self.navigationController = navigationController
         self.dependencies = dependencies
+        walletViewModel = WalletEditViewModel(dependencies: dependencies)
     }
     
     func start() {
@@ -38,11 +41,23 @@ final class WalletEditCoordinator: Coordinator {
             start()
         }
     }
+    
+    func goToDetails(walletID: Int) {
+        // TODO: - Use wallet id
+        let coordinator = WalletDetailsCoordinator(navigationController: navigationController, dependencies: dependencies)
+        childCoordinators.append(coordinator)
+        coordinator.parent = self
+        coordinator.start()
+    }
+    
+    func callBanner(type: ErrorPopupType) {
+        parent?.callBanner(type: type)
+    }
 }
 
 extension WalletEditCoordinator: WalletEditViewModelDelegate {
-    func walletEditViewModelDidFinish() {
-        
+    func walletEditViewModelDidFinish(walletID: Int) {
+        goToDetails(walletID: walletID)
     }
     
     func walletEditViewModelEnterName(_ currentValue: String?) {

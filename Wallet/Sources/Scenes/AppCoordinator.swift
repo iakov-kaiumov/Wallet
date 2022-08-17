@@ -6,6 +6,16 @@
 import UIKit
 
 final class AppCoordinator: Coordinator {
+    // MARK: - Properties
+    weak var parent: Coordinator?
+    var childCoordinators: [Coordinator] = []
+    var navigationController: UINavigationController
+    var dependencies: AppDependency
+    var window: UIWindow?
+    
+    var errorPopupViewModel: ErrorPopupViewModel?
+    
+    // MARK: - Init
     init(navigationController: UINavigationController,
          dependencies: AppDependency = AppDependency()) {
         self.navigationController = navigationController
@@ -22,20 +32,14 @@ final class AppCoordinator: Coordinator {
         self.window = window
     }
     
-    var childCoordinators: [Coordinator] = []
-    var navigationController: UINavigationController
-    var dependencies: AppDependency
-    var window: UIWindow?
-    
-    var errorPopupViewModel: ErrorPopupViewModel?
-    
+    // MARK: - Public Methods
     func start() {
         showLaunchScreen()
         
         navigationController.navigationBar.tintColor = R.color.accentPurple()
         
         dependencies.signInService.checkSignInStatus { [weak self] isSignedIn in
-            if isSignedIn {
+            if !isSignedIn {
                 self?.startWallets()
             } else {
                 self?.startOnboarding()
@@ -46,26 +50,16 @@ final class AppCoordinator: Coordinator {
             errorPopupViewModel = ErrorPopupViewModel(parent: window)
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.errorPopupViewModel?.showErrorPopup()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                self.errorPopupViewModel?.hideErrorPopup()
-            }
+    }
+    
+    func callBanner(type: ErrorPopupType) {
+        errorPopupViewModel?.showErrorPopup(type: type)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.errorPopupViewModel?.hideErrorPopup()
         }
-        
     }
     
-    func createUser() {
-//        dependencies.dataService.createUser(email: "test@example.com") {
-//            self.dependencies.dataService.getCategories(for: .SPENDING) { values in
-//                print("Categories")
-//                values.forEach {
-//                    print($0.name)
-//                }
-//            }
-//        }
-    }
-    
+    // MARK: - Private Methods
     private func showLaunchScreen() {
         let storyboard = UIStoryboard(name: "LaunchScreen", bundle: nil)
         let launchScreen = storyboard.instantiateViewController(withIdentifier: "LaunchScreen") as UIViewController
@@ -76,6 +70,7 @@ final class AppCoordinator: Coordinator {
         let coordinator = OnboardingCoordinator(navigationController: navigationController,
                                                 dependencies: dependencies)
         coordinator.delegate = self
+        coordinator.parent = self
         self.childCoordinators.append(coordinator)
         coordinator.start()
     }
@@ -84,17 +79,20 @@ final class AppCoordinator: Coordinator {
         let coordinator = WalletsCoordinator(navigationController: navigationController,
                                              dependencies: dependencies)
         coordinator.delegate = self
+        coordinator.parent = self
         self.childCoordinators.append(coordinator)
         coordinator.start()
     }
 }
 
+// MARK: - OnboardingCoordinatorDelegate
 extension AppCoordinator: OnboardingCoordinatorDelegate {
     func onboardingCoordinatorSuccessfulSignIn() {
         startWallets()
     }
 }
 
+// MARK: - WalletsCoordinatorDelegate
 extension AppCoordinator: WalletsCoordinatorDelegate {
     func walletsCoordinatorSignOut() {
         dependencies.signInService.signOut()

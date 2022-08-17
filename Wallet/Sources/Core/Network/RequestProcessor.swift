@@ -30,7 +30,7 @@ final class RequestProcessor: IRequestProcessor {
             return
         }
         
-        session.dataTask(with: urlRequest) { [weak self] data, response, error in
+        let task = session.dataTask(with: urlRequest) { [weak self] data, response, error in
             guard let self = self else { return }
             
             if let networkError = NetworkError(data: data, response: response, error: error) {
@@ -49,6 +49,10 @@ final class RequestProcessor: IRequestProcessor {
             } catch {
                 completion(.failure(.decodingError(error)))
             }
-        }.resume()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            task.resume()
+        }
     }
 }

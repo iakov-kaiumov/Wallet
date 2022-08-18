@@ -25,6 +25,7 @@ final class CategoryViewModel {
     var operationType: MoneyOperationType
     
     var reloadData: (() -> Void)?
+    var showProgressView: ((_ isOn: Bool) -> Void)?
     
     lazy var iconBuilder = IconViewModelBuilder()
     lazy var categoryModelBuilder = CategoryModelBuilder()
@@ -37,12 +38,16 @@ final class CategoryViewModel {
     }
     
     func loadData() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.showProgressView?(true)
+        }
         dependencies.categoryService.categoryNetworkServiceGetAll(type: operationType.convertToCategoryType()) { [weak self] result in
             switch result {
             case .success(let models):
                 self?.categories = self?.categoryModelBuilder.build(models) ?? []
                 DispatchQueue.main.async {
                     self?.reloadData?()
+                    self?.showProgressView?(false)
                 }
             case .failure(let error):
                 DispatchQueue.main.async {

@@ -6,7 +6,7 @@
 import Foundation
 
 protocol CategoryServiceProtocol: AnyObject {
-    func categoryNetworkServiceGetAll(type: CategoryApiModel.CategoryType,
+    func categoryNetworkServiceGetAll(type: MoneyOperationType,
                                       completion: @escaping (Result<[CategoryApiModel], NetworkError>) -> Void)
     
     func categoryNetworkServiceCreate(_ category: CategoryApiModel,
@@ -14,10 +14,7 @@ protocol CategoryServiceProtocol: AnyObject {
 }
 
 extension NetworkService: CategoryServiceProtocol {
-    func categoryNetworkServiceGetAll(
-        type: CategoryApiModel.CategoryType,
-        completion: @escaping (Result<[CategoryApiModel], NetworkError>) -> Void
-    ) {
+    func categoryNetworkServiceGetAll(type: MoneyOperationType, completion: @escaping (Result<[CategoryApiModel], NetworkError>) -> Void) {
         let request = CategoryRequestsFactory.makeGetRequest(categoryType: type)
         requestProcessor.fetch(request) { result in
             completion(result)

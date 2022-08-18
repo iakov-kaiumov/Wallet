@@ -98,24 +98,30 @@ final class NewCategoryViewModel {
     }
     
     func changeIcon(iconId: Int, colorId: Int) {
+        guard let index = itemIndex(for: .icon) else { return }
         model.colorId = colorId
         model.iconId = iconId
-        tableItems[2].value = formatter.formatType(model)
-        onItemChanged?(2)
+        tableItems[index] = NewCategoryItem(type: .icon, title: R.string.localizable.newcategory_icon(), iconId: iconId, colorId: colorId)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.onItemChanged?(index)
+        }
     }
     
     func createCategory() {
-        let categoryModel = CategoryApiModel(name: model.name ?? "", type: model.type?.convertToCategoryType(), color: String(describing: model.colorId ?? 0), iconId: model.iconId)
+        let categoryModel = CategoryApiModel(id: 0, name: model.name ?? "", type: model.type, color: String(describing: model.colorId ?? 0), iconId: model.iconId)
         showProgressView?(true)
         dependencies.categoryService.categoryNetworkServiceCreate(categoryModel) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.showProgressView?(false)
-                switch result {
-                case .success(let model):
-                    print(model)
+            switch result {
+            case .success(let model):
+                print(model)
+                DispatchQueue.main.async {
+                    self?.showProgressView?(false)
                     self?.moveNext()
-                case .failure(let error):
-                    print(error)
+                }
+            case .failure(let error):
+                print(error)
+                DispatchQueue.main.async {
+                    self?.showProgressView?(false)
                     self?.showError(error: error)
                 }
             }

@@ -41,6 +41,10 @@ final class WalletsViewModel {
     }
     
     // MARK: - Public Methods
+    func load() {
+        loadWallets()
+    }
+    
     func selectWalletWithIndex(_ index: Int, section: Int) {
         var wallets: [WalletModel]
         if section == 0 {
@@ -117,15 +121,14 @@ final class WalletsViewModel {
             case .success(let walletModels):
                 self.wallets = walletModels.compactMap { WalletModel.fromApiModel($0) }
                 DispatchQueue.main.async {
-                    self.reloadData?()
+                    self.updateShownWallets()
+                    self.updateHiddenWallets()
+                    self.onDidLoad?()
                 }
             case .failure(let error):
                 self.delegate?.walletsViewModel(self, didReceiveError: error)
             }
         }
-        
-        updateShownWallets()
-        updateHiddenWallets()
     }
     
     private func loadCurrencies() {

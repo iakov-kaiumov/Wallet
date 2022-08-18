@@ -32,7 +32,11 @@ final class WalletsViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.onDidLoad = { [weak self] in
+            self?.walletsTableView.reloadData()
+        }
         setup()
+        viewModel.load()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -90,7 +94,7 @@ final class WalletsViewController: UIViewController {
         setupCreateWalletButton()
         setupEmptyLabel()
         
-        viewModel.reloadData = { [weak self] in
+        viewModel.onDidLoad = { [weak self] in
             self?.walletsTableView.reloadData()
         }
         viewModel.reloadCurrencyData = { [weak self] in

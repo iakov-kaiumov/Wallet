@@ -86,10 +86,20 @@ final class AppCoordinator: Coordinator {
     }
     
     private func setupNavigationBar() {
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = R.color.accentColor()
-        navigationController.navigationBar.standardAppearance = appearance
+        let scrollAppearance = UINavigationBarAppearance()
+        scrollAppearance.configureWithTransparentBackground()
+        
+        if #available(iOS 15, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = R.color.background()
+            
+            navigationController.navigationBar.standardAppearance = appearance
+            navigationController.navigationBar.scrollEdgeAppearance = scrollAppearance
+        } else {
+            navigationController.navigationBar.standardAppearance = scrollAppearance
+        }
+        
     }
 }
 

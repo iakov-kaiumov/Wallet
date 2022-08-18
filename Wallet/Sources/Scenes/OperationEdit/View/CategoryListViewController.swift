@@ -107,7 +107,7 @@ extension CategoryListViewController: UITableViewDataSource {
         if section == 0 {
             return viewModel.categories.count
         }
-        return 1
+        return viewModel.categories.count > 0 ? 1 : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

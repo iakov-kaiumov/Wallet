@@ -33,6 +33,7 @@ final class WalletEditViewModel {
     weak var delegate: WalletEditViewModelDelegate?
     
     var onDataChanged: (() -> Void)?
+    var onDidStartLoading: (() -> Void)?
     
     var walletModel: WalletModel
     
@@ -68,11 +69,16 @@ final class WalletEditViewModel {
     
     func mainButtonDidTap() {
         if isCreatingMode {
+            onDidStartLoading?()
             dependencies.walletService.walletServiceCreate(walletModel.makeApiModel()) { result in
                 switch result {
                 case .success(let model):
                     print("Nice. \(model)")
-                    self.delegate?.walletEditViewModelDidFinish(walletID: model.id)
+                    
+                    DispatchQueue.main.async {
+                        self.delegate?.walletEditViewModelDidFinish(walletID: model.id)
+                    }
+                    
                 case .failure(let error):
                     print("\(error)")
                 }

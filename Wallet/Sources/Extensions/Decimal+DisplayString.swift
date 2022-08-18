@@ -6,7 +6,7 @@
 import Foundation
 
 extension Decimal {
-    func displayString(currency: CurrencyModel) -> String {
+    func displayString(currency: CurrencyModel = .RUB) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.groupingSeparator = " "

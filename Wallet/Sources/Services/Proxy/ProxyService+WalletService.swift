@@ -12,6 +12,18 @@ extension ProxyService: WalletServiceProtocol {
     
     func walletServiceGetAll(completion: @escaping (Result<[WalletApiModel], NetworkError>) -> Void) {
         networkService.walletServiceGetAll(completion: completion)
+        // TODO: - Get rid of it
+        if let person = cacheService.getPerson() {
+            print(person)
+            print("shooshoonchick")
+        } else {
+            let person = PersonModel(id: 5,
+                                     email: "aboba",
+                                     personBalance: 100,
+                                     personIncome: 200,
+                                     personSpendings: 300)
+            cacheService.savePerson(person: person)
+        }
     }
     
     func walletServiceEdit(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {

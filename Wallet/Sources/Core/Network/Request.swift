@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct EmptyBody: Encodable {
+struct EmptyBody: Codable {
     
 }
 

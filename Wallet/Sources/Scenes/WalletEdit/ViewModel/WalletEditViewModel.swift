@@ -23,6 +23,8 @@ protocol WalletEditViewModelDelegate: AnyObject {
     func walletEditViewModelEnterLimit(_ currentValue: String?)
     
     func walletEditViewModelDidFinish(walletID: Int)
+    
+    func walletsViewModel(_ viewModel: WalletEditViewModel, didReceiveError error: Error)
 }
 
 final class WalletEditViewModel {
@@ -34,6 +36,7 @@ final class WalletEditViewModel {
     
     var onDataChanged: (() -> Void)?
     var onDidStartLoading: (() -> Void)?
+    var onDidStopLoading: (() -> Void)?
     
     var walletModel: WalletModel
     
@@ -70,22 +73,23 @@ final class WalletEditViewModel {
     func mainButtonDidTap() {
         if isCreatingMode {
             onDidStartLoading?()
-            dependencies.walletService.walletServiceCreate(walletModel.makeApiModel()) { result in
-                switch result {
-                case .success(let model):
-                    print("Nice. \(model)")
-                    
-                    DispatchQueue.main.async {
-                        self.delegate?.walletEditViewModelDidFinish(walletID: model.id)
-                    }
-                    
-                case .failure(let error):
-                    print("\(error)")
-                }
-            }
-             
+            dependencies.walletService.walletServiceCreate(walletModel.makeApiModel(), completion: onServerResponse)
+        } else {
+            onDidStartLoading?()
+            dependencies.walletService.walletServiceEdit(walletModel.makeApiModel(), completion: onServerResponse)
         }
- 
+    }
+    
+    private func onServerResponse(result: Result<WalletApiModel, NetworkError>) {
+        switch result {
+        case .success(let model):
+            DispatchQueue.main.async {
+                self.delegate?.walletEditViewModelDidFinish(walletID: model.id)
+            }
+        case .failure(let error):
+            self.onDidStopLoading?()
+            self.delegate?.walletsViewModel(self, didReceiveError: error)
+        }
     }
     
     func changeName(_ value: String?) {

@@ -9,6 +9,7 @@ class NetworkService {
     let signInService: SignInService
     var requestProcessor: IRequestProcessor
     private let requestConstructor: IRequestConstructor = RequestConstructor()
+    var walletDelegates: DelegatesList<WalletServiceDelegate> = DelegatesList<WalletServiceDelegate>()
     
     init(signInService: SignInService) {
         self.signInService = signInService

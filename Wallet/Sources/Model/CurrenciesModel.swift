@@ -22,7 +22,7 @@ extension CurrencyModel {
             symbol: apiModel.symbol,
             fullDescription: apiModel.fullDescription,
             shortDescription: apiModel.shortDescription,
-            value: apiModel.value, isAscending: false
+            value: apiModel.value, isAscending: apiModel.ascending
         )
     }
     

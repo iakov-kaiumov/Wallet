@@ -32,9 +32,6 @@ final class WalletsViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.reloadData = { [weak self] in
-            self?.walletsTableView.reloadData()
-        }
         setup()
         viewModel.load()
     }
@@ -94,16 +91,19 @@ final class WalletsViewController: UIViewController {
         setupCreateWalletButton()
         setupEmptyLabel()
         
-        viewModel.reloadData = { [weak self] in
+        viewModel.onDidUpdateWallets = { [weak self] in
             self?.walletsTableView.reloadData()
         }
-        viewModel.reloadCurrencyData = { [weak self] in
+        viewModel.onDidUpdateCurrencies = { [weak self] in
             guard let self = self else { return }
             self.currenciesView.configure(currencies: self.viewModel.currencyData)
         }
-        viewModel.reloadUserData = { [weak self] in
+        viewModel.onDidUpdateUserData = { [weak self] in
             guard let self = self else { return }
             self.headerView.configure(model: self.viewModel.userData)
+        }
+        viewModel.onDidDeleteWallet = { [weak self] indexPath in
+            self?.walletsTableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
     
@@ -239,9 +239,6 @@ extension WalletsViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section != 1 {
-            viewModel.selectWalletWithIndex(indexPath.row, section: indexPath.section)
-        }
         tableView.deselectRow(at: indexPath, animated: true)
         
         viewModel.onCellTapped(indexPath)
@@ -324,7 +321,7 @@ extension WalletsViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath)
         
         if let cell = cell as? WalletCell {
-            let model = indexPath.section == 0 ? viewModel.shownWallets[indexPath.row] : viewModel.hiddenWallets[indexPath.row]
+            let model = viewModel.getWallet(at: indexPath)
             cell.configure(model: model)
             
             if model.isSkeleton {

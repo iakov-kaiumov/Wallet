@@ -5,6 +5,10 @@
 
 import Foundation
 
+protocol WalletServiceDelegate: AnyObject {
+    func walletService(_ service: WalletServiceProtocol, didLoadWallets wallets: [WalletApiModel])
+}
+
 protocol WalletServiceProtocol: AnyObject {
     func walletServiceCreate(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void)
     
@@ -12,19 +16,14 @@ protocol WalletServiceProtocol: AnyObject {
     
     func walletServiceEdit(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void)
     
-    func walletServiceDelete(_ walletId: Int, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void)
+    func walletServiceDelete(_ walletId: Int, completion: @escaping (Result<Data, NetworkError>) -> Void)
+    
+    func addDelegate(_ delegate: WalletServiceDelegate)
 }
 
 extension NetworkService: WalletServiceProtocol {
-    private func convertWallet(_ wallet: WalletApiModel) -> WalletModel? {
-        return WalletModel(id: wallet.id,
-                           name: wallet.name,
-                           currency: .RUB,
-                           limit: wallet.amountLimit,
-                           balance: wallet.balance ?? 0,
-                           income: wallet.income ?? 0,
-                           spendings: wallet.spendings ?? 0,
-                           isHidden: wallet.isHidden != 0)
+    func addDelegate(_ delegate: WalletServiceDelegate) {
+        walletDelegates.addDelegate(delegate)
     }
     
     func walletServiceCreate(_ wallet: WalletApiModel,
@@ -43,10 +42,8 @@ extension NetworkService: WalletServiceProtocol {
         requestProcessor.fetch(request, completion: completion)
     }
     
-    func walletServiceDelete(_ walletId: Int, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
+    func walletServiceDelete(_ walletId: Int, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         let request = WalletRequestsFactory.makeDeleteRequest(walletId: walletId)
-        requestProcessor.fetch(request, completion: completion)
-        
+        requestProcessor.fetchData(request, completion: completion)
     }
-    
 }

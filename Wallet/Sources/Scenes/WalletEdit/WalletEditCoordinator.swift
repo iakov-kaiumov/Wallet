@@ -5,6 +5,10 @@
 
 import UIKit
 
+protocol WalletEditCoordinatorDelegate: AnyObject {
+    func updateWallets()
+}
+
 final class WalletEditCoordinator: Coordinator {
     weak var parent: Coordinator?
     
@@ -45,20 +49,15 @@ final class WalletEditCoordinator: Coordinator {
             start()
         }
     }
-    
-    func goToDetails(walletID: Int) {
-        // TODO: - Use wallet id
-        let coordinator = WalletDetailsCoordinator(navigationController: navigationController, dependencies: dependencies)
-        childCoordinators.append(coordinator)
-        navigationController.viewControllers = []
-        coordinator.parent = self
-        coordinator.start()
-    }
 }
 
 extension WalletEditCoordinator: WalletEditViewModelDelegate {
+    func walletsViewModel(_ viewModel: WalletEditViewModel, didReceiveError error: Error) {
+        callBanner(type: .unknownError)
+    }
+    
     func walletEditViewModelDidFinish(walletID: Int) {
-        goToDetails(walletID: walletID)
+        navigationController.popToRootViewController(animated: true)
     }
     
     func walletEditViewModelEnterName(_ currentValue: String?) {

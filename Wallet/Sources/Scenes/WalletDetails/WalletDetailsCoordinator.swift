@@ -17,7 +17,11 @@ final class WalletDetailsCoordinator: Coordinator {
     }
     
     func start() {
-        let viewModel = WalletDetailesViewModel(dependencies: dependencies)
+        
+    }
+    
+    func start(wallet: WalletModel) {
+        let viewModel = WalletDetailesViewModel(dependencies: dependencies, wallet: wallet)
         viewModel.delegate = self
         let viewController = WalletDetailesViewController(viewModel: viewModel)
         
@@ -26,6 +30,10 @@ final class WalletDetailsCoordinator: Coordinator {
 }
 
 extension WalletDetailsCoordinator: WalletDetailesViewModelDelegate {
+    func walletDetailsViewModel(_ viewModel: WalletDetailesViewModel, didReceiveError error: Error) {
+        callBanner(type: .unknownError)
+    }
+    
     func walletDetailsViewModelAddOperation() {
         let coordinator = OperationEditCoordinator(navigationController: navigationController,
                                                    dependencies: dependencies)

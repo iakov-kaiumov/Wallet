@@ -10,11 +10,11 @@ protocol WalletServiceDelegate: AnyObject {
 }
 
 protocol WalletServiceProtocol: AnyObject {
-    func walletServiceCreate(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void)
+    func walletServiceCreate(_ wallet: WalletApiModelShort, completion: @escaping (Result<WalletApiModelShort, NetworkError>) -> Void)
     
     func walletServiceGetAll(completion: @escaping (Result<[WalletApiModel], NetworkError>) -> Void)
     
-    func walletServiceEdit(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void)
+    func walletServiceEdit(_ wallet: WalletApiModelShort, completion: @escaping (Result<WalletApiModelShort, NetworkError>) -> Void)
     
     func walletServiceDelete(_ walletId: Int, completion: @escaping (Result<Data, NetworkError>) -> Void)
     
@@ -26,8 +26,8 @@ extension NetworkService: WalletServiceProtocol {
         walletDelegates.addDelegate(delegate)
     }
     
-    func walletServiceCreate(_ wallet: WalletApiModel,
-                             completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
+    func walletServiceCreate(_ wallet: WalletApiModelShort,
+                             completion: @escaping (Result<WalletApiModelShort, NetworkError>) -> Void) {
         let request = WalletRequestsFactory.makeCreateReqeust(wallet: wallet)
         requestProcessor.fetch(request, completion: completion)
     }
@@ -37,7 +37,7 @@ extension NetworkService: WalletServiceProtocol {
         requestProcessor.fetch(request, completion: completion)
     }
     
-    func walletServiceEdit(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
+    func walletServiceEdit(_ wallet: WalletApiModelShort, completion: @escaping (Result<WalletApiModelShort, NetworkError>) -> Void) {
         let request = WalletRequestsFactory.makeUpdateReqeust(walletId: wallet.id, wallet: wallet)
         requestProcessor.fetch(request, completion: completion)
     }

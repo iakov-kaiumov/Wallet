@@ -161,8 +161,8 @@ final class WalletDetailesViewController: UIViewController {
     }
     
     private func setNavigationTitle() {
-        guard let walletName = viewModel.walletName,
-        let walletAmount = viewModel.walletAmount else { return }
+        guard let walletName = viewModel.walletInfoModel?.walletName,
+              let walletAmount = viewModel.walletInfoModel?.walletAmount else { return }
         let fadeTextAnimation = CATransition()
         fadeTextAnimation.duration = 0.5
         fadeTextAnimation.type = .fade
@@ -259,7 +259,7 @@ extension WalletDetailesViewController: UITableViewDataSource {
             completionHandler(true)
         }
         trash.image = R.image.actionDelete()
-        trash.backgroundColor = .systemBackground
+        trash.backgroundColor = .systemRed
         
         let configuration = UISwipeActionsConfiguration(actions: [trash])
         return configuration

@@ -41,7 +41,6 @@ final class RequestProcessor: IRequestProcessor {
                 completion(.failure(.noData))
                 return
             }
-            
             completion(.success(data))
         }
         task.resume()

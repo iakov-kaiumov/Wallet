@@ -27,8 +27,8 @@ struct WalletModel {
         return spendings > limit
     }
     
-    func makeApiModel() -> WalletApiModel {
-        WalletApiModel(
+    func makeApiModel() -> WalletApiModelShort {
+        WalletApiModelShort(
             id: id,
             name: name,
             currency: currency.code,
@@ -75,10 +75,13 @@ extension WalletModel {
     }
     
     static func fromApiModel(_ wallet: WalletApiModel) -> WalletModel? {
-        WalletModel(
+        guard let currencyDto = wallet.currencyDto else {
+            return nil
+        }
+        return WalletModel(
             id: wallet.id,
             name: wallet.name,
-            currency: CurrencyModel.RUB,
+            currency: CurrencyModel.fromApiModel(currencyDto),
             limit: wallet.amountLimit,
             balance: wallet.balance ?? 0,
             income: wallet.income ?? 0,

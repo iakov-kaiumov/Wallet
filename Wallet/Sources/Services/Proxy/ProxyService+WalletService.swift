@@ -10,7 +10,7 @@ extension ProxyService: WalletServiceProtocol {
         networkService.addDelegate(delegate)
     }
     
-    func walletServiceCreate(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
+    func walletServiceCreate(_ wallet: WalletApiModelShort, completion: @escaping (Result<WalletApiModelShort, NetworkError>) -> Void) {
         networkService.walletServiceCreate(wallet) { result in
             completion(result)
             self.walletServiceGetAll(completion: self.notifyWalletDelegates)
@@ -24,7 +24,7 @@ extension ProxyService: WalletServiceProtocol {
         }
     }
     
-    func walletServiceEdit(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
+    func walletServiceEdit(_ wallet: WalletApiModelShort, completion: @escaping (Result<WalletApiModelShort, NetworkError>) -> Void) {
         networkService.walletServiceEdit(wallet) { result in
             completion(result)
 //            self.walletServiceGetAll(completion: self.notifyWalletDelegates)

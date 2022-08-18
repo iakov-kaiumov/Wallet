@@ -23,7 +23,15 @@ class NetworkService {
     private static func makeDefaultRequestProcessor() -> IRequestProcessor {
         let constructor = RequestConstructor()
         let session = NetworkService.makeDefaultURLSession()
-        return RequestProcessor(session: session, requestConstructor: constructor)
+        let decoder = JSONDecoder()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+        
+        return RequestProcessor(session: session,
+                                requestConstructor: constructor,
+                                decoder: decoder)
     }
     
     private static func makeDefaultURLSession() -> URLSession {

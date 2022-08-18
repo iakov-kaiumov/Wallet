@@ -6,7 +6,7 @@
 import Foundation
 
 fileprivate extension Constants {
-    static let hoursMinutes = "H:mm"
+    static let hoursMinutes = "HH:mm"
     static let dayMonth = "d MMMM"
 }
 

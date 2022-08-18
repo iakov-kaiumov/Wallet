@@ -88,3 +88,7 @@
 "icon_picker_section_color" = "Выберите цвет";
 "icon_picker_section_icon" = "Выберите иконку";
 "icon_picker_save_button" = "Coхранить";
+
+"date_tommorow" = "Завтра";
+"date_today" = "Сегодня";
+"date_yesterday" = "Вчера";

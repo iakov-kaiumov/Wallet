@@ -22,8 +22,8 @@ final class WalletRequestsFactory {
         )
     }
     
-    static func makeCreateReqeust(wallet: WalletApiModel) -> DefaultBodyRequest<WalletApiModel, WalletApiModel> {
-        DefaultBodyRequest<WalletApiModel, WalletApiModel>(
+    static func makeCreateReqeust(wallet: WalletApiModelShort) -> DefaultBodyRequest<WalletApiModelShort, WalletApiModelShort> {
+        DefaultBodyRequest<WalletApiModelShort, WalletApiModelShort>(
             httpMethod: .POST,
             path: basePath,
             queryParameters: [:],
@@ -32,8 +32,8 @@ final class WalletRequestsFactory {
         )
     }
     
-    static func makeUpdateReqeust(walletId: Int, wallet: WalletApiModel) -> DefaultBodyRequest<WalletApiModel, WalletApiModel> {
-        DefaultBodyRequest<WalletApiModel, WalletApiModel>(
+    static func makeUpdateReqeust(walletId: Int, wallet: WalletApiModelShort) -> DefaultBodyRequest<WalletApiModelShort, WalletApiModelShort> {
+        DefaultBodyRequest<WalletApiModelShort, WalletApiModelShort>(
             httpMethod: .PUT,
             path: "\(basePath)/\(walletId)",
             queryParameters: [:],

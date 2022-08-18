@@ -36,7 +36,6 @@ final class OperationTableHeaderView: UITableViewHeaderFooterView {
     // MARK: - Public Methods
     func configure(with model: Model?) {
         walletAmountLabel.showSkeleton(model == nil)
-        walletNameLabel.showSkeleton(model == nil)
         limitLabel.showSkeleton(model == nil)
         incomeChipView.showSkeleton(model == nil)
         expenseChipView.showSkeleton(model == nil)
@@ -67,13 +66,10 @@ final class OperationTableHeaderView: UITableViewHeaderFooterView {
         walletNameLabel.snp.makeConstraints {
             $0.leading.top.trailing.equalToSuperview().inset(16)
         }
-        
-//        walletNameLabel.setupSkeleton()
     }
     
     private func setupWalletAmountLabel() {
         contentView.addSubview(walletAmountLabel)
-        // TODO: Get rid of stub
         walletAmountLabel.text = "-"
         walletAmountLabel.font = .systemFont(ofSize: 32, weight: .semibold)
         walletAmountLabel.snp.makeConstraints {

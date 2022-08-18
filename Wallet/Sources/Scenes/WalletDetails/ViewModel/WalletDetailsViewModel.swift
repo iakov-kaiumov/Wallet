@@ -9,11 +9,15 @@ protocol WalletDetailesViewModelDelegate: AnyObject {
     func walletDetailsViewModelAddOperation()
     
     func walletDetailsViewModelOpenSettings()
+    
+    func walletDetailsViewModel(_ viewModel: WalletDetailesViewModel, didReceiveError error: Error)
 }
 
 final class WalletDetailesViewModel {
     // MARK: - Properties
-    typealias Dependencies = HasSpendChipModelBuilder & HasOperationCellModelBuilder
+    typealias Dependencies = HasSpendChipModelBuilder & HasOperationCellModelBuilder & HasOperationService
+    
+    var walletModel: WalletModel
     
     var onDidUpdateWalletInfo: (() -> Void)?
     var onDidUpdateOperations: (() -> Void)?
@@ -22,16 +26,15 @@ final class WalletDetailesViewModel {
     
     var walletInfoModel: OperationTableHeaderView.Model?
     var operationSections: [OperationCellSection] = []
-    var walletAmount: String?
-    var walletName: String?
     
     weak var delegate: WalletDetailesViewModelDelegate?
     
     private let dependencies: Dependencies
     
     // MARK: - Init
-    init(dependencies: Dependencies) {
+    init(dependencies: Dependencies, wallet: WalletModel) {
         self.dependencies = dependencies
+        self.walletModel = wallet
     }
     
     // MARK: - Public Methods
@@ -49,6 +52,16 @@ final class WalletDetailesViewModel {
     }
     
     func deleteOperation(at indexPath: IndexPath) {
+        let model = operationSections[indexPath.section].operationModels[indexPath.row]
+        dependencies.operationNetworkService.operationServiceDelete(walletId: model.walletId, operationId: model.id) { result in
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                self.delegate?.walletDetailsViewModel(self, didReceiveError: error)
+            }
+        }
+        
         operationSections[indexPath.section].operationModels.remove(at: indexPath.row)
         if operationSections[indexPath.section].operationModels.count == 0 {
             operationSections.remove(at: indexPath.section)
@@ -61,34 +74,21 @@ final class WalletDetailesViewModel {
     
     // MARK: - Private Methods
     private func loadWalletInfo() {
-        // TODO: - Load info from Network, replace stubs
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
-            guard let self = self else {
-                return
-            }
-            let income = Decimal(130_000)
-            let incomeChipModel = self.dependencies.spendChipModelBuilder.buildIncomeSpendChipModel(income: income)
-            
-            let spent = Decimal(120_000)
-            let limit = Decimal(100_000)
-            
-            let walletAmount = Decimal(200_000)
-            let walletName = "Кошелек 1"
-            self.walletAmount = walletAmount.displayString(currency: .RUB)
-            self.walletName = walletName
-            let expenseChipModel = self.dependencies.spendChipModelBuilder.buildExpenseSpendChipModel(
-                spending: spent,
-                limit: limit
-            )
-            self.walletInfoModel = OperationTableHeaderView.Model(
-                walletName: walletName,
-                walletAmount: walletAmount.displayString(currency: .RUB),
-                incomeChipModel: incomeChipModel,
-                expenseChipModel: expenseChipModel,
-                isLimitExceeded: true
-            )
-            self.onDidUpdateWalletInfo?()
-        }
+        let incomeChipModel = dependencies.spendChipModelBuilder.buildIncomeSpendChipModel(income: walletModel.income)
+        
+        let expenseChipModel = dependencies.spendChipModelBuilder.buildExpenseSpendChipModel(
+            spending: walletModel.spendings,
+            limit: walletModel.limit
+        )
+        
+        self.walletInfoModel = OperationTableHeaderView.Model(
+            walletName: walletModel.name,
+            walletAmount: walletModel.balance.displayString(currency: .RUB),
+            incomeChipModel: incomeChipModel,
+            expenseChipModel: expenseChipModel,
+            isLimitExceeded: walletModel.isLimitExceeded
+        )
+        self.onDidUpdateWalletInfo?()
     }
     
     private func setMockupOperation() {
@@ -105,37 +105,79 @@ final class WalletDetailesViewModel {
     }
     
     private func loadOperations() {
-        // TODO: - Load operations from Network, replace stubs
         setMockupOperation()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
-            guard let self = self else {
-                return
+        dependencies.operationNetworkService.operationServiceGetAll(walletID: walletModel.id) { result in
+            switch result {
+            case .success(let models):
+                let operations = models.compactMap { OperationModel.fromApiModel($0) }
+                let sections = self.getSectionedOperations(operations)
+                DispatchQueue.main.async {
+                    self.operationSections = sections
+                    self.onDidUpdateOperations?()
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.delegate?.walletDetailsViewModel(self, didReceiveError: error)
+                }
             }
-            self.operationSections = []
-            // first section
-            var firstSectionsModels: [OperationCellView.Model] = []
-            for _ in 0..<5 {
-                let model = OperationModel.makeTestModel()
-                let cellModel = self.dependencies.operationCellModelBuilder.buildOperationCellModel(from: model)
-                firstSectionsModels.append(cellModel)
-            }
-            self.operationSections.append(OperationCellSection(sectionName: "Сегодня",
-                                                          operationModels: firstSectionsModels))
             
-            // second section
-            var secondSectionsModels: [OperationCellView.Model] = []
-            for _ in 0..<7 {
-                let model = OperationModel.makeTestModel()
-                let cellModel = self.dependencies.operationCellModelBuilder.buildOperationCellModel(from: model)
-                secondSectionsModels.append(cellModel)
-            }
-            self.operationSections.append(OperationCellSection(sectionName: "Вчера",
-                                                          operationModels: secondSectionsModels))
-            
-            self.onDidUpdateOperations?()
         }
-        
     }
     
+    private func getDescriptiveSectionName(from date: Date) -> String {
+        // TODO: - Move to service
+        let daysBetween = date.daysBetween(date: Date())
+        switch daysBetween {
+        case -1:
+            return R.string.localizable.date_tommorow()
+        case 0:
+            return R.string.localizable.date_today()
+        case 1:
+            return R.string.localizable.date_yesterday()
+        default:
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.yyyy"
+            return dateFormatter.string(from: date)
+        }
+    }
+    
+    private func getSectionedOperations(_ operations: [OperationModel]) -> [OperationCellSection] {
+        let sortedOperations = operations.sorted(by: { $0.operationDate < $1.operationDate })
+        var groupedItems = [[OperationModel]]()
+        var tempItems = [OperationModel]()
+        
+        for operation in sortedOperations {
+            if let firstOperation = tempItems.first {
+                let daysBetween = firstOperation.operationDate.daysBetween(date: operation.operationDate)
+                if daysBetween >= 1 {
+                    groupedItems.append(tempItems.reversed())
+                    tempItems.removeAll()
+                    tempItems.append(operation)
+                } else {
+                    tempItems.append(operation)
+                }
+            } else {
+                tempItems.append(operation)
+            }
+        }
+        if !operations.isEmpty {
+            groupedItems.append(tempItems.reversed())
+        }
+        
+        var sections = [OperationCellSection]()
+        for items in groupedItems.reversed() {
+            
+            let operationModels = items.map {
+                dependencies.operationCellModelBuilder.buildOperationCellModel(from: $0)
+            }
+            var sectionName = ""
+            if let date = items.first?.operationDate {
+                sectionName = getDescriptiveSectionName(from: date)
+            }
+            sections.append(OperationCellSection(sectionName: sectionName, operationModels: operationModels))
+        }
+        
+        return sections
+    }
 }

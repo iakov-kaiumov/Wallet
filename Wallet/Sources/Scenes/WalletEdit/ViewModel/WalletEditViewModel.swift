@@ -80,7 +80,7 @@ final class WalletEditViewModel {
         }
     }
     
-    private func onServerResponse(result: Result<WalletApiModel, NetworkError>) {
+    private func onServerResponse(result: Result<WalletApiModelShort, NetworkError>) {
         DispatchQueue.main.async {
             switch result {
             case .success(let model):

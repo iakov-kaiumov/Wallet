@@ -14,14 +14,14 @@ final class WalletEditViewModelFormatter: IWalletEditViewModelFormatter {
         guard let wallet = wallet else {
             return ""
         }
-        return  wallet.name
+        return wallet.name
     }
     
     func formatCurrency(_ wallet: WalletModel?) -> String {
         guard let wallet = wallet else {
             return ""
         }
-        return  wallet.currency.shortDescription
+        return wallet.currency.shortDescription
     }
     
     func formatLimit(_ wallet: WalletModel?) -> String {

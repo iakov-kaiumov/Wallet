@@ -11,22 +11,25 @@ extension OperationCellView {
 
 final class OperationCellView: UITableViewCell {
     struct Model {
+        let id: Int
+        let walletId: Int
         let title: String
         let operationType: String
         let moneySpend: String
         let timestamp: String
-        let icon: UIImage?
+        let icon: IconView.IconModel?
         var isSkeleton: Bool = false
         static func makeTestModel() -> Model {
-            Model(title: "Супермаркеты",
+            Model(id: 0, walletId: 0,
+                  title: "Супермаркеты",
                   operationType: "Траты",
                   moneySpend: "100 000 ₽",
                   timestamp: "15:00",
-                  icon: R.image.settingsButton())
+                  icon: nil)
         }
         
         static func makeSkeleton() -> Model {
-            Model(title: "", operationType: "", moneySpend: "", timestamp: "", icon: nil, isSkeleton: true)
+            Model(id: 0, walletId: 0, title: "", operationType: "", moneySpend: "", timestamp: "", icon: nil, isSkeleton: true)
         }
     }
     // MARK: - Properties
@@ -34,7 +37,7 @@ final class OperationCellView: UITableViewCell {
     private let operationTypeLabel = UILabel()
     private let moneyLabel = UILabel()
     private let timestampLabel = UILabel()
-    private let iconImageView = UIImageView()
+    private let iconImageView = IconView(edge: 40.0)
     
     private var model: Model?
     
@@ -62,7 +65,7 @@ final class OperationCellView: UITableViewCell {
         operationTypeLabel.text = model.operationType
         timestampLabel.text = model.timestamp
         moneyLabel.text = model.moneySpend
-        iconImageView.image = model.icon
+        iconImageView.configure(model.icon)
     }
     
     private func setup() {
@@ -77,8 +80,6 @@ final class OperationCellView: UITableViewCell {
     
     private func setupIconImageView() {
         contentView.addSubview(iconImageView)
-        // TODO: - Get rid of stub
-        iconImageView.image = R.image.settingsButton()
         iconImageView.snp.makeConstraints {
             $0.leading.equalToSuperview().inset(16)
             $0.size.equalTo(40)
@@ -99,8 +100,6 @@ final class OperationCellView: UITableViewCell {
         contentView.addSubview(timestampLabel)
         timestampLabel.font = .systemFont(ofSize: 13)
         timestampLabel.textColor = R.color.secondaryText()
-        // TODO: Get rid of stub
-        timestampLabel.text = "15:00"
         timestampLabel.snp.makeConstraints {
             $0.top.equalTo(moneyLabel.snp.bottom).inset(-8)
             $0.bottom.equalToSuperview().inset(16)
@@ -111,8 +110,6 @@ final class OperationCellView: UITableViewCell {
     private func setupTitleLabel() {
         titleLabel.font = .systemFont(ofSize: 17)
         titleLabel.textColor = R.color.mainText()
-        // TODO: - Get rid of stub
-        titleLabel.text = "Супермаркеты"
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16)
             $0.leading.equalTo(iconImageView.snp.trailing).offset(16)
@@ -124,8 +121,6 @@ final class OperationCellView: UITableViewCell {
         contentView.addSubview(operationTypeLabel)
         operationTypeLabel.font = .systemFont(ofSize: 13)
         operationTypeLabel.textColor = R.color.secondaryText()
-        // TODO: - Get rid of stub
-        operationTypeLabel.text = "Траты"
         operationTypeLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).inset(-8)
             $0.bottom.equalToSuperview().inset(16)

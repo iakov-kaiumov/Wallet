@@ -128,7 +128,7 @@ final class OperationViewModel {
     
     func changeDate(_ value: Date?) {
         guard let index = itemIndex(for: .date) else { return }
-        model.operationDate = value
+        model.operationDate = value ?? Date()
         tableItems[index].value = formatter.formatDate(model)
         toggleButton()
         onItemChanged?(index)
@@ -139,8 +139,7 @@ final class OperationViewModel {
     private func toggleButton() {
         guard let _ = model.operationBalance,
               let _ = model.type,
-              let _ = model.category,
-              let _ = model.operationDate else {
+              let _ = model.category else {
             setButtonInteraction?(false)
             return
         }

@@ -18,7 +18,7 @@ protocol HasCategoryService {
     var categoryService: CategoryServiceProtocol { get }
 }
 
-protocol HasCurrenciesServiceProtocol {
+protocol HasCurrenciesService {
     var currenciesNetworkService: CurrenciesServiceProtocol { get }
 }
 
@@ -69,7 +69,7 @@ extension AppDependency: HasCategoryService {
 }
 
 // MARK: - HasCurrenciesServiceProtocol
-extension AppDependency: HasCurrenciesServiceProtocol {
+extension AppDependency: HasCurrenciesService {
     var currenciesNetworkService: CurrenciesServiceProtocol {
         proxyService
     }

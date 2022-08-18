@@ -17,21 +17,14 @@ protocol WalletServiceProtocol: AnyObject {
 
 extension NetworkService: WalletServiceProtocol {
     private func convertWallet(_ wallet: WalletApiModel) -> WalletModel? {
-        guard let id = wallet.id,
-              let currency = wallet.currency,
-              let currencyType = CurrencyType(rawValue: currency),
-              let isHidden = wallet.isHidden else {
-            return nil
-        }
-        
-        return WalletModel(id: Int(id),
+        return WalletModel(id: wallet.id,
                            name: wallet.name,
-                           currency: currencyType,
+                           currency: .RUB,
                            limit: wallet.amountLimit,
-                           balance: 0,
-                           income: 0,
-                           spendings: 0,
-                           isHidden: isHidden)
+                           balance: wallet.balance ?? 0,
+                           income: wallet.income ?? 0,
+                           spendings: wallet.spendings ?? 0,
+                           isHidden: wallet.isHidden ?? false)
     }
     
     func walletServiceCreate(_ wallet: WalletApiModel,

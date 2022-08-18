@@ -15,11 +15,11 @@ extension ProxyService: WalletServiceProtocol {
     }
     
     func walletServiceEdit(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
-        
+        networkService.walletServiceEdit(wallet, completion: completion)
     }
     
     func walletServiceDelete(_ walletId: Int, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
-        
+        networkService.walletServiceDelete(walletId, completion: completion)
     }
 
 }

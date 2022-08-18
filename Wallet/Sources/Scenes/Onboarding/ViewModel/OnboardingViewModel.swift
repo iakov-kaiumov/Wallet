@@ -16,6 +16,8 @@ final class OnboardingViewModel {
     
     weak var delegate: OnboardingViewModelDelegate?
     
+    var showProgressView: ((_ isOn: Bool) -> Void)?
+    
     private let dependencies: Dependencies
     
     // MARK: - Init
@@ -25,14 +27,18 @@ final class OnboardingViewModel {
     
     // MARK: - Public Methods
     func loginButtonDidTap(presenting controller: UIViewController) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            self.showProgressView?(true)
+        }
         dependencies.signInService.signIn(presenting: controller) { [weak self] result in
-            switch result {
-            case .success(let email):
-                print("PUPA")
-                print(email)
-                self?.delegate?.onboardingViewModelSuccessfulSignIn()
-            case .failure(let error):
-                print(error)
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.delegate?.onboardingViewModelSuccessfulSignIn()
+                case .failure(let error):
+                    print(error)
+                }
+                self?.showProgressView?(false)
             }
         }
     }

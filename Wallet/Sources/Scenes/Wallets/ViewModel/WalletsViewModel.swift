@@ -14,7 +14,7 @@ protocol WalletsViewModelDelegate: AnyObject {
 }
 
 final class WalletsViewModel {
-    typealias Dependencies = HasWalletServiceProtocol & HasCurrenciesServiceProtocol
+    typealias Dependencies = HasWalletService & HasCurrenciesService
     // MARK: - Properties
     weak var delegate: WalletsViewModelDelegate?
     var wallets: [WalletModel] = []

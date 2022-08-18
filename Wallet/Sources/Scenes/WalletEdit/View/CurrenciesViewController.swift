@@ -12,6 +12,7 @@ final class CurrenciesViewController: UIViewController {
     
     private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
     private lazy var closeButton = UIButton(type: .system)
+    private lazy var progressView = ProgressView()
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         
@@ -49,7 +50,7 @@ final class CurrenciesViewController: UIViewController {
     }
     
     @objc private func nextButtonAction(sender: UIButton!) {
-        viewModel.closeButtonDidTap()
+        viewModel.nextButtonDidTap()
     }
     
     // MARK: - Private Methods
@@ -60,6 +61,7 @@ final class CurrenciesViewController: UIViewController {
         setupCloseButton()
         setupTableView()
         setupNextButton()
+        setupProgressView()
         
         viewModel.onDataInserted = { [weak self] (at: [IndexPath]) -> Void in
             guard let self = self else { return }
@@ -79,7 +81,11 @@ final class CurrenciesViewController: UIViewController {
             
             self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
             self.tableView.endUpdates()
-            
+        }
+        
+        viewModel.onDataReload = { [weak self] in
+            self?.tableView.reloadData()
+            self?.progressView.hide()
         }
     }
     
@@ -93,6 +99,15 @@ final class CurrenciesViewController: UIViewController {
         
         closeButton.setTitle(R.string.localizable.modal_close_button(), for: .normal)
         closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
+    }
+    
+    private func setupProgressView() {
+        view.addSubview(progressView)
+        
+        progressView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        progressView.show()
     }
     
     private func setupTableView() {
@@ -125,7 +140,7 @@ extension CurrenciesViewController: UITableViewDataSource {
         if section == 0 {
             return viewModel.currencies.count
         }
-        return 1
+        return viewModel.currencies.count == 0 ? 0 : 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -135,7 +150,7 @@ extension CurrenciesViewController: UITableViewDataSource {
             
             if let cell = cell as? CurrencyCell {
                 cell.configure(title: model.fullDescription)
-                cell.accessoryType = indexPath.row == viewModel.chosenIndex ? .checkmark : .none
+                cell.accessoryType = model.code == viewModel.currencyModel.code ? .checkmark : .none
             }
             
             return cell
@@ -157,20 +172,19 @@ extension CurrenciesViewController: UITableViewDataSource {
             return
         }
         
-        if let oldIndex = viewModel.chosenIndex {
+        let model = viewModel.currencies[indexPath.row]
+        
+        if let oldIndex = viewModel.currencies.firstIndex(where: { $0.code == viewModel.currencyModel.code }) {
             let oldPath = IndexPath(row: oldIndex, section: 0)
             tableView.cellForRow(at: oldPath)?.accessoryType = .none
-            
-            if oldPath == indexPath {
-                viewModel.chosenIndex = nil
-            } else {
-                tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-                viewModel.chosenIndex = indexPath.row
-            }
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-            viewModel.chosenIndex = indexPath.row
         }
+        
+        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        viewModel.currencyModel = model
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        56
     }
 }
 

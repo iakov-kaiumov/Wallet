@@ -13,6 +13,7 @@ final class OnboardingViewController: UIViewController {
     private lazy var titleLabel = UILabel()
     private lazy var descriptionLabel = UILabel()
     private lazy var loginButton = ButtonFactory.makeGrayButton()
+    private lazy var progressView = ProgressView()
     
     // MARK: - Init
     init(viewModel: OnboardingViewModel) {
@@ -44,6 +45,15 @@ final class OnboardingViewController: UIViewController {
         setupTitleLabel()
         setupDescriptionLabel()
         setupLoginButton()
+        setupProgressView()
+        
+        viewModel.showProgressView = { isOn in
+            if isOn {
+                self.progressView.show()
+            } else {
+                self.progressView.hide()
+            }
+        }
     }
     
     private func setupOnboardingImage() {
@@ -95,5 +105,13 @@ final class OnboardingViewController: UIViewController {
         loginButton.setTitle(title, for: .normal)
         
         loginButton.addTarget(self, action: #selector(loginButtonAction), for: .touchUpInside)
+    }
+    
+    private func setupProgressView() {
+        view.addSubview(progressView)
+        
+        progressView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
     }
 }

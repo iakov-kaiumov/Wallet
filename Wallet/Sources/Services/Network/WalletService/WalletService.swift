@@ -18,7 +18,6 @@ protocol WalletServiceProtocol: AnyObject {
 extension NetworkService: WalletServiceProtocol {
     private func convertWallet(_ wallet: WalletApiModel) -> WalletModel? {
         guard let id = wallet.id,
-              let personId = wallet.personId,
               let currency = wallet.currency,
               let currencyType = CurrencyType(rawValue: currency),
               let balance = wallet.balance,
@@ -29,7 +28,6 @@ extension NetworkService: WalletServiceProtocol {
         }
         
         return WalletModel(id: Int(id),
-                           personId: Int(personId),
                            name: wallet.name,
                            currency: currencyType,
                            limit: wallet.amountLimit,

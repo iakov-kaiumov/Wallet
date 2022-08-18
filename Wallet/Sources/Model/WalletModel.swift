@@ -20,7 +20,6 @@ enum CurrencyType: String, Codable, CaseIterable {
 
 struct WalletModel: Codable {
     var id: Int
-    var personId: Int
     var name: String
     var currency: CurrencyType
     var limit: Decimal?
@@ -34,7 +33,6 @@ struct WalletModel: Codable {
     
     func makeApiModel() -> WalletApiModel {
         WalletApiModel(id: Int64(id),
-                       personId: Int64(personId),
                        name: name,
                        currency: currency.rawValue,
                        amountLimit: limit,
@@ -47,7 +45,6 @@ struct WalletModel: Codable {
     static func makeCleanModel(_ id: Int = 0) -> WalletModel {
         return WalletModel(
             id: id,
-            personId: 0,
             name: "Новый кошелек",
             currency: CurrencyType.RUB,
             limit: nil,
@@ -62,7 +59,6 @@ struct WalletModel: Codable {
     static func makeTestModel(_ id: Int = 0) -> WalletModel {
         return WalletModel(
             id: id,
-            personId: 0,
             name: "Тестовый кошелек №\(id)",
             currency: CurrencyType.RUB,
             limit: Decimal(Double.random(in: 100000...1000000)),

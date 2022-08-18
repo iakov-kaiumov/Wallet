@@ -35,6 +35,14 @@ struct WalletModel: Codable {
         balance.displayString(currency: currency)
     }
     
+    var isLimitExceeded: Bool {
+        guard let limit = limit else {
+            return false
+        }
+
+        return spendings > limit
+    }
+    
     func makeApiModel() -> WalletApiModel {
         WalletApiModel(id: Int64(id),
                        isHidden: isHidden ? 1 : 0,
@@ -62,7 +70,7 @@ struct WalletModel: Codable {
             id: id,
             name: "Тестовый кошелек №\(id)",
             currency: CurrencyType.RUB,
-            limit: Decimal(Double.random(in: 100000...1000000)),
+            limit: Decimal(Double.random(in: 10000...100000)),
             balance: Decimal(Double.random(in: 10000...100000)),
             income: Decimal(Double.random(in: 10000...100000)),
             spendings: Decimal(Double.random(in: 10000...100000)),

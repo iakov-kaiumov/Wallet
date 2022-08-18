@@ -82,7 +82,7 @@ class WalletCell: UITableViewCell {
         redLabel.setText(text: R.string.localizable.wallets_limit_exceeded())
         contentView.addSubview(redLabel)
         redLabel.snp.makeConstraints {
-            $0.top.equalTo(walletTitleLabel.snp.bottom).offset(6)
+            $0.top.equalTo(walletTitleLabel.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(72)
         }
     }

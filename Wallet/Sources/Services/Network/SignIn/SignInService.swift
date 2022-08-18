@@ -8,17 +8,18 @@
 import Foundation
 import GoogleSignIn
 
-protocol ISignInService {
+protocol GoogleSignInServiceProtocol {
     func handle(_ url: URL) -> Bool
     
     func checkSignInStatus(_ completion: @escaping (_ isSignedIn: Bool) -> Void)
     
     func signOut()
     
-    func signIn(presenting controller: UIViewController, completion: @escaping (_ success: Bool) -> Void)
+    func signIn(presenting controller: UIViewController, completion: @escaping (_ result: Result<String, NetworkError>) -> Void)
+    
 }
 
-class SignInService: ISignInService {
+class SignInService: GoogleSignInServiceProtocol {
     // MARK: - Public methods
     func handle(_ url: URL) -> Bool {
         return GIDSignIn.sharedInstance.handle(url)
@@ -35,33 +36,26 @@ class SignInService: ISignInService {
         GIDSignIn.sharedInstance.signOut()
     }
     
-    func signIn(presenting controller: UIViewController, completion: @escaping (_ success: Bool) -> Void) {
+    func signIn(presenting controller: UIViewController, completion: @escaping (_ result: Result<String, NetworkError>) -> Void) {
         guard let signInConfig = getSignInConfig() else {
-            completion(false)
+            completion(.failure(.noData))
             return
         }
-        GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: controller) { [weak self] user, error in
+        GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: controller) { user, error in
             guard error == nil else {
-                completion(false)
+                completion(.failure(.noData))
                 return
             }
             guard let user = user else {
-                completion(false)
+                completion(.failure(.noData))
                 return
             }
 
-            user.authentication.do { authentication, error in
-                guard error == nil else {
-                    completion(false)
-                    return
-                }
-                guard let authentication = authentication, let idToken = authentication.idToken else {
-                    completion(false)
-                    return
-                }
-                
-                self?.signInServer(with: idToken, completion: completion)
+            guard let email = user.profile?.email else {
+                completion(.failure(.noData))
+                return
             }
+            completion(.success(email))
         }
     }
     
@@ -79,12 +73,5 @@ class SignInService: ISignInService {
             return GIDConfiguration(clientID: clientId)
         }
         return nil
-    }
-    
-    private func signInServer(with idToken: String, completion: @escaping (_ success: Bool) -> Void) {
-        completion(true)
-        return
-        
-        // TODO: Add server authentication
     }
 }

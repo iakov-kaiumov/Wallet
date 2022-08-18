@@ -87,7 +87,7 @@ final class WalletEditViewController: UIViewController {
     }
     
     @objc private func nextButtonAction() {
-        viewModel.nextButtonDidTap()
+        viewModel.mainButtonDidTap()
     }
 }
 

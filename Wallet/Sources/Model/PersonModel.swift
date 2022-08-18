@@ -16,7 +16,7 @@ struct PersonModel: Codable {
     
     var personSpendings: Double?
     
-    static func getTestModel() -> PersonModel {
+    static func makeTestModel() -> PersonModel {
         return PersonModel(
             id: 0,
             email: "test@example.com",

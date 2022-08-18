@@ -25,11 +25,14 @@ final class OnboardingViewModel {
     
     // MARK: - Public Methods
     func loginButtonDidTap(presenting controller: UIViewController) {
-        dependencies.signInService.signIn(presenting: controller) { [weak self] success in
-            if success {
+        dependencies.signInService.signIn(presenting: controller) { [weak self] result in
+            switch result {
+            case .success(let email):
+                print("PUPA")
+                print(email)
                 self?.delegate?.onboardingViewModelSuccessfulSignIn()
-            } else {
-                // TODO: Handle error
+            case .failure(let error):
+                print(error)
             }
         }
     }

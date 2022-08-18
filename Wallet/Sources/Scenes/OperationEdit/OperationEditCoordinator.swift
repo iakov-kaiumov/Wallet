@@ -37,7 +37,7 @@ extension OperationEditCoordinator: OperationViewModelDelegate {
         viewModel.delegate = self
         viewModel.text = ""
         if let currentValue = currentValue {
-            viewModel.text = currentValue.displayString()
+            viewModel.text = currentValue.displayString(currency: .RUB)
         }
         
         let controller = TextInputViewController(viewModel: viewModel)

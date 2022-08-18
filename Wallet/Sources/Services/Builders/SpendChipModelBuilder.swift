@@ -12,7 +12,7 @@ protocol SpendChipBuilderProtocol {
 
 final class SpendChipModelBuilder: SpendChipBuilderProtocol {
     func buildIncomeSpendChipModel(income: Decimal) -> SpendChipView.Model {
-        let incomeMoney = income.displayString()
+        let incomeMoney = income.displayString(currency: .RUB)
         let titleLabel = R.string.localizable.operations_income_chip()
         return SpendChipView.Model(dotColor: .green,
                                    titleLabelText: titleLabel,
@@ -21,7 +21,7 @@ final class SpendChipModelBuilder: SpendChipBuilderProtocol {
     }
     
     func buildExpenseSpendChipModel(spending: Decimal, limit: Decimal?) -> SpendChipView.Model {
-        let spentMoney = spending.displayString()
+        let spentMoney = spending.displayString(currency: .RUB)
         let dotColor: DotColor = .red
         let titleLabel = R.string.localizable.operations_spendings_chip()
         guard let limit = limit else {
@@ -30,7 +30,7 @@ final class SpendChipModelBuilder: SpendChipBuilderProtocol {
                                        spendMoneyText: .normal(spentMoney))
         }
         let isLimitExceeded = spending > limit
-        let limitString = " / " + limit.displayString()
+        let limitString = " / " + limit.displayString(currency: .RUB)
         let attributedSpentMoney = makeSpendMoneyAttributedText(spentMoney: spentMoney,
                                                                 limitMoney: limitString,
                                                                 isLimitExceeded: isLimitExceeded)

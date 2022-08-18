@@ -131,10 +131,10 @@ extension CurrenciesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyCell.identifier, for: indexPath)
-            let type = viewModel.currencies[indexPath.row]
+            let model = viewModel.currencies[indexPath.row]
             
             if let cell = cell as? CurrencyCell {
-                cell.configure(type: type)
+                cell.configure(title: model.fullDescription)
                 cell.accessoryType = indexPath.row == viewModel.chosenIndex ? .checkmark : .none
             }
             

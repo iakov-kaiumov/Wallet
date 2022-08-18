@@ -14,19 +14,20 @@ protocol WalletsViewModelDelegate: AnyObject {
 }
 
 final class WalletsViewModel {
-    typealias Dependencies = HasWalletServiceProtocol
+    typealias Dependencies = HasWalletServiceProtocol & HasCurrenciesServiceProtocol
     // MARK: - Properties
     weak var delegate: WalletsViewModelDelegate?
     var wallets: [WalletModel] = []
     var shownWallets: [WalletModel] = []
     var hiddenWallets: [WalletModel] = []
     var userData: PersonModel
-    var currencyData: CurrenciesModel
+    var currencyData: [CurrencyModel]
     var isHidden: Bool = false
     var onHide: (() -> Void)?
     var onShow: (() -> Void)?
     
     var reloadData: (() -> Void)?
+    var reloadCurrencyData: (() -> Void)?
     
     private var dependenices: Dependencies
     
@@ -34,8 +35,9 @@ final class WalletsViewModel {
     init(dependencies: Dependencies) {
         self.dependenices = dependencies
         userData = PersonModel.makeTestModel()
-        currencyData = CurrenciesModel.getTestModel()
+        currencyData = (0..<3).map { _ in CurrencyModel.makeSkeletonModel() }
         loadWallets()
+        loadCurrencies()
     }
     
     // MARK: - Public Methods
@@ -113,7 +115,7 @@ final class WalletsViewModel {
         dependenices.walletNetworkService.walletServiceGetAll { result in
             switch result {
             case .success(let walletModels):
-                self.wallets = walletModels
+                self.wallets = walletModels.compactMap { WalletModel.fromApiModel($0) }
                 DispatchQueue.main.async {
                     self.reloadData?()
                 }
@@ -124,6 +126,20 @@ final class WalletsViewModel {
         
         updateShownWallets()
         updateHiddenWallets()
+    }
+    
+    private func loadCurrencies() {
+        dependenices.currenciesNetworkService.currenciesServiceGetDaily { result in
+            switch result {
+            case .success(let data):
+                DispatchQueue.main.async {
+                    self.currencyData = data.map { CurrencyModel.fromApiModel($0) }
+                    self.reloadCurrencyData?()
+                }
+            case .failure(let error):
+                self.delegate?.walletsViewModel(self, didReceiveError: error)
+            }
+        }
     }
 
     private func updateHiddenWallets() {

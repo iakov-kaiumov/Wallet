@@ -14,6 +14,10 @@ protocol HasWalletServiceProtocol {
     var walletNetworkService: WalletServiceProtocol { get }
 }
 
+protocol HasCurrenciesServiceProtocol {
+    var currenciesNetworkService: CurrenciesServiceProtocol { get }
+}
+
 protocol HasSpendChipModelBuilder {
     var spendChipModelBuilder: SpendChipBuilderProtocol { get }
 }
@@ -48,6 +52,13 @@ extension AppDependency: HasSignInService {
 // MARK: - HasWalletServiceProtocol
 extension AppDependency: HasWalletServiceProtocol {
     var walletNetworkService: WalletServiceProtocol {
+        proxyService
+    }
+}
+
+// MARK: - HasCurrenciesServiceProtocol
+extension AppDependency: HasCurrenciesServiceProtocol {
+    var currenciesNetworkService: CurrenciesServiceProtocol {
         proxyService
     }
 }

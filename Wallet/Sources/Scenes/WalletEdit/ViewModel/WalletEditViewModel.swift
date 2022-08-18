@@ -3,6 +3,8 @@
 //  Wallet
 //
 
+import Foundation
+
 enum WalletEditFieldType: Int {
     case name, currency, limit
 }
@@ -16,7 +18,7 @@ struct WalletEditTableItem {
 protocol WalletEditViewModelDelegate: AnyObject {
     func walletEditViewModelEnterName(_ currentValue: String?)
     
-    func walletEditViewModelEnterCurrency(_ currentValue: String?)
+    func walletEditViewModelEnterCurrency(_ currentValue: CurrencyModel)
     
     func walletEditViewModelEnterLimit(_ currentValue: String?)
     
@@ -59,7 +61,7 @@ final class WalletEditViewModel {
         case .name:
             delegate?.walletEditViewModelEnterName(item.value)
         case .currency:
-            delegate?.walletEditViewModelEnterCurrency(item.value)
+            delegate?.walletEditViewModelEnterCurrency(walletModel.currency)
         case .limit:
             delegate?.walletEditViewModelEnterLimit(item.value)
         }
@@ -83,19 +85,28 @@ final class WalletEditViewModel {
     
     func changeName(_ value: String?) {
         guard let index = itemIndex(for: .name) else { return }
-        tableItems[index].value = value ?? ""
-        onDataChanged?()
+        if let value = value {
+            walletModel.name = value
+            tableItems[index].value = value
+            onDataChanged?()
+        }
     }
     
-    func changeCurrency(_ value: CurrencyType?) {
+    func changeCurrency(_ value: CurrencyModel?) {
         guard let index = itemIndex(for: .currency) else { return }
-        tableItems[index].value = value?.rawValue ?? ""
-        onDataChanged?()
+        if let value = value {
+            walletModel.currency = value
+            tableItems[index].value = value.shortDescription
+            onDataChanged?()
+        }
     }
     
     func changeLimit(_ value: String?) {
         guard let index = itemIndex(for: .limit) else { return }
-        tableItems[index].value = value ?? ""
-        onDataChanged?()
+        if let value = value, let number = Double(value) {
+            walletModel.limit = Decimal(number)
+            tableItems[index].value = value
+            onDataChanged?()
+        }
     }
 }

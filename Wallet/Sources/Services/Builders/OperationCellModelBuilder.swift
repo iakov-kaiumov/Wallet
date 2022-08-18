@@ -21,7 +21,7 @@ final class OperationCellModelBuilder: OperationCellModelBuilderProtocol {
             return OperationCellView.Model.makeTestModel()
         }
         let operationType = categoryType.displayName()
-        let moneySpend = categoryType == .SPENDING ? "-" + money.displayString() : money.displayString()
+        let moneySpend = categoryType == .SPENDING ? "-" + money.displayString(currency: .RUB) : money.displayString(currency: .RUB)
         let timestamp = DateFormatter.hoursMinutes.string(from: operationDate)
         // TODO: - Get icon
         let icon = R.image.settingsButton()

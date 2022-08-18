@@ -8,16 +8,16 @@ import Foundation
 protocol CurrenciesViewModelDelegate: AnyObject {
     func currenciesViewModelCloseButtonDidTap()
     
-    func currenciesViewModelValueChanged(_ value: CurrencyType?)
+    func currenciesViewModelValueChanged(_ value: CurrencyModel?)
 }
 
 final class CurrenciesViewModel {
     
-    private let mainCurrencies: [CurrencyType] = [.RUB, .USD, .EUR]
+    private let mainCurrencies: [CurrencyModel] = []
     
-    private let allCurrencies: [CurrencyType] = CurrencyType.allCases
+    private let allCurrencies: [CurrencyModel] = []
     
-    var currencies: [CurrencyType] = [.RUB, .USD, .EUR]
+    var currencies: [CurrencyModel] = []
     
     var chosenIndex: Int? {
         didSet {
@@ -38,8 +38,8 @@ final class CurrenciesViewModel {
     
     weak var delegate: CurrenciesViewModelDelegate?
     
-    func setCurrentCurrency(_ value: CurrencyType) {
-        chosenIndex = allCurrencies.firstIndex(of: value)
+    func setCurrentCurrency(_ value: CurrencyModel) {
+        chosenIndex = allCurrencies.firstIndex(where: { $0.code == value.code })
     }
     
     func toggleState() {

@@ -23,7 +23,7 @@ final class OperationViewModelFormatter: IOperationViewModelFormatter {
         guard let amount = operation?.operationBalance else {
             return ""
         }
-        return amount.displayString()
+        return amount.displayString(currency: .RUB)
     }
     
     func formatType(_ operation: OperationModel?) -> String {

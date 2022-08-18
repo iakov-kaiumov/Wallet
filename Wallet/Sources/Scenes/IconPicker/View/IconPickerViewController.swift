@@ -39,7 +39,7 @@ final class IconPickerViewController: UIViewController {
     // MARK: - Private methods
     
     private func setup() {
-        navigationController?.navigationBar.topItem?.title = R.string.localizable.icon_picker_title()
+        title = R.string.localizable.icon_picker_title()
         view.backgroundColor = R.color.background()
         setupTableView()
         setupSaveButton()

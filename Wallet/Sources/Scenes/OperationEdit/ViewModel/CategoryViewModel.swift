@@ -41,7 +41,7 @@ final class CategoryViewModel {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.showProgressView?(true)
         }
-        dependencies.categoryService.categoryNetworkServiceGetAll(personId: 0, type: operationType) { [weak self] result in
+        dependencies.categoryService.categoryNetworkServiceGetAll(type: operationType) { [weak self] result in
             switch result {
             case .success(let models):
                 self?.categories = self?.categoryModelBuilder.build(models) ?? []

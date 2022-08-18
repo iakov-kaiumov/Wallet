@@ -15,8 +15,7 @@ final class CategoryRequestsFactory {
         )
     }
     
-    static func makeGetRequest(personId: Int,
-                               categoryType: MoneyOperationType) -> DefaultSimpleRequest<[CategoryApiModel]> {
+    static func makeGetRequest(categoryType: MoneyOperationType) -> DefaultSimpleRequest<[CategoryApiModel]> {
         DefaultSimpleRequest<[CategoryApiModel]>(
             httpMethod: .GET,
             path: basePath,

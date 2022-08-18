@@ -11,6 +11,7 @@ final class NewCategoryViewController: UIViewController {
     private let viewModel: NewCategoryViewModel
     private lazy var tableView: UITableView = UITableView()
     private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
+    private lazy var progressView = ProgressView()
     
     // MARK: - Init
     init(viewModel: NewCategoryViewModel) {
@@ -39,6 +40,15 @@ final class NewCategoryViewController: UIViewController {
         title = R.string.localizable.newcategory_title()
         setupTableView()
         setupNextButton()
+        setupProgressView()
+        
+        viewModel.showProgressView = { isOn in
+            if isOn {
+                self.progressView.show()
+            } else {
+                self.progressView.hide()
+            }
+        }
         
         viewModel.onItemChanged = { [weak self] row in
             self?.tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
@@ -68,6 +78,14 @@ final class NewCategoryViewController: UIViewController {
         }
         nextButton.setTitle(R.string.localizable.default_save_button(), for: .normal)
         nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+    }
+    
+    private func setupProgressView() {
+        view.addSubview(progressView)
+        
+        progressView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
     }
 }
 

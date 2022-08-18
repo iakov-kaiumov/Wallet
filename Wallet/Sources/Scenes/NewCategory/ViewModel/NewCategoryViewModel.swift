@@ -35,6 +35,7 @@ final class NewCategoryViewModel {
     var model: CategoryModel
     
     var onItemChanged: ((_ row: Int) -> Void)?
+    var showProgressView: ((_ isOn: Bool) -> Void)?
     
     weak var delegate: NewCategoryViewModelDelegate?
     
@@ -105,7 +106,9 @@ final class NewCategoryViewModel {
     
     func createCategory() {
         let categoryModel = CategoryApiModel(name: model.name ?? "", type: model.type?.convertToCategoryType(), color: String(describing: model.colorId ?? 0), iconId: model.iconId)
+        showProgressView?(true)
         dependencies.categoryService.categoryNetworkServiceCreate(categoryModel) { [weak self] result in
+            self?.showProgressView?(false)
             switch result {
             case .success(let model):
                 print(model)

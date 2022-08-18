@@ -36,12 +36,12 @@ final class WalletsViewModel {
         self.dependenices = dependencies
         userData = PersonModel.makeTestModel()
         currencyData = (0..<3).map { _ in CurrencyModel.makeSkeletonModel() }
-        loadWallets()
-        loadCurrencies()
+        load()
     }
     
     // MARK: - Public Methods
     func load() {
+        loadCurrencies()
         loadWallets()
     }
     

@@ -24,7 +24,9 @@ final class WalletEditViewController: UIViewController {
         return tableView
     }()
 
-    private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
+    private lazy var nextButton = ButtonFactory.makeGrayButton()
+    
+    private lazy var progressView = ProgressView()
 
     // MARK: - Init
     init(viewModel: WalletEditViewModel) {
@@ -39,6 +41,13 @@ final class WalletEditViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.onDataChanged = { [weak self] in
+            self?.tableView.reloadData()
+            self?.progressView.hide()
+        }
+        viewModel.onDidStartLoading = { [weak self] in
+            self?.progressView.show()
+        }
         setup()
     }
     
@@ -58,9 +67,14 @@ final class WalletEditViewController: UIViewController {
 
         setupTableView()
         setupNextButton()
+        setupProgressView()
 
-        viewModel.onDataChanged = { [weak self] in
-            self?.tableView.reloadData()
+    }
+    
+    private func setupProgressView() {
+        view.addSubview(progressView)
+        progressView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
     }
 

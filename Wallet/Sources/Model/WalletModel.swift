@@ -34,7 +34,7 @@ struct WalletModel {
                        balance: balance,
                        income: income,
                        spendings: spendings,
-                       isHidden: isHidden)
+                       isHidden: isHidden ? 1 : 0)
     }
     
     static func makeCleanModel(_ id: Int = 0) -> WalletModel {
@@ -68,10 +68,6 @@ struct WalletModel {
 extension WalletModel {
     static func fromApiModel(_ wallet: WalletApiModel) -> WalletModel? {
         guard
-//              let currency = wallet.currency,
-              let balance = wallet.balance,
-              let income = wallet.income,
-              let spendings = wallet.spendings,
               let isHidden = wallet.isHidden else {
             return nil
         }
@@ -81,10 +77,10 @@ extension WalletModel {
             name: wallet.name,
             currency: CurrencyModel.RUB,
             limit: wallet.amountLimit,
-            balance: balance,
-            income: income,
-            spendings: spendings,
-            isHidden: isHidden
+            balance: 0,
+            income: 0,
+            spendings: 0,
+            isHidden: isHidden != 0
         )
     }
 }

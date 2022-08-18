@@ -105,9 +105,9 @@ final class NewCategoryViewModel {
     }
     
     func createCategory() {
-        let categoryModel = CategoryApiModel(name: model.name ?? "", type: model.type?.convertToCategoryType(), color: String(describing: model.colorId ?? 0), iconId: model.iconId)
+        let categoryModel = CategoryApiModel(id: 0, name: model.name ?? "", type: model.type, color: String(describing: model.colorId ?? 0), iconId: model.iconId)
         showProgressView?(true)
-        dependencies.categoryService.categoryNetworkServiceCreate(categoryModel) { [weak self] result in
+        dependencies.categoryService.categoryNetworkServiceCreate(categoryModel, personId: 0, type: .INCOME) { [weak self] result in
             self?.showProgressView?(false)
             switch result {
             case .success(let model):

@@ -17,12 +17,4 @@ enum MoneyOperationType: String, Codable, CaseIterable {
         }
     }
     
-    func convertToCategoryType() -> CategoryApiModel.CategoryType {
-        switch self {
-        case .INCOME:
-            return CategoryApiModel.CategoryType.income
-        case .SPENDING:
-            return CategoryApiModel.CategoryType.spending
-        }
-    }
 }

@@ -25,6 +25,7 @@ final class CategoryTypeViewModel {
     }
     
     func closeButtonDidTap() {
+        delegate?.categoryTypeViewModelValueChanged(chosenType)
         delegate?.categoryTypeViewModelCloseButtonDidTap()
     }
     

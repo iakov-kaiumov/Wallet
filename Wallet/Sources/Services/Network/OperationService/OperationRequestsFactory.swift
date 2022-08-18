@@ -5,24 +5,24 @@
 
 import Foundation
 
-final class OperationRequests {
+final class OperationRequestsFactory {
     private static let basePath = "/wallet"
     
-    static func makeGetRequest(walletId: Int, operationId: Int) -> some IRequest {
+    static func makeGetRequest(walletId: Int, operationId: Int) -> DefaultSimpleRequest<OperationApiModel> {
         DefaultSimpleRequest<OperationApiModel>(
             httpMethod: .GET,
             path: "\(basePath)/\(walletId)/operation/\(operationId)"
         )
     }
     
-    static func makeGetAllRequest(walletId: Int) -> some IRequest {
-        DefaultSimpleRequest<OperationApiModel>(
+    static func makeGetAllRequest(walletId: Int) -> DefaultSimpleRequest<[OperationApiModel]> {
+        DefaultSimpleRequest<[OperationApiModel]>(
             httpMethod: .GET,
             path: "\(basePath)/\(walletId)/operation"
         )
     }
     
-    static func makeCreateReqeust(walletId: Int, operation: OperationApiModel) -> some IRequest {
+    static func makeCreateReqeust(walletId: Int, operation: OperationApiModel) -> DefaultBodyRequest<OperationApiModel, OperationApiModel> {
         DefaultBodyRequest<OperationApiModel, OperationApiModel>(
             httpMethod: .POST,
             path: "\(basePath)/\(walletId)/operation",

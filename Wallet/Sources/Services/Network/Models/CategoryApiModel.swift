@@ -4,14 +4,22 @@
 
 import Foundation
 
-public struct CategoryApiModel: Codable {
-    public enum CategoryType: String, Codable {
-        case income = "INCOME"
-        case spending = "SPENDING"
+struct CategoryApiModel: Codable {
+    let id: Int?
+    let name: String
+    let type: MoneyOperationType?
+    let color: String
+    let iconId: Int?
+    
+    var categoryModel: CategoryModel? {
+        guard let id = id,
+              let type = type,
+              let color = Int(color),
+              let iconId = iconId else { return nil }
+        return CategoryModel(id: id,
+                             name: name,
+                             type: type,
+                             colorId: color,
+                             iconId: iconId)
     }
-    public var id: Int?
-    public var name: String
-    public var type: CategoryType?
-    public var color: String
-    public var iconId: Int?
 }

@@ -6,7 +6,7 @@
 import Foundation
 
 extension ProxyService: CategoryServiceProtocol {
-    func categoryNetworkServiceGetAll(personId: Int, type: CategoryApiModel.CategoryType, completion: @escaping (Result<[CategoryApiModel], NetworkError>) -> Void) {
+    func categoryNetworkServiceGetAll(personId: Int, type: MoneyOperationType, completion: @escaping (Result<[CategoryApiModel], NetworkError>) -> Void) {
         // TODO: - Cache request
         networkService.categoryNetworkServiceGetAll(personId: personId,
                                                     type: type,
@@ -15,7 +15,7 @@ extension ProxyService: CategoryServiceProtocol {
     
     func categoryNetworkServiceCreate(_ category: CategoryApiModel,
                                       personId: Int,
-                                      type: CategoryApiModel.CategoryType,
+                                      type: MoneyOperationType,
                                       completion: @escaping (Result<CategoryApiModel, NetworkError>) -> Void) {
         // TODO: - Cache request
         networkService.categoryNetworkServiceCreate(category,

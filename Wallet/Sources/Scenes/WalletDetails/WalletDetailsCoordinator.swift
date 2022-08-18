@@ -6,6 +6,7 @@
 import UIKit
 
 final class WalletDetailsCoordinator: Coordinator {
+    weak var parent: Coordinator?
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     var dependencies: AppDependency

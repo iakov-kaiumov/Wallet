@@ -19,7 +19,9 @@ final class PopupViewHolder {
     }
     
     // MARK: Public methods
-    func show(message: String, image: UIImage? = R.image.alertImage()) {
+    func show(type: ErrorPopupType) {
+        let message = type.title()
+        let image = type.icon()
         parent.addSubview(popupView)
         
         popupView.snp.makeConstraints {
@@ -72,9 +74,9 @@ final class PopupViewHolder {
     // MARK: Private methods
     private func hide(_ errorView: UIView) {
         UIView.animate(
-            withDuration: 0.3,
+            withDuration: 0.7,
             delay: 0.0,
-            options: [.curveLinear],
+            options: [.curveEaseInOut],
             animations: {
                 errorView.center.y -= 200
             },

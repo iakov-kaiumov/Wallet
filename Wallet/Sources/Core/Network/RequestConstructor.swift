@@ -27,7 +27,8 @@ final class RequestConstructor: IRequestConstructor {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = request.httpMethod.rawValue
         if let body = request.body {
-            urlRequest.httpBody = body.data(using: .utf8)
+            urlRequest.httpBody = try? JSONEncoder().encode(body)
+            print(String(decoding: urlRequest.httpBody ?? Data(), as: UTF8.self))
         }
         request.headers?.forEach { urlRequest.setValue($0.value, forHTTPHeaderField: $0.key) }
         return urlRequest

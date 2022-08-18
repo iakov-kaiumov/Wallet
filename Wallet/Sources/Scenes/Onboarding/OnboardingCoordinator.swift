@@ -10,17 +10,19 @@ protocol OnboardingCoordinatorDelegate: AnyObject {
 }
 
 final class OnboardingCoordinator: Coordinator {
-    init(navigationController: UINavigationController,
-         dependencies: AppDependency = AppDependency()) {
-        self.navigationController = navigationController
-        self.dependencies = dependencies
-    }
+    weak var parent: Coordinator?
     
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     var dependencies: AppDependency
     
     var delegate: OnboardingCoordinatorDelegate?
+    
+    init(navigationController: UINavigationController,
+         dependencies: AppDependency = AppDependency()) {
+        self.navigationController = navigationController
+        self.dependencies = dependencies
+    }
     
     func start() {
         let viewModel = OnboardingViewModel(dependencies: dependencies)

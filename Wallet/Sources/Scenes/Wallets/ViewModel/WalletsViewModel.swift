@@ -7,12 +7,14 @@ import UIKit
 
 protocol WalletsViewModelDelegate: AnyObject {
     func walletsViewModel(_ viewModel: WalletsViewModel, didSelectWallet wallet: WalletModel)
+    func walletsViewModel(_ viewModel: WalletsViewModel, didReceiveError error: Error)
     func walletsViewModelDidAskToCreateWallet()
     func walletsViewModelSignOut()
     func walletsViewModelEditWallet(wallet: WalletModel)
 }
 
 final class WalletsViewModel {
+    typealias Dependencies = HasWalletServiceProtocol
     // MARK: - Properties
     weak var delegate: WalletsViewModelDelegate?
     var wallets: [WalletModel] = []
@@ -24,9 +26,14 @@ final class WalletsViewModel {
     var onHide: (() -> Void)?
     var onShow: (() -> Void)?
     
+    var reloadData: (() -> Void)?
+    
+    private var dependenices: Dependencies
+    
     // MARK: - Init
-    init() {
-        userData = PersonModel.getTestModel()
+    init(dependencies: Dependencies) {
+        self.dependenices = dependencies
+        userData = PersonModel.makeTestModel()
         currencyData = CurrenciesModel.getTestModel()
         loadWallets()
     }
@@ -103,8 +110,16 @@ final class WalletsViewModel {
     
     // MARK: - Private Methods
     private func loadWallets() {
-        for i in 1...5 {
-            wallets.append(WalletModel.getTestModel(i))
+        dependenices.walletNetworkService.walletServiceGetAll { result in
+            switch result {
+            case .success(let walletModels):
+                self.wallets = walletModels
+                DispatchQueue.main.async {
+                    self.reloadData?()
+                }
+            case .failure(let error):
+                self.delegate?.walletsViewModel(self, didReceiveError: error)
+            }
         }
         
         updateShownWallets()

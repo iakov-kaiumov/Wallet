@@ -12,6 +12,10 @@ enum CurrencyType: String, Codable, CaseIterable {
         switch self {
         case .RUB:
             return "₽"
+        case .USD:
+            return "$"
+        case .EUR:
+            return "€"
         default:
             return ""
         }
@@ -28,7 +32,7 @@ struct WalletModel: Codable {
     var spendings: Decimal
     var isHidden: Bool
     var formattedBalance: String {
-        balance.displayString()
+        balance.displayString(currency: currency)
     }
     
     var isLimitExceeded: Bool {
@@ -41,7 +45,7 @@ struct WalletModel: Codable {
     
     func makeApiModel() -> WalletApiModel {
         WalletApiModel(id: Int64(id),
-                       isHidden: isHidden,
+                       isHidden: isHidden ? 1 : 0,
                        name: name,
                        currency: currency.rawValue,
                        amountLimit: limit)

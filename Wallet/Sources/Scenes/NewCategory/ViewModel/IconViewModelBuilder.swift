@@ -2,8 +2,6 @@
 //  IconViewModelBuilder.swift
 //  Wallet
 //
-//  Created by Ярослав Ульяненков on 15.08.2022.
-//
 
 import UIKit
 

@@ -31,7 +31,7 @@ extension NetworkService: WalletServiceProtocol {
                            balance: 0,
                            income: 0,
                            spendings: 0,
-                           isHidden: isHidden)
+                           isHidden: isHidden != 0)
     }
     
     func walletServiceCreate(_ wallet: WalletApiModel,
@@ -54,7 +54,17 @@ extension NetworkService: WalletServiceProtocol {
     
     func walletServiceGetAll(completion: @escaping (Result<[WalletModel], NetworkError>) -> Void) {
         let request = WalletRequestsFactory.makeGetAllReqeust()
-        requestProcessor.fetch(request, completion: completion)
+        requestProcessor.fetch(request) { result in
+            switch result {
+            case .success(let models):
+                let result = models.compactMap({ model in
+                    self.convertWallet(model)
+                })
+                completion(.success(result))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     func walletServiceEdit(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {

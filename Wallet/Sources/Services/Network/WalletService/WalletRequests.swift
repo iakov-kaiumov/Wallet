@@ -15,8 +15,8 @@ final class WalletRequestsFactory {
         )
     }
     
-    static func makeGetAllReqeust() -> DefaultSimpleRequest<[WalletModel]> {
-        DefaultSimpleRequest<[WalletModel]>(
+    static func makeGetAllReqeust() -> DefaultSimpleRequest<[WalletApiModel]> {
+        DefaultSimpleRequest<[WalletApiModel]>(
             httpMethod: .GET,
             path: basePath
         )

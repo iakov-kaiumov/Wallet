@@ -14,7 +14,7 @@ protocol WalletsViewModelDelegate: AnyObject {
 }
 
 final class WalletsViewModel {
-    typealias Dependencies = HasWalletService & HasCurrenciesService
+    typealias Dependencies = HasWalletService & HasCurrenciesService & HasPersonService
     // MARK: - Properties
     weak var delegate: WalletsViewModelDelegate?
     var wallets: [WalletModel] = []
@@ -28,21 +28,24 @@ final class WalletsViewModel {
     
     var reloadData: (() -> Void)?
     var reloadCurrencyData: (() -> Void)?
+    var reloadUserData: (() -> Void)?
     
     private var dependenices: Dependencies
     
     // MARK: - Init
     init(dependencies: Dependencies) {
         self.dependenices = dependencies
-        userData = PersonModel.makeTestModel()
+        userData = PersonModel.skeletonModel
         currencyData = (0..<3).map { _ in CurrencyModel.makeSkeletonModel() }
-        loadWallets()
-        loadCurrencies()
+        wallets = (0..<3).map { _ in WalletModel.makeSkeletonModel() }
+        shownWallets = wallets
     }
     
     // MARK: - Public Methods
     func load() {
         loadWallets()
+        loadCurrencies()
+        loadUserData()
     }
     
     func selectWalletWithIndex(_ index: Int, section: Int) {
@@ -138,6 +141,21 @@ final class WalletsViewModel {
                 DispatchQueue.main.async {
                     self.currencyData = data.map { CurrencyModel.fromApiModel($0) }
                     self.reloadCurrencyData?()
+                }
+            case .failure(let error):
+                self.delegate?.walletsViewModel(self, didReceiveError: error)
+            }
+        }
+    }
+    
+    private func loadUserData() {
+        dependenices.personNetworkService.personServiceGet { result in
+            switch result {
+            case .success(let person):
+                let userData = PersonModel.fromApiModel(person)
+                DispatchQueue.main.async {
+                    self.userData = userData
+                    self.reloadUserData?()
                 }
             case .failure(let error):
                 self.delegate?.walletsViewModel(self, didReceiveError: error)

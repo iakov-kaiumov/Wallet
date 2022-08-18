@@ -22,6 +22,10 @@ protocol HasCurrenciesService {
     var currenciesNetworkService: CurrenciesServiceProtocol { get }
 }
 
+protocol HasPersonService {
+    var personNetworkService: PersonServiceProtocol { get }
+}
+
 protocol HasSpendChipModelBuilder {
     var spendChipModelBuilder: SpendChipBuilderProtocol { get }
 }
@@ -71,6 +75,12 @@ extension AppDependency: HasCategoryService {
 // MARK: - HasCurrenciesServiceProtocol
 extension AppDependency: HasCurrenciesService {
     var currenciesNetworkService: CurrenciesServiceProtocol {
+        proxyService
+    }
+}
+
+extension AppDependency: HasPersonService {
+    var personNetworkService: PersonServiceProtocol {
         proxyService
     }
 }

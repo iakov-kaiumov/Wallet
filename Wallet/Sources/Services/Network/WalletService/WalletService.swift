@@ -24,7 +24,7 @@ extension NetworkService: WalletServiceProtocol {
                            balance: wallet.balance ?? 0,
                            income: wallet.income ?? 0,
                            spendings: wallet.spendings ?? 0,
-                           isHidden: wallet.isHidden ?? false)
+                           isHidden: wallet.isHidden != 0)
     }
     
     func walletServiceCreate(_ wallet: WalletApiModel,

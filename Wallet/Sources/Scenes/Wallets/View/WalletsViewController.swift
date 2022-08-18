@@ -101,6 +101,10 @@ final class WalletsViewController: UIViewController {
             guard let self = self else { return }
             self.currenciesView.configure(currencies: self.viewModel.currencyData)
         }
+        viewModel.reloadUserData = { [weak self] in
+            guard let self = self else { return }
+            self.headerView.configure(model: self.viewModel.userData)
+        }
     }
     
     private func setupSignOutButton() {
@@ -307,15 +311,7 @@ extension WalletsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath)
-            
-            if let cell = cell as? WalletCell {
-                cell.configure(model: viewModel.shownWallets[indexPath.row])
-            }
-            
-            return cell
-        } else if indexPath.section == 1 {
+        if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: ShowMoreCell.identifier, for: indexPath)
             
             if let cell = cell as? ShowMoreCell {
@@ -323,15 +319,20 @@ extension WalletsViewController: UITableViewDataSource {
             }
             
             return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath)
-            
-            if let cell = cell as? WalletCell {
-                cell.configure(model: viewModel.hiddenWallets[indexPath.row])
-            }
-            
-            return cell
         }
-
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath)
+        
+        if let cell = cell as? WalletCell {
+            let model = indexPath.section == 0 ? viewModel.shownWallets[indexPath.row] : viewModel.hiddenWallets[indexPath.row]
+            cell.configure(model: model)
+            
+            if model.isSkeleton {
+                cell.setupSkeleton(insets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16), cornerRadius: 16)
+            }
+            cell.showSkeleton(model.isSkeleton)
+        }
+        
+        return cell
     }
 }

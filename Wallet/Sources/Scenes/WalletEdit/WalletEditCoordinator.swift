@@ -40,6 +40,7 @@ final class WalletEditCoordinator: Coordinator {
         } else {
             if let wallet = wallet {
                 walletViewModel = WalletEditViewModel(dependencies: dependencies, wallet: wallet)
+                walletViewModel.isCreatingMode = isCreatingMode
             }
             start()
         }

@@ -193,6 +193,28 @@ final class WalletsViewController: UIViewController {
         walletsTableView.insertRows(at: indexPaths, with: .fade)
         walletsTableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
     }
+    
+    private func moveRows(indexPath: IndexPath) {
+        walletsTableView.beginUpdates()
+        if viewModel.isHidden {
+            walletsTableView.deleteRows(at: [indexPath], with: .fade)
+        } else {
+            var section: Int
+            if indexPath.section == 0 {
+                section = 2
+            } else {
+                section = 0
+            }
+            let row = walletsTableView.numberOfRows(inSection: section)
+            walletsTableView.moveRow(at: indexPath, to: IndexPath(row: row, section: section))
+        }
+        if walletsTableView.numberOfRows(inSection: 1) == 1 && !viewModel.haveHiddenWallets() {
+            walletsTableView.deleteRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
+        } else if walletsTableView.numberOfRows(inSection: 1) == 0 && viewModel.haveHiddenWallets() {
+            walletsTableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
+        }
+        walletsTableView.endUpdates()
+    }
 }
 
 // MARK: - Extensions
@@ -225,8 +247,13 @@ extension WalletsViewController: UITableViewDelegate {
             self?.moveRows(indexPath: indexPath)
             completionHandler(true)
         }
-        hide.image = R.image.actionHide()
-        hide.backgroundColor = .systemBackground
+        
+        if indexPath.section == 0 {
+            hide.image = R.image.actionHide()
+        } else {
+            hide.image = R.image.actionShow()
+        }
+        hide.backgroundColor = R.color.warningGrey()
         
         // Edit action
         let edit = UIContextualAction(style: .normal, title: "") { [weak self] (_, _, completionHandler) in
@@ -234,7 +261,7 @@ extension WalletsViewController: UITableViewDelegate {
             completionHandler(true)
         }
         edit.image = R.image.actionEdit()
-        edit.backgroundColor = .systemBackground
+        edit.backgroundColor = R.color.accentPurple()
         
         // Trash action
         let trash = UIContextualAction(style: .destructive, title: "") { [weak self] (_, _, completionHandler) in
@@ -242,39 +269,18 @@ extension WalletsViewController: UITableViewDelegate {
             completionHandler(true)
         }
         trash.image = R.image.actionDelete()
-        trash.backgroundColor = .systemBackground
+        trash.backgroundColor = .systemRed
         
         let configuration = UISwipeActionsConfiguration(actions: [trash, edit, hide])
         
         return configuration
     }
-    
-    private func moveRows(indexPath: IndexPath) {
-        walletsTableView.beginUpdates()
-        if viewModel.isHidden {
-            walletsTableView.deleteRows(at: [indexPath], with: .fade)
-        } else {
-            var section: Int
-            if indexPath.section == 0 {
-                section = 2
-            } else {
-                section = 0
-            }
-            let row = walletsTableView.numberOfRows(inSection: section)
-            walletsTableView.moveRow(at: indexPath, to: IndexPath(row: row, section: section))
-        }
-        if walletsTableView.numberOfRows(inSection: 1) == 1 && !viewModel.haveHiddenWallets() {
-            walletsTableView.deleteRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
-        } else if walletsTableView.numberOfRows(inSection: 1) == 0 && viewModel.haveHiddenWallets() {
-            walletsTableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
-        }
-        walletsTableView.endUpdates()
-    }
 }
 
 extension WalletsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        emptyLabel.layer.opacity = viewModel.shownWallets.isEmpty && viewModel.hiddenWallets.isEmpty ? 1.0 : 0.0
+        emptyLabel.layer.opacity = viewModel.wallets.isEmpty ? 1.0 : 0.0
+        walletsTableView.isScrollEnabled = viewModel.shownWallets.count + viewModel.hiddenWallets.count > 0
         switch section {
         case 0:
             return viewModel.shownWallets.count

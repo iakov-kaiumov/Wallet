@@ -123,7 +123,7 @@ final class WalletsViewModel {
                 DispatchQueue.main.async {
                     self.updateShownWallets()
                     self.updateHiddenWallets()
-                    self.onDidLoad?()
+                    self.reloadData?()
                 }
             case .failure(let error):
                 self.delegate?.walletsViewModel(self, didReceiveError: error)

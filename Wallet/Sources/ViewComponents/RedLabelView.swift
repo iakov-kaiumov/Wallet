@@ -34,13 +34,13 @@ final class RedLabelView: UIView {
     private func setup() {
         layer.masksToBounds = true
         layer.backgroundColor = R.color.warningRed()?.cgColor
-        layer.cornerRadius = 8
+        layer.cornerRadius = 9
         textLabelSetup()
     }
     
     private func textLabelSetup() {
         textLabel.textColor = .white
-        textLabel.font = .systemFont(ofSize: 10)
+        textLabel.font = .systemFont(ofSize: 12)
         
         addSubview(textLabel)
         textLabel.snp.makeConstraints {

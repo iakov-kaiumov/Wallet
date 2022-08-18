@@ -243,8 +243,13 @@ extension WalletsViewController: UITableViewDelegate {
             self?.moveRows(indexPath: indexPath)
             completionHandler(true)
         }
-        hide.image = R.image.actionHide()
-        hide.backgroundColor = .systemBackground
+        
+        if indexPath.section == 0 {
+            hide.image = R.image.actionHide()
+        } else {
+            hide.image = R.image.actionShow()
+        }
+        hide.backgroundColor = R.color.warningGrey()
         
         // Edit action
         let edit = UIContextualAction(style: .normal, title: "") { [weak self] (_, _, completionHandler) in
@@ -252,7 +257,7 @@ extension WalletsViewController: UITableViewDelegate {
             completionHandler(true)
         }
         edit.image = R.image.actionEdit()
-        edit.backgroundColor = .systemBackground
+        edit.backgroundColor = R.color.accentPurple()
         
         // Trash action
         let trash = UIContextualAction(style: .destructive, title: "") { [weak self] (_, _, completionHandler) in
@@ -260,7 +265,7 @@ extension WalletsViewController: UITableViewDelegate {
             completionHandler(true)
         }
         trash.image = R.image.actionDelete()
-        trash.backgroundColor = .systemBackground
+        trash.backgroundColor = .systemRed
         
         let configuration = UISwipeActionsConfiguration(actions: [trash, edit, hide])
         

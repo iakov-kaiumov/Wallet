@@ -47,6 +47,7 @@
 "wallets_delete_alert" = "Уверены, что хотите удалить кошелек?";
 "wallets_hidden_wallets" = "Скрытые кошельки";
 "wallets_hide" = "Скрыть";
+"wallets_limit_exceeded"  = "Превышен лимит";
 
 "operation_edit_add_title" = "Новая операция";
 "operation_edit_edit_title" = "Новая операция";

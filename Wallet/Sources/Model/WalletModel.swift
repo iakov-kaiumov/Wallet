@@ -18,6 +18,14 @@ struct WalletModel {
         balance.displayString(currency: currency)
     }
     
+    var isLimitExceeded: Bool {
+        guard let limit = limit else {
+            return false
+        }
+
+        return spendings > limit
+    }
+    
     func makeApiModel() -> WalletApiModel {
         WalletApiModel(id: id,
                        name: name,

@@ -33,7 +33,7 @@ final class RedLabelView: UIView {
     
     private func setup() {
         layer.masksToBounds = true
-        layer.backgroundColor = R.color.warningRed()?.cgColor
+        layer.backgroundColor = UIColor.systemRed.cgColor
         layer.cornerRadius = 9
         textLabelSetup()
     }

@@ -28,4 +28,15 @@ struct OperationModel: Codable {
             category: CategoryModel.makeTestModel()
         )
     }
+    
+    static func makeEmptyModel(_ id: Int = 0) -> OperationModel {
+        return OperationModel(
+            id: id,
+            walletId: 0,
+            operationBalance: nil,
+            operationDate: Date(),
+            type: nil,
+            category: nil
+        )
+    }
 }

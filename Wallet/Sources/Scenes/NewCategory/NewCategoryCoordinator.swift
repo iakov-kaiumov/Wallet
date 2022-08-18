@@ -27,7 +27,18 @@ final class NewCategoryCoordinator: Coordinator {
     }
     
     func start() {
-        newCategoryViewModel = NewCategoryViewModel(model: CategoryModel.newCategory())
+        newCategoryViewModel = NewCategoryViewModel(dependencies: self.dependencies, model: CategoryModel.newCategory())
+        newCategoryViewModel?.delegate = self
+        if let newCategoryViewModel = newCategoryViewModel {
+            let viewController = NewCategoryViewController(viewModel: newCategoryViewModel)
+            navigationController.pushViewController(viewController, animated: true)
+        }
+    }
+    
+    func start(type: MoneyOperationType) {
+        var model = CategoryModel.newCategory()
+        model.type = type
+        newCategoryViewModel = NewCategoryViewModel(dependencies: self.dependencies, model: model)
         newCategoryViewModel?.delegate = self
         if let newCategoryViewModel = newCategoryViewModel {
             let viewController = NewCategoryViewController(viewModel: newCategoryViewModel)
@@ -37,6 +48,10 @@ final class NewCategoryCoordinator: Coordinator {
 }
 
 extension NewCategoryCoordinator: NewCategoryViewModelDelegate {
+    func newCategoryViewModel(_ viewModel: NewCategoryViewModel, didReceiveError error: Error) {
+        callBanner(type: .unknownError)
+    }
+    
     func newCategoryViewModelEnterName(_ currentValue: String?) {
         let viewModel = TextInputViewModel.makeCategoryName(isModal: true)
         viewModel.delegate = self
@@ -61,7 +76,7 @@ extension NewCategoryCoordinator: NewCategoryViewModelDelegate {
         if let viewModel = newCategoryViewModel {
             iconViewModel.setIcon(icon: viewModel.model.iconId ?? 0, color: viewModel.model.colorId ?? 0)
         }
-        let viewController = IconPickerViewController(viewModel: iconViewModel)
+        let viewController = IconPickerViewController( viewModel: iconViewModel)
         navigationController.pushViewController(viewController, animated: true)
     }
     

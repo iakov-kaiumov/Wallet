@@ -6,9 +6,9 @@
 import Foundation
 
 protocol WalletServiceProtocol: AnyObject {
-    func walletServiceCreate(_ wallet: WalletApiModel, completion: @escaping (Result<WalletModel, NetworkError>) -> Void)
+    func walletServiceCreate(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void)
     
-    func walletServiceGetAll(completion: @escaping (Result<[WalletModel], NetworkError>) -> Void)
+    func walletServiceGetAll(completion: @escaping (Result<[WalletApiModel], NetworkError>) -> Void)
     
     func walletServiceEdit(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void)
     
@@ -17,42 +17,23 @@ protocol WalletServiceProtocol: AnyObject {
 
 extension NetworkService: WalletServiceProtocol {
     private func convertWallet(_ wallet: WalletApiModel) -> WalletModel? {
-        guard let id = wallet.id,
-              let currency = wallet.currency,
-              let currencyType = CurrencyType(rawValue: currency),
-              let isHidden = wallet.isHidden else {
-            return nil
-        }
-        
-        return WalletModel(id: Int(id),
+        return WalletModel(id: wallet.id,
                            name: wallet.name,
-                           currency: currencyType,
+                           currency: .RUB,
                            limit: wallet.amountLimit,
-                           balance: 0,
-                           income: 0,
-                           spendings: 0,
-                           isHidden: isHidden != 0)
+                           balance: wallet.balance ?? 0,
+                           income: wallet.income ?? 0,
+                           spendings: wallet.spendings ?? 0,
+                           isHidden: wallet.isHidden ?? false)
     }
     
     func walletServiceCreate(_ wallet: WalletApiModel,
-                             completion: @escaping (Result<WalletModel, NetworkError>) -> Void) {
+                             completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
         let request = WalletRequestsFactory.makeCreateReqeust(wallet: wallet)
-        requestProcessor.fetch(request) { result in
-            switch result {
-            case .success(let model):
-                guard let result = self.convertWallet(model) else {
-                    completion(.failure(.noData))
-                    return
-                }
-                completion(.success(result))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-            
-        }
+        requestProcessor.fetch(request, completion: completion)
     }
     
-    func walletServiceGetAll(completion: @escaping (Result<[WalletModel], NetworkError>) -> Void) {
+    func walletServiceGetAll(completion: @escaping (Result<[WalletApiModel], NetworkError>) -> Void) {
         let request = WalletRequestsFactory.makeGetAllReqeust()
         requestProcessor.fetch(request) { result in
             switch result {
@@ -68,9 +49,7 @@ extension NetworkService: WalletServiceProtocol {
     }
     
     func walletServiceEdit(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
-        guard let walletID = wallet.id else { return }
-        let request = WalletRequestsFactory.makeUpdateReqeust(walletId: Int(walletID),
-                                                              wallet: wallet)
+        let request = WalletRequestsFactory.makeUpdateReqeust(walletId: wallet.id, wallet: wallet)
         requestProcessor.fetch(request, completion: completion)
     }
     

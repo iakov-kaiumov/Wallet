@@ -18,6 +18,10 @@ protocol HasCategoryService {
     var categoryService: CategoryServiceProtocol { get }
 }
 
+protocol HasCurrenciesService {
+    var currenciesNetworkService: CurrenciesServiceProtocol { get }
+}
+
 protocol HasSpendChipModelBuilder {
     var spendChipModelBuilder: SpendChipBuilderProtocol { get }
 }
@@ -60,6 +64,13 @@ extension AppDependency: HasWalletService {
 // MARK: - HasCategoryService
 extension AppDependency: HasCategoryService {
     var categoryService: CategoryServiceProtocol {
+        proxyService
+    }
+}
+
+// MARK: - HasCurrenciesServiceProtocol
+extension AppDependency: HasCurrenciesService {
+    var currenciesNetworkService: CurrenciesServiceProtocol {
         proxyService
     }
 }

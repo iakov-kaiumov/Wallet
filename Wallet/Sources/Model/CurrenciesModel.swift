@@ -4,23 +4,42 @@
 
 import Foundation
 
-struct CurrenciesModel {
+struct CurrencyModel {
+    let code: String
+    let symbol: String
+    let fullDescription: String
+    let shortDescription: String
+    let value: Double
     
-    var currencies: [Currency] = []
-    
-    struct Currency {
-        var type: CurrencyType
-        var value: Double
-        var isAscending: Bool
+    var isAscending: Bool
+    var isSkeleton: Bool = false
+}
+
+extension CurrencyModel {
+    static func fromApiModel(_ apiModel: CurrencyApiModel) -> CurrencyModel {
+        CurrencyModel(
+            code: apiModel.code,
+            symbol: apiModel.symbol,
+            fullDescription: apiModel.fullDescription,
+            shortDescription: apiModel.shortDescription,
+            value: apiModel.value, isAscending: false
+        )
     }
     
-    static func getTestModel() -> CurrenciesModel {
-        var model = CurrenciesModel()
-        
-        for currency in [CurrencyType.USD, CurrencyType.EUR, CurrencyType.GBR] {
-            model.currencies.append(Currency(type: currency, value: Double.random(in: 50...100), isAscending: Bool.random()))
-        }
-        
-        return model
+    static func makeSkeletonModel() -> CurrencyModel {
+        CurrencyModel(
+            code: "USD", symbol: "$",
+            fullDescription: "", shortDescription: "",
+            value: 75, isAscending: false, isSkeleton: true
+        )
+    }
+    
+    static var RUB: CurrencyModel {
+        CurrencyModel(
+            code: "RUB", symbol: "P",
+            fullDescription: "Российский рубль (RUB)",
+            shortDescription: "Российский рубль",
+            value: 1.0, isAscending: false
+        )
     }
 }

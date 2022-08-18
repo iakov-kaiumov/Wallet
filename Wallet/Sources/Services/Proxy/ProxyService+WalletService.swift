@@ -6,20 +6,20 @@
 import Foundation
 
 extension ProxyService: WalletServiceProtocol {
-    func walletServiceCreate(_ wallet: WalletApiModel, completion: @escaping (Result<WalletModel, NetworkError>) -> Void) {
+    func walletServiceCreate(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
         networkService.walletServiceCreate(wallet, completion: completion)
     }
     
-    func walletServiceGetAll(completion: @escaping (Result<[WalletModel], NetworkError>) -> Void) {
+    func walletServiceGetAll(completion: @escaping (Result<[WalletApiModel], NetworkError>) -> Void) {
         networkService.walletServiceGetAll(completion: completion)
     }
     
     func walletServiceEdit(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
-        
+        networkService.walletServiceEdit(wallet, completion: completion)
     }
     
     func walletServiceDelete(_ walletId: Int, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
-        
+        networkService.walletServiceDelete(walletId, completion: completion)
     }
 
 }

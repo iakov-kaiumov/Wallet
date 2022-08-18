@@ -24,10 +24,12 @@ final class CurrenciesView: UIView {
     }
     
     // MARK: - Public methods
-    func configure(model: CurrenciesModel) {
+    func configure(currencies: [CurrencyModel]) {
         stack.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        for currency in model.currencies {
+        for currency in currencies {
             let currencyStack = makeCurrencyStack(currency: currency)
+            currencyStack.setupSkeleton(cornerRadius: 4)
+            currencyStack.showSkeleton(currency.isSkeleton)
             stack.addArrangedSubview(currencyStack)
         }
     }
@@ -57,11 +59,11 @@ final class CurrenciesView: UIView {
         }
     }
     
-    private func makeCurrencyStack(currency: CurrenciesModel.Currency) -> UIStackView {
+    private func makeCurrencyStack(currency: CurrencyModel) -> UIStackView {
         let currencyNameLabel = UILabel()
         currencyNameLabel.font = .systemFont(ofSize: 13)
         currencyNameLabel.textColor = .systemGray
-        currencyNameLabel.text = currency.type.rawValue
+        currencyNameLabel.text = currency.code
         
         let currencyValueLabel = UILabel()
         currencyValueLabel.font = .systemFont(ofSize: 13, weight: .light)

@@ -5,27 +5,10 @@
 
 import Foundation
 
-enum CurrencyType: String, Codable, CaseIterable {
-    case RUB, USD, EUR, CHF, KWD, BHD, OMR, JPY, SEK, GBR
-    
-    var currencySymbol: String {
-        switch self {
-        case .RUB:
-            return "₽"
-        case .USD:
-            return "$"
-        case .EUR:
-            return "€"
-        default:
-            return ""
-        }
-    }
-}
-
-struct WalletModel: Codable {
+struct WalletModel {
     var id: Int
     var name: String
-    var currency: CurrencyType
+    var currency: CurrencyModel
     var limit: Decimal?
     var balance: Decimal
     var income: Decimal
@@ -44,18 +27,21 @@ struct WalletModel: Codable {
     }
     
     func makeApiModel() -> WalletApiModel {
-        WalletApiModel(id: Int64(id),
-                       isHidden: isHidden ? 1 : 0,
+        WalletApiModel(id: id,
                        name: name,
-                       currency: currency.rawValue,
-                       amountLimit: limit)
+                       currency: currency.code,
+                       amountLimit: limit,
+                       balance: balance,
+                       income: income,
+                       spendings: spendings,
+                       isHidden: isHidden)
     }
     
     static func makeCleanModel(_ id: Int = 0) -> WalletModel {
         return WalletModel(
             id: id,
             name: "Новый кошелек",
-            currency: CurrencyType.RUB,
+            currency: CurrencyModel.RUB,
             limit: nil,
             balance: 0,
             income: 0,
@@ -69,12 +55,36 @@ struct WalletModel: Codable {
         return WalletModel(
             id: id,
             name: "Тестовый кошелек №\(id)",
-            currency: CurrencyType.RUB,
-            limit: Decimal(Double.random(in: 10000...100000)),
+            currency: CurrencyModel.RUB,
+            limit: Decimal(Double.random(in: 100000...1000000)),
             balance: Decimal(Double.random(in: 10000...100000)),
             income: Decimal(Double.random(in: 10000...100000)),
             spendings: Decimal(Double.random(in: 10000...100000)),
             isHidden: Bool.random()
+        )
+    }
+}
+
+extension WalletModel {
+    static func fromApiModel(_ wallet: WalletApiModel) -> WalletModel? {
+        guard
+//              let currency = wallet.currency,
+              let balance = wallet.balance,
+              let income = wallet.income,
+              let spendings = wallet.spendings,
+              let isHidden = wallet.isHidden else {
+            return nil
+        }
+        
+        return WalletModel(
+            id: wallet.id,
+            name: wallet.name,
+            currency: CurrencyModel.RUB,
+            limit: wallet.amountLimit,
+            balance: balance,
+            income: income,
+            spendings: spendings,
+            isHidden: isHidden
         )
     }
 }

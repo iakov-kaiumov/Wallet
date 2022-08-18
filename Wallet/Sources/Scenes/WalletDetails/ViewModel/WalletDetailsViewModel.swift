@@ -74,7 +74,7 @@ final class WalletDetailesViewModel {
             
             let walletAmount = Decimal(200_000)
             let walletName = "Кошелек 1"
-            self.walletAmount = walletAmount.displayString()
+            self.walletAmount = walletAmount.displayString(currency: .RUB)
             self.walletName = walletName
             let expenseChipModel = self.dependencies.spendChipModelBuilder.buildExpenseSpendChipModel(
                 spending: spent,
@@ -82,7 +82,7 @@ final class WalletDetailesViewModel {
             )
             self.walletInfoModel = OperationTableHeaderView.Model(
                 walletName: walletName,
-                walletAmount: walletAmount.displayString(),
+                walletAmount: walletAmount.displayString(currency: .RUB),
                 incomeChipModel: incomeChipModel,
                 expenseChipModel: expenseChipModel,
                 isLimitExceeded: true

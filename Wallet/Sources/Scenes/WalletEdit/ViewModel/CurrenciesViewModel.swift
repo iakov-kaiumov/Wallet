@@ -8,29 +8,22 @@ import Foundation
 protocol CurrenciesViewModelDelegate: AnyObject {
     func currenciesViewModelCloseButtonDidTap()
     
-    func currenciesViewModelValueChanged(_ value: CurrencyType?)
+    func currenciesViewModelValueChanged(_ value: CurrencyModel)
+    
+    func currenciesViewModel(_ viewModel: CurrenciesViewModel, didReceiveError error: Error)
 }
 
 final class CurrenciesViewModel {
+    // MARK: - Properties
+    typealias Dependencies = HasCurrenciesService
     
-    private let mainCurrencies: [CurrencyType] = [.RUB, .USD, .EUR]
+    var currencies: [CurrencyModel] = []
     
-    private let allCurrencies: [CurrencyType] = CurrencyType.allCases
-    
-    var currencies: [CurrencyType] = [.RUB, .USD, .EUR]
-    
-    var chosenIndex: Int? {
-        didSet {
-            if let chosenIndex = chosenIndex {
-                let type = allCurrencies[chosenIndex]
-                delegate?.currenciesViewModelValueChanged(type)
-            } else {
-                delegate?.currenciesViewModelValueChanged(nil)
-            }
-        }
-    }
+    var currencyModel: CurrencyModel
     
     var isShortMode: Bool = true
+    
+    var onDataReload: (() -> Void)?
     
     var onDataInserted: ((_ at: [IndexPath]) -> Void)?
     
@@ -38,10 +31,23 @@ final class CurrenciesViewModel {
     
     weak var delegate: CurrenciesViewModelDelegate?
     
-    func setCurrentCurrency(_ value: CurrencyType) {
-        chosenIndex = allCurrencies.firstIndex(of: value)
+    private var dependencies: Dependencies
+    
+    private var mainCurrencies: [CurrencyModel] = []
+    
+    private var allCurrencies: [CurrencyModel] = []
+    
+    private let mainCurrenciesCodes: [String] = ["RUB", "USD", "EUR"]
+    
+    // MARK: - Init
+    init(dependencies: Dependencies, currencyModel: CurrencyModel) {
+        self.dependencies = dependencies
+        self.currencyModel = currencyModel
+        
+        loadCurrencies()
     }
     
+    // MARK: - Public methods
     func toggleState() {
         isShortMode.toggle()
         if isShortMode {
@@ -64,17 +70,37 @@ final class CurrenciesViewModel {
     }
     
     func nextButtonDidTap() {
-        if let chosenIndex = chosenIndex {
-            let type = allCurrencies[chosenIndex]
-            delegate?.currenciesViewModelValueChanged(type)
-        } else {
-            delegate?.currenciesViewModelValueChanged(nil)
-        }
+        delegate?.currenciesViewModelValueChanged(currencyModel)
     }
     
     func getShowMoreCellModel() -> ShowMoreCell.Model {
         let text = isShortMode ? R.string.localizable.currencies_show_more_button() : R.string.localizable.currencies_show_less_button()
         
         return ShowMoreCell.Model(text: text, isShowMore: isShortMode)
+    }
+    
+    // MARK: - Private methods
+    private func loadCurrencies() {
+        dependencies.currenciesNetworkService.currenciesServiceGetAll { result in
+            switch result {
+            case .success(let models):
+                self.setupCurrencies(models)
+            case .failure(let error):
+                self.delegate?.currenciesViewModel(self, didReceiveError: error)
+            }
+        }
+    }
+    
+    private func setupCurrencies(_ apiModels: [CurrencyApiModel]) {
+        let allCurrencies = apiModels.map { CurrencyModel.fromApiModel($0) }
+        let mainCurrencies = allCurrencies.filter { mainCurrenciesCodes.contains($0.code) }
+        let extraCurrencies = allCurrencies.filter { !mainCurrenciesCodes.contains($0.code) }
+        let sortedCurrencies = mainCurrencies + extraCurrencies
+        DispatchQueue.main.async { [weak self] in
+            self?.allCurrencies = sortedCurrencies
+            self?.mainCurrencies = mainCurrencies
+            self?.currencies = mainCurrencies
+            self?.onDataReload?()
+        }
     }
 }

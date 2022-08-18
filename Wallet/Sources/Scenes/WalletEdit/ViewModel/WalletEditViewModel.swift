@@ -3,6 +3,8 @@
 //  Wallet
 //
 
+import Foundation
+
 enum WalletEditFieldType: Int {
     case name, currency, limit
 }
@@ -16,7 +18,7 @@ struct WalletEditTableItem {
 protocol WalletEditViewModelDelegate: AnyObject {
     func walletEditViewModelEnterName(_ currentValue: String?)
     
-    func walletEditViewModelEnterCurrency(_ currentValue: String?)
+    func walletEditViewModelEnterCurrency(_ currentValue: CurrencyModel)
     
     func walletEditViewModelEnterLimit(_ currentValue: String?)
     
@@ -34,19 +36,18 @@ final class WalletEditViewModel {
     
     var walletModel: WalletModel
     
-    var tableItems: [WalletEditTableItem] = [
-        WalletEditTableItem(type: .name, title: R.string.localizable.wallet_edit_name(), value: "Новый кошелек 1"),
-        WalletEditTableItem(type: .currency, title: R.string.localizable.wallet_edit_currency(), value: "USD"),
-        WalletEditTableItem(type: .limit, title: R.string.localizable.wallet_edit_limit(), value: "")
-    ]
+    var tableItems: [WalletEditTableItem] = []
     
     private var dependencies: Dependencies
     
+    private lazy var formatter: IWalletEditViewModelFormatter = WalletEditViewModelFormatter()
+    
     // MARK: - Init
-    init(dependencies: Dependencies,
-         wallet: WalletModel = .makeCleanModel()) {
+    init(dependencies: Dependencies, wallet: WalletModel = .makeCleanModel()) {
         self.dependencies = dependencies
         self.walletModel = wallet
+        
+        loadItems()
     }
         
     // MARK: - Public Methods
@@ -59,7 +60,7 @@ final class WalletEditViewModel {
         case .name:
             delegate?.walletEditViewModelEnterName(item.value)
         case .currency:
-            delegate?.walletEditViewModelEnterCurrency(item.value)
+            delegate?.walletEditViewModelEnterCurrency(walletModel.currency)
         case .limit:
             delegate?.walletEditViewModelEnterLimit(item.value)
         }
@@ -83,19 +84,50 @@ final class WalletEditViewModel {
     
     func changeName(_ value: String?) {
         guard let index = itemIndex(for: .name) else { return }
-        tableItems[index].value = value ?? ""
-        onDataChanged?()
+        if let value = value {
+            walletModel.name = value
+            tableItems[index].value = formatter.formatName(walletModel)
+            onDataChanged?()
+        }
     }
     
-    func changeCurrency(_ value: CurrencyType?) {
+    func changeCurrency(_ value: CurrencyModel?) {
         guard let index = itemIndex(for: .currency) else { return }
-        tableItems[index].value = value?.rawValue ?? ""
-        onDataChanged?()
+        if let value = value {
+            walletModel.currency = value
+            tableItems[index].value = formatter.formatCurrency(walletModel)
+            onDataChanged?()
+        }
     }
     
     func changeLimit(_ value: String?) {
         guard let index = itemIndex(for: .limit) else { return }
-        tableItems[index].value = value ?? ""
+        if let value = value, let number = Double(value) {
+            walletModel.limit = Decimal(number)
+        } else {
+            walletModel.limit = nil
+        }
+        tableItems[index].value = formatter.formatLimit(walletModel)
         onDataChanged?()
+    }
+    
+    private func loadItems() {
+        tableItems = [
+            WalletEditTableItem(
+                type: .name,
+                title: R.string.localizable.wallet_edit_name(),
+                value: formatter.formatName(walletModel)
+            ),
+            WalletEditTableItem(
+                type: .currency,
+                title: R.string.localizable.wallet_edit_currency(),
+                value: formatter.formatCurrency(walletModel)
+            ),
+            WalletEditTableItem(
+                type: .limit,
+                title: R.string.localizable.wallet_edit_limit(),
+                value: formatter.formatLimit(walletModel)
+            )
+        ]
     }
 }

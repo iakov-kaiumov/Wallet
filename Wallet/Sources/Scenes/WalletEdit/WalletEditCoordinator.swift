@@ -69,12 +69,9 @@ extension WalletEditCoordinator: WalletEditViewModelDelegate {
         navigationController.present(controller, animated: true)
     }
     
-    func walletEditViewModelEnterCurrency(_ currentValue: String?) {
-        let currenciesViewModel = CurrenciesViewModel()
+    func walletEditViewModelEnterCurrency(_ currentValue: CurrencyModel) {
+        let currenciesViewModel = CurrenciesViewModel(dependencies: dependencies, currencyModel: currentValue)
         currenciesViewModel.delegate = self
-        if let currentValue = currentValue, let type = CurrencyType(rawValue: currentValue) {
-            currenciesViewModel.setCurrentCurrency(type)
-        }
         
         let controller = CurrenciesViewController(viewModel: currenciesViewModel)
         navigationController.present(controller, animated: true)
@@ -114,11 +111,16 @@ extension WalletEditCoordinator: TextInputViewModelDelegate {
 }
 
 extension WalletEditCoordinator: CurrenciesViewModelDelegate {
+    func currenciesViewModel(_ viewModel: CurrenciesViewModel, didReceiveError error: Error) {
+        callBanner(type: .unknownError)
+    }
+    
     func currenciesViewModelCloseButtonDidTap() {
         navigationController.dismiss(animated: true)
     }
     
-    func currenciesViewModelValueChanged(_ value: CurrencyType?) {
+    func currenciesViewModelValueChanged(_ value: CurrencyModel) {
         walletViewModel.changeCurrency(value)
+        navigationController.dismiss(animated: true)
     }
 }

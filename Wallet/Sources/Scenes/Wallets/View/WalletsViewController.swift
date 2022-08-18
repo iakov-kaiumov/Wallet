@@ -97,6 +97,10 @@ final class WalletsViewController: UIViewController {
         viewModel.onDidLoad = { [weak self] in
             self?.walletsTableView.reloadData()
         }
+        viewModel.reloadCurrencyData = { [weak self] in
+            guard let self = self else { return }
+            self.currenciesView.configure(currencies: self.viewModel.currencyData)
+        }
     }
     
     private func setupSignOutButton() {
@@ -135,7 +139,7 @@ final class WalletsViewController: UIViewController {
             $0.top.equalTo(headerView.snp.bottom).offset(16)
         }
         
-        currenciesView.configure(model: viewModel.currencyData)
+        currenciesView.configure(currencies: viewModel.currencyData)
     }
     
     private func setupCreateWalletButton() {

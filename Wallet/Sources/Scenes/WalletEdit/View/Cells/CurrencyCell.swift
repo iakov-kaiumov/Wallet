@@ -28,8 +28,8 @@ final class CurrencyCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure(type: CurrencyType) {
-        titleLabel.text = type.rawValue
+    func configure(title: String) {
+        titleLabel.text = title
     }
     
     // MARK: - Private Methods

@@ -20,6 +20,7 @@ final class WalletDetailsCoordinator: Coordinator {
         let viewModel = WalletDetailesViewModel(dependencies: dependencies)
         viewModel.delegate = self
         let viewController = WalletDetailesViewController(viewModel: viewModel)
+        
         navigationController.pushViewController(viewController, animated: true)
     }
 }

@@ -35,17 +35,7 @@ extension NetworkService: WalletServiceProtocol {
     
     func walletServiceGetAll(completion: @escaping (Result<[WalletApiModel], NetworkError>) -> Void) {
         let request = WalletRequestsFactory.makeGetAllReqeust()
-        requestProcessor.fetch(request) { result in
-            switch result {
-            case .success(let models):
-                let result = models.compactMap({ model in
-                    self.convertWallet(model)
-                })
-                completion(.success(result))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+        requestProcessor.fetch(request, completion: completion)
     }
     
     func walletServiceEdit(_ wallet: WalletApiModel, completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {

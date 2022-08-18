@@ -14,7 +14,7 @@ protocol WalletsViewModelDelegate: AnyObject {
 }
 
 final class WalletsViewModel {
-    typealias Dependencies = HasWalletServiceProtocol
+    typealias Dependencies = HasWalletService
     // MARK: - Properties
     weak var delegate: WalletsViewModelDelegate?
     var wallets: [WalletModel] = []
@@ -110,7 +110,7 @@ final class WalletsViewModel {
     
     // MARK: - Private Methods
     private func loadWallets() {
-        dependenices.walletNetworkService.walletServiceGetAll { result in
+        dependenices.walletService.walletServiceGetAll { result in
             switch result {
             case .success(let walletModels):
                 self.wallets = walletModels

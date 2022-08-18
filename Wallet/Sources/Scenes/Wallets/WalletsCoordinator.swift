@@ -28,7 +28,10 @@ final class WalletsCoordinator: Coordinator {
         let viewModel = WalletsViewModel(dependencies: dependencies)
         viewModel.delegate = self
         let viewController = WalletsViewController(viewModel: viewModel)
-        navigationController.setViewControllers([viewController], animated: true)
+        DispatchQueue.main.async {
+            self.navigationController.setViewControllers([viewController], animated: true)
+        }
+        
     }
     
     // MARK: - Private Methods

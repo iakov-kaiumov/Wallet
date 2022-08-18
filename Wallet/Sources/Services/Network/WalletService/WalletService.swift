@@ -20,9 +20,6 @@ extension NetworkService: WalletServiceProtocol {
         guard let id = wallet.id,
               let currency = wallet.currency,
               let currencyType = CurrencyType(rawValue: currency),
-              let balance = wallet.balance,
-              let income = wallet.income,
-              let spendings = wallet.spendings,
               let isHidden = wallet.isHidden else {
             return nil
         }
@@ -31,9 +28,9 @@ extension NetworkService: WalletServiceProtocol {
                            name: wallet.name,
                            currency: currencyType,
                            limit: wallet.amountLimit,
-                           balance: balance,
-                           income: income,
-                           spendings: spendings,
+                           balance: 0,
+                           income: 0,
+                           spendings: 0,
                            isHidden: isHidden)
     }
     

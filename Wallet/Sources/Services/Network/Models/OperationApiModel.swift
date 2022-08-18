@@ -4,17 +4,28 @@
 
 import Foundation
 
-public struct OperationApiModel: Codable {
-
-    public enum ModelType: String, Codable { 
-        case income = "INCOME"
-        case spending = "SPENDING"
-    }
-    public var id: Int?
-    public var walletId: Int?
-    public var type: ModelType?
+struct OperationApiModel: Codable {
+    let id: Int?
+    let walletId: Int?
+    let type: MoneyOperationType?
     /** Категория операции */
-    public var categoryId: Int64?
-    public var balance: Decimal?
-    public var date: Date?
+    let categoryDto: CategoryApiModel?
+    let balance: Decimal?
+    let date: Date?
+    
+    var operationModel: OperationModel? {
+        guard let id = id,
+              let walletId = walletId,
+              let type = type,
+              let category = categoryDto?.categoryModel,
+              let balance = balance,
+              let date = date else { return nil }
+        return OperationModel(id: id,
+                              walletId: walletId,
+                              operationBalance: balance,
+                              operationDate: date,
+                              type: type,
+                              category: category)
+
+    }
 }

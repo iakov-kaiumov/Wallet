@@ -101,7 +101,7 @@ extension NewCategoryViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: IconCell.identifier, for: indexPath)
             
             if let cell = cell as? IconCell {
-                cell.configure(viewModel.iconBuilder.build(viewModel.model))
+                cell.configure(viewModel.iconBuilder.build(item))
             }
             
             cell.accessoryType = .disclosureIndicator

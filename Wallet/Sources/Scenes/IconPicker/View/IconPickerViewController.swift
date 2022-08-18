@@ -168,7 +168,7 @@ extension IconPickerViewController: UICollectionViewDelegateFlowLayout {
         } else {
             inset = Constants.iconSpacing(self.view.bounds.width)
         }
-        return UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+        return UIEdgeInsets(top: Constants.topInset, left: inset, bottom: 0, right: inset)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -191,6 +191,8 @@ fileprivate extension Constants {
     
     static let minimumSpacing: CGFloat = 5.0
     
+    static let topInset: CGFloat = 16.0
+    
     static let colorSpacing = { (width: CGFloat) -> CGFloat in
         max((width - cellSize * colorRowLength) / (colorRowLength + 2), minimumSpacing)
     }
@@ -199,10 +201,10 @@ fileprivate extension Constants {
     }
     
     static let colorTableCellHeight = { (colorsCount: Int, width: CGFloat) -> CGFloat in
-        CGFloat(colorsCount) / colorRowLength * (cellSize + colorSpacing(width)) - colorSpacing(width)
+        CGFloat(colorsCount) / colorRowLength * (cellSize + colorSpacing(width)) - colorSpacing(width) + topInset
     }
     
     static let iconTableCellHeight = { (iconsCount: Int, width: CGFloat) -> CGFloat in
-        CGFloat(iconsCount) / iconRowLength * (cellSize + iconSpacing(width)) - iconSpacing(width)
+        CGFloat(iconsCount) / iconRowLength * (cellSize + iconSpacing(width)) - iconSpacing(width) + topInset
     }
 }

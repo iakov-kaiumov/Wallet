@@ -77,10 +77,10 @@ extension WalletEditCoordinator: WalletEditViewModelDelegate {
         navigationController.present(controller, animated: true)
     }
     
-    func walletEditViewModelEnterLimit(_ currentValue: String?) {
+    func walletEditViewModelEnterLimit(_ currentValue: Decimal?) {
         let limitInputViewModel = TextInputViewModel.makeWalletLimit(isModal: true)
         limitInputViewModel.delegate = self
-        limitInputViewModel.text = currentValue
+        limitInputViewModel.text = currentValue?.displayString() ?? ""
         
         let controller = TextInputViewController(viewModel: limitInputViewModel)
         navigationController.present(controller, animated: true)
@@ -102,7 +102,7 @@ extension WalletEditCoordinator: TextInputViewModelDelegate {
                 self.start()
             }
         case .walletLimit:
-            walletViewModel.changeLimit(value)
+            walletViewModel.changeLimit(value?.toDecimal)
         default:
             break
         }

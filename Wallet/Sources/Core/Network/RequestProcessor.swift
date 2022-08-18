@@ -42,9 +42,6 @@ final class RequestProcessor: IRequestProcessor {
                 return
             }
             
-            print("PUPA")
-            print(String(decoding: data, as: UTF8.self))
-            print()
             completion(.success(data))
         }
         task.resume()

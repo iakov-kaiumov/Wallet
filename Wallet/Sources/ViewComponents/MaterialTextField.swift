@@ -44,6 +44,11 @@ final private class MaterialTextFieldLabel: UIView {
 
 final class MaterialTextField: UIView {
     // MARK: - Properties
+    
+    enum Format {
+        case any, decimal
+    }
+    
     private let label: MaterialTextFieldLabel = MaterialTextFieldLabel()
 
     lazy var textField: UITextField = {
@@ -64,7 +69,7 @@ final class MaterialTextField: UIView {
         return view
     }()
     
-    var allowedCharacters: CharacterSet?
+    var format: Format = .any
     
     var text: String? {
         get {
@@ -92,6 +97,17 @@ final class MaterialTextField: UIView {
             label.text = newValue
         }
     }
+    
+    private lazy var decimalFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = Locale.current
+        formatter.maximumFractionDigits = 0
+        formatter.groupingSeparator = " "
+        return formatter
+    }()
+    
+    private var allowedDecimalCharacters: CharacterSet = CharacterSet.decimalDigits
 
     // MARK: - Init
     override init(frame: CGRect) {
@@ -136,8 +152,30 @@ extension MaterialTextField: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
-        guard let allowedCharacters = allowedCharacters else { return true }
+        if format == .any {
+            return true
+        }
+        
+        if let groupingSeparator = decimalFormatter.groupingSeparator {
+
+            if string == groupingSeparator {
+                return true
+            }
+
+            if let textWithoutGroupingSeparator = textField.text?.replacingOccurrences(of: groupingSeparator, with: "") {
+                var totalTextWithoutGroupingSeparators = textWithoutGroupingSeparator + string
+                if string.isEmpty { // pressed Backspace key
+                    totalTextWithoutGroupingSeparators.removeLast()
+                }
+                if let numberWithoutGroupingSeparator = totalTextWithoutGroupingSeparators.toDecimal,
+                    let formattedText = decimalFormatter.string(from: numberWithoutGroupingSeparator as NSNumber) {
+
+                    textField.text = formattedText
+                    return false
+                }
+            }
+        }
         let characterSet = CharacterSet(charactersIn: string)
-        return allowedCharacters.isSuperset(of: characterSet)
+        return allowedDecimalCharacters.isSuperset(of: characterSet)
     }
 }

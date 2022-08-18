@@ -20,7 +20,7 @@ protocol WalletEditViewModelDelegate: AnyObject {
     
     func walletEditViewModelEnterCurrency(_ currentValue: CurrencyModel)
     
-    func walletEditViewModelEnterLimit(_ currentValue: String?)
+    func walletEditViewModelEnterLimit(_ currentValue: Decimal?)
     
     func walletEditViewModelDidFinish(walletID: Int)
     
@@ -62,11 +62,11 @@ final class WalletEditViewModel {
     func cellDidTap(item: WalletEditTableItem) {
         switch item.type {
         case .name:
-            delegate?.walletEditViewModelEnterName(item.value)
+            delegate?.walletEditViewModelEnterName(walletModel.name)
         case .currency:
             delegate?.walletEditViewModelEnterCurrency(walletModel.currency)
         case .limit:
-            delegate?.walletEditViewModelEnterLimit(item.value)
+            delegate?.walletEditViewModelEnterLimit(walletModel.limit)
         }
     }
     
@@ -81,14 +81,14 @@ final class WalletEditViewModel {
     }
     
     private func onServerResponse(result: Result<WalletApiModel, NetworkError>) {
-        switch result {
-        case .success(let model):
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            switch result {
+            case .success(let model):
                 self.delegate?.walletEditViewModelDidFinish(walletID: model.id)
+            case .failure(let error):
+                self.onDidStopLoading?()
+                self.delegate?.walletsViewModel(self, didReceiveError: error)
             }
-        case .failure(let error):
-            self.onDidStopLoading?()
-            self.delegate?.walletsViewModel(self, didReceiveError: error)
         }
     }
     
@@ -102,21 +102,19 @@ final class WalletEditViewModel {
     }
     
     func changeCurrency(_ value: CurrencyModel?) {
-        guard let index = itemIndex(for: .currency) else { return }
+        guard let currencyIndex = itemIndex(for: .currency) else { return }
+        guard let limitIndex = itemIndex(for: .limit) else { return }
         if let value = value {
             walletModel.currency = value
-            tableItems[index].value = formatter.formatCurrency(walletModel)
+            tableItems[currencyIndex].value = formatter.formatCurrency(walletModel)
+            tableItems[limitIndex].value = formatter.formatLimit(walletModel)
             onDataChanged?()
         }
     }
     
-    func changeLimit(_ value: String?) {
+    func changeLimit(_ value: Decimal?) {
         guard let index = itemIndex(for: .limit) else { return }
-        if let value = value, let number = Double(value) {
-            walletModel.limit = Decimal(number)
-        } else {
-            walletModel.limit = nil
-        }
+        walletModel.limit = value
         tableItems[index].value = formatter.formatLimit(walletModel)
         onDataChanged?()
     }

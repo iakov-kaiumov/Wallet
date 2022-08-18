@@ -108,20 +108,17 @@ final class NewCategoryViewModel {
         let categoryModel = CategoryApiModel(name: model.name ?? "", type: model.type?.convertToCategoryType(), color: String(describing: model.colorId ?? 0), iconId: model.iconId)
         showProgressView?(true)
         dependencies.categoryService.categoryNetworkServiceCreate(categoryModel) { [weak self] result in
-            self?.showProgressView?(false)
-            switch result {
-            case .success(let model):
-                print(model)
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                self?.showProgressView?(false)
+                switch result {
+                case .success(let model):
+                    print(model)
                     self?.moveNext()
-                }
-            case .failure(let error):
-                print(error)
-                DispatchQueue.main.async {
+                case .failure(let error):
+                    print(error)
                     self?.showError(error: error)
                 }
             }
-
         }
     }
     

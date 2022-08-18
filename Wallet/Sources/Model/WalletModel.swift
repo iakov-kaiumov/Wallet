@@ -32,7 +32,7 @@ struct WalletModel {
             id: id,
             name: name,
             currency: currency.code,
-            amountLimit: limit,
+            amountLimit: limit ?? 0,
             balance: balance,
             income: income,
             spendings: spendings,
@@ -56,7 +56,7 @@ extension WalletModel {
             balance: 0,
             income: 0,
             spendings: 0,
-            isHidden: Bool.random()
+            isHidden: false
         )
         
     }

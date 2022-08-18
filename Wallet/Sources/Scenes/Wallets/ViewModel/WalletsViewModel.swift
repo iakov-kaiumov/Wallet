@@ -26,7 +26,7 @@ final class WalletsViewModel {
     var onHide: (() -> Void)?
     var onShow: (() -> Void)?
     
-    var reloadData: (() -> Void)?
+    var onDidLoad: (() -> Void)?
     
     private var dependenices: Dependencies
     
@@ -35,10 +35,13 @@ final class WalletsViewModel {
         self.dependenices = dependencies
         userData = PersonModel.makeTestModel()
         currencyData = CurrenciesModel.getTestModel()
-        loadWallets()
     }
     
     // MARK: - Public Methods
+    func load() {
+        loadWallets()
+    }
+    
     func selectWalletWithIndex(_ index: Int, section: Int) {
         var wallets: [WalletModel]
         if section == 0 {
@@ -115,15 +118,14 @@ final class WalletsViewModel {
             case .success(let walletModels):
                 self.wallets = walletModels
                 DispatchQueue.main.async {
-                    self.reloadData?()
+                    self.updateShownWallets()
+                    self.updateHiddenWallets()
+                    self.onDidLoad?()
                 }
             case .failure(let error):
                 self.delegate?.walletsViewModel(self, didReceiveError: error)
             }
         }
-        
-        updateShownWallets()
-        updateHiddenWallets()
     }
 
     private func updateHiddenWallets() {

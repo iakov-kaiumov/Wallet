@@ -20,7 +20,7 @@ final class OperationEditCoordinator: Coordinator {
     }
     
     func start() {
-        let model = OperationModel.makeTestModel()
+        let model = OperationModel.makeEmptyModel()
         operationViewModel = OperationViewModel(model: model)
         operationViewModel?.delegate = self
         guard let operationViewModel = operationViewModel else {
@@ -53,8 +53,8 @@ extension OperationEditCoordinator: OperationViewModelDelegate {
         navigationController.present(controller, animated: true)
     }
     
-    func operationViewModelEnterCategory(_ currentValue: CategoryModel?) {
-        let viewModel = CategoryViewModel()
+    func operationViewModelEnterCategory(_ currentValue: CategoryModel?, _ currentType: MoneyOperationType) {
+        let viewModel = CategoryViewModel(dependencies: dependencies, type: currentType)
         viewModel.delegate = self
         viewModel.chosenCategory = currentValue
         
@@ -99,20 +99,23 @@ extension OperationEditCoordinator: OperationTypeViewModelDelegate {
 }
 
 extension OperationEditCoordinator: CategoryViewModelDelegate {
+    func categoryViewModel(_ viewModel: CategoryViewModel, didReceiveError error: Error) {
+        callBanner(type: .unknownError)
+    }
+    
     func categoryViewModelCloseButtonDidTap() {
-        navigationController.dismiss(animated: true)
+        navigationController.popViewController(animated: true)
     }
     
     func categoryViewModelValueChanged(_ value: CategoryModel?) {
         operationViewModel?.changeCategory(value)
     }
     
-    func categoryViewModelCreateCategory() {
-        let coordinator = NewCategoryCoordinator(navigationController: navigationController,
-                                                 dependencies: dependencies)
+    func categoryViewModelCreateCategory(type: MoneyOperationType) {
+        let coordinator = NewCategoryCoordinator(navigationController: navigationController, dependencies: dependencies)
         coordinator.delegate = self
         childCoordinators.append(coordinator)
-        coordinator.start()
+        coordinator.start(type: type)
     }
 }
 

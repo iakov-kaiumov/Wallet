@@ -32,6 +32,7 @@ final class OperationViewController: UIViewController {
     init(viewModel: OperationViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        viewModel.setButtonInteraction = setButtonEnabled
     }
 
     required init?(coder: NSCoder) {
@@ -79,6 +80,8 @@ final class OperationViewController: UIViewController {
     private func setupNextButton() {
         view.addSubview(nextButton)
 
+        setButtonEnabled(false)
+        
         nextButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
@@ -101,6 +104,7 @@ final class OperationViewController: UIViewController {
             guard let self = self else {
                 return
             }
+            
             self.toggleDatePicker(enabled: false)
         }
         
@@ -122,6 +126,11 @@ final class OperationViewController: UIViewController {
             },
             completion: nil
         )
+    }
+    
+    private func setButtonEnabled(_ isActive: Bool) {
+        nextButton.isEnabled = isActive
+        nextButton.backgroundColor = isActive ? R.color.loginButton() : R.color.warningGrey()
     }
 }
 

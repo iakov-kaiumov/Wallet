@@ -57,6 +57,10 @@
 "operation_edit_type" = "Тип";
 "operation_edit_category" = "Категория";
 "operation_edit_date" = "Дата операции";
+"operation_edit_enter_amount" = "Введите сумму";
+"operation_edit_enter_category" = "Выберите категорию";
+"operation_edit_enter_type" = "Выберите тип";
+"operation_edit_enter_date" = "Укажите дату";
 
 "operations_empty_label" = "У вас пока нет записей";
 "operations_create_button" = "Добавить операцию";

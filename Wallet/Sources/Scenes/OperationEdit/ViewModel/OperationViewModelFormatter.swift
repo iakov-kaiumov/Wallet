@@ -21,14 +21,14 @@ final class OperationViewModelFormatter: IOperationViewModelFormatter {
     
     func formatAmount(_ operation: OperationModel?) -> String {
         guard let amount = operation?.operationBalance else {
-            return ""
+            return R.string.localizable.operation_edit_enter_amount()
         }
         return amount.displayString(currency: .RUB)
     }
     
     func formatType(_ operation: OperationModel?) -> String {
         guard let type = operation?.type else {
-            return ""
+            return R.string.localizable.operation_edit_enter_type()
         }
         switch type {
         case .INCOME:
@@ -40,14 +40,14 @@ final class OperationViewModelFormatter: IOperationViewModelFormatter {
     
     func formatCategory(_ operation: OperationModel?) -> String {
         guard let category = operation?.category else {
-            return ""
+            return R.string.localizable.operation_edit_enter_category()
         }
         return category.name ?? ""
     }
     
     func formatDate(_ operation: OperationModel?) -> String {
         guard let date = operation?.operationDate else {
-            return ""
+            return R.string.localizable.operation_edit_enter_date()
         }
         return dateFormatter.string(from: date)
     }

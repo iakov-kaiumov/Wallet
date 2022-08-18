@@ -25,6 +25,7 @@ final class OperationTypeViewModel {
     }
     
     func closeButtonDidTap() {
+        delegate?.operationTypeViewModelValueChanged(chosenType)
         delegate?.operationTypeViewModelCloseButtonDidTap()
     }
     

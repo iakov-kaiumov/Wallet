@@ -21,13 +21,12 @@ final class CategoryRequestsFactory {
             httpMethod: .GET,
             path: basePath,
             queryParameters: [
-                "personId": "\(personId)",
                 "categoryType": categoryType.rawValue
             ]
         )
     }
     
-    static func makeCreateReqeust(category: CategoryApiModel) -> DefaultBodyRequest<CategoryApiModel, CategoryApiModel> {
+    static func makeCreateRequest(category: CategoryApiModel) -> DefaultBodyRequest<CategoryApiModel, CategoryApiModel> {
         DefaultBodyRequest<CategoryApiModel, CategoryApiModel>(
             httpMethod: .POST,
             path: basePath,
@@ -36,7 +35,7 @@ final class CategoryRequestsFactory {
         )
     }
     
-    static func makeUpdateReqeust(id: Int, category: CategoryApiModel) -> some IRequest {
+    static func makeUpdateRequest(id: Int, category: CategoryApiModel) -> some IRequest {
         DefaultBodyRequest<CategoryApiModel, CategoryApiModel>(
             httpMethod: .POST,
             path: "\(basePath)/\(id)",

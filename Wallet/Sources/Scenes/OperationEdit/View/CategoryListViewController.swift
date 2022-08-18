@@ -11,6 +11,7 @@ final class CategoryListViewController: UIViewController {
     private let viewModel: CategoryViewModel
     
     private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
+    private lazy var progressView = ProgressView()
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         
@@ -54,6 +55,15 @@ final class CategoryListViewController: UIViewController {
         title = R.string.localizable.category_picker_title()
         setupTableView()
         setupNextButton()
+        setupProgressView()
+        
+        viewModel.showProgressView = { isOn in
+            if isOn {
+                self.progressView.show()
+            } else {
+                self.progressView.hide()
+            }
+        }
         
         viewModel.reloadData = { [weak self] in
             self?.tableView.reloadData()
@@ -77,6 +87,14 @@ final class CategoryListViewController: UIViewController {
         nextButton.setTitle(R.string.localizable.default_save_button(), for: .normal)
         nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
     }
+    
+    private func setupProgressView() {
+        view.addSubview(progressView)
+        
+        progressView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+    }
 }
 
 extension CategoryListViewController: UITableViewDataSource {
@@ -89,7 +107,7 @@ extension CategoryListViewController: UITableViewDataSource {
         if section == 0 {
             return viewModel.categories.count
         }
-        return 1
+        return viewModel.categories.count > 0 ? 1 : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

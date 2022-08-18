@@ -22,7 +22,7 @@ extension NetworkService: CategoryServiceProtocol {
         type: MoneyOperationType,
         completion: @escaping (Result<[CategoryApiModel], NetworkError>) -> Void
     ) {
-        let request = CategoryRequestsFactory.makeGetRequest(personId: personId, categoryType: type)
+        let request = CategoryRequestsFactory.makeGetRequest(categoryType: type)
         requestProcessor.fetch(request) { result in
             completion(result)
         }
@@ -32,7 +32,7 @@ extension NetworkService: CategoryServiceProtocol {
                                       personId: Int,
                                       type: MoneyOperationType,
                                       completion: @escaping (Result<CategoryApiModel, NetworkError>) -> Void) {
-        let request = CategoryRequestsFactory.makeCreateReqeust(category: category)
+        let request = CategoryRequestsFactory.makeCreateRequest(category: category)
         requestProcessor.fetch(request, completion: completion)
     }
 }

@@ -10,8 +10,12 @@ protocol HasSignInService {
     var signInService: GoogleSignInServiceProtocol { get }
 }
 
-protocol HasWalletServiceProtocol {
-    var walletNetworkService: WalletServiceProtocol { get }
+protocol HasWalletService {
+    var walletService: WalletServiceProtocol { get }
+}
+
+protocol HasCategoryService {
+    var categoryService: CategoryServiceProtocol { get }
 }
 
 protocol HasSpendChipModelBuilder {
@@ -22,6 +26,7 @@ protocol HasOperationCellModelBuilder {
     var operationCellModelBuilder: OperationCellModelBuilderProtocol { get }
 }
 
+// MARK: - AppDependency
 final class AppDependency {
     private let proxyService: ProxyService
     
@@ -46,8 +51,15 @@ extension AppDependency: HasSignInService {
 }
 
 // MARK: - HasWalletServiceProtocol
-extension AppDependency: HasWalletServiceProtocol {
-    var walletNetworkService: WalletServiceProtocol {
+extension AppDependency: HasWalletService {
+    var walletService: WalletServiceProtocol {
+        proxyService
+    }
+}
+
+// MARK: - HasCategoryService
+extension AppDependency: HasCategoryService {
+    var categoryService: CategoryServiceProtocol {
         proxyService
     }
 }

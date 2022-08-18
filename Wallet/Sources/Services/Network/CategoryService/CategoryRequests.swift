@@ -26,7 +26,7 @@ final class CategoryRequestsFactory {
         )
     }
     
-    static func makeCreateReqeust(category: CategoryApiModel) -> some IRequest {
+    static func makeCreateReqeust(category: CategoryApiModel) -> DefaultBodyRequest<CategoryApiModel, CategoryApiModel> {
         DefaultBodyRequest<CategoryApiModel, CategoryApiModel>(
             httpMethod: .POST,
             path: basePath,

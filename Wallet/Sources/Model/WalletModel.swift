@@ -33,13 +33,10 @@ struct WalletModel: Codable {
     
     func makeApiModel() -> WalletApiModel {
         WalletApiModel(id: Int64(id),
+                       isHidden: isHidden,
                        name: name,
                        currency: currency.rawValue,
-                       amountLimit: limit,
-                       balance: balance,
-                       income: income,
-                       spendings: spendings,
-                       isHidden: isHidden)
+                       amountLimit: limit)
     }
     
     static func makeCleanModel(_ id: Int = 0) -> WalletModel {

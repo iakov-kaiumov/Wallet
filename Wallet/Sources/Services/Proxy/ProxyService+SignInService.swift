@@ -23,7 +23,10 @@ extension ProxyService: GoogleSignInServiceProtocol {
             switch result {
             case .success(let token):
                 UserDefaults.standard.set(token, forKey: "token")
-                self?.networkService.setup()
+                DispatchQueue.main.async {
+                    self?.networkService.setup()
+                }
+                
             case .failure(let error):
                 print(error)
             }

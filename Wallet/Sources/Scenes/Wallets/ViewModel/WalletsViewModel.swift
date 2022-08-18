@@ -112,7 +112,7 @@ final class WalletsViewModel {
     
     // MARK: - Private Methods
     private func loadWallets() {
-        dependenices.walletNetworkService.walletServiceGetAll { result in
+        dependenices.walletService.walletServiceGetAll { result in
             switch result {
             case .success(let walletModels):
                 self.wallets = walletModels.compactMap { WalletModel.fromApiModel($0) }

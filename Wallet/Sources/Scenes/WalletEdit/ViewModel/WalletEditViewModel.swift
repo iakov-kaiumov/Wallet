@@ -26,7 +26,7 @@ protocol WalletEditViewModelDelegate: AnyObject {
 }
 
 final class WalletEditViewModel {
-    typealias Dependencies = HasWalletServiceProtocol
+    typealias Dependencies = HasWalletService
     // MARK: - Properties
     var isCreatingMode: Bool = true
     
@@ -69,7 +69,7 @@ final class WalletEditViewModel {
     
     func mainButtonDidTap() {
         if isCreatingMode {
-            dependencies.walletNetworkService.walletServiceCreate(walletModel.makeApiModel()) { result in
+            dependencies.walletService.walletServiceCreate(walletModel.makeApiModel()) { result in
                 switch result {
                 case .success(let model):
                     print("Nice. \(model)")

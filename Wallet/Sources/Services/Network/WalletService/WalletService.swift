@@ -16,6 +16,24 @@ protocol WalletServiceProtocol: AnyObject {
 }
 
 extension NetworkService: WalletServiceProtocol {
+    private func convertWallet(_ wallet: WalletApiModel) -> WalletModel? {
+        guard let id = wallet.id,
+              let currency = wallet.currency,
+              let currencyType = CurrencyType(rawValue: currency),
+              let isHidden = wallet.isHidden else {
+            return nil
+        }
+        
+        return WalletModel(id: Int(id),
+                           name: wallet.name,
+                           currency: currencyType,
+                           limit: wallet.amountLimit,
+                           balance: 0,
+                           income: 0,
+                           spendings: 0,
+                           isHidden: isHidden)
+    }
+    
     func walletServiceCreate(_ wallet: WalletApiModel,
                              completion: @escaping (Result<WalletApiModel, NetworkError>) -> Void) {
         let request = WalletRequestsFactory.makeCreateReqeust(wallet: wallet)

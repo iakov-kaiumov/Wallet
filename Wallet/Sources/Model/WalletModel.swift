@@ -41,13 +41,22 @@ struct WalletModel: Codable {
         String(format: "%.2f ₽", balance ?? 0)
     }
     
+    var isLimitExceeded: Bool {
+        guard let spendings = spendings,
+        let limit = limit else {
+            return false
+        }
+
+        return spendings > limit
+    }
+    
     static func getTestModel(_ id: Int = 0) -> WalletModel {
         return WalletModel(
             id: id,
             personId: 0,
             name: "Тестовый кошелек №\(id)",
             currency: CurrencyType.RUB,
-            limit: Double.random(in: 100000...1000000),
+            limit: Double.random(in: 10000...100000),
             balance: Double.random(in: 10000...100000),
             income: Double.random(in: 10000...100000),
             spendings: Double.random(in: 10000...100000),

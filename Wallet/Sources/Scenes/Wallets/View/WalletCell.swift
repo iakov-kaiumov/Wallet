@@ -9,10 +9,10 @@ class WalletCell: UITableViewCell {
     
     // MARK: - Properties
     static let reuseIdentifier = "Wallet Cell"
-
-    private var icon = UIImageView(image: R.image.walletBgIcon())
-    private var walletTitleLabel = UILabel()
-    private var walletBalanceLabel = UILabel()
+    private lazy var icon = UIImageView(image: R.image.walletBgIcon())
+    private lazy var walletTitleLabel = UILabel()
+    private lazy var walletBalanceLabel = UILabel()
+    private lazy var redLabel = RedLabelView()
     
     // MARK: - Init
     required init?(coder: NSCoder) {
@@ -28,10 +28,11 @@ class WalletCell: UITableViewCell {
     // MARK: - Lifecycle
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0))
+//        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0))
     }
     
     override func prepareForReuse() {
+        redLabel.layer.opacity = 0.0
         walletTitleLabel.text = ""
         walletBalanceLabel.text = ""
         super.prepareForReuse()
@@ -41,6 +42,7 @@ class WalletCell: UITableViewCell {
     func configure(model: WalletModel) {
         walletTitleLabel.text = model.name
         walletBalanceLabel.text = model.formattedBalance
+        redLabel.layer.opacity = model.isLimitExceeded ? 1.0 : 0.0
     }
     
     // MARK: - Private Methods
@@ -51,10 +53,9 @@ class WalletCell: UITableViewCell {
     
     private func setupIcon() {
         contentView.addSubview(icon)
-        icon.translatesAutoresizingMaskIntoConstraints = false
         icon.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
-            $0.top.equalToSuperview()
+            $0.top.equalToSuperview().offset(20)
         }
     }
     
@@ -70,11 +71,19 @@ class WalletCell: UITableViewCell {
         walletBalanceLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         contentView.addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.snp.makeConstraints {
             $0.leading.equalTo(icon.snp.trailing).offset(16)
-            $0.top.bottom.equalToSuperview()
+            $0.top.equalToSuperview()
+            $0.bottom.equalToSuperview()
             $0.trailing.equalToSuperview().inset(16)
+        }
+        
+        redLabel.layer.opacity = 0.0
+        redLabel.setText(text: R.string.localizable.wallets_limit_exceeded())
+        contentView.addSubview(redLabel)
+        redLabel.snp.makeConstraints {
+            $0.top.equalTo(walletTitleLabel.snp.bottom).offset(6)
+            $0.leading.equalToSuperview().offset(72)
         }
     }
 }

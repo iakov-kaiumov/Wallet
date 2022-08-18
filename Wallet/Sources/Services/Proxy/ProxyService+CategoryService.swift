@@ -14,14 +14,9 @@ extension ProxyService: CategoryServiceProtocol {
     }
     
     func categoryNetworkServiceCreate(_ category: CategoryApiModel,
-                                      personId: Int,
-                                      type: CategoryApiModel.CategoryType,
                                       completion: @escaping (Result<CategoryApiModel, NetworkError>) -> Void) {
         // TODO: - Cache request
-        networkService.categoryNetworkServiceCreate(category,
-                                                    personId: personId,
-                                                    type: type,
-                                                    completion: completion)
+        networkService.categoryNetworkServiceCreate(category, completion: completion)
     }
     
 }

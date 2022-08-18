@@ -24,9 +24,13 @@ protocol NewCategoryViewModelDelegate: AnyObject {
     func newCategoryViewModelEnterIcon()
     
     func newCategoryViewModelCreateCategory(_ newCategory: CategoryModel)
+    
+    func newCategoryViewModel(_ viewModel: NewCategoryViewModel, didReceiveError error: Error)
 }
 
 final class NewCategoryViewModel {
+    typealias Dependencies = HasCategoryService
+    
     // MARK: - Properties
     var model: CategoryModel
     
@@ -39,8 +43,10 @@ final class NewCategoryViewModel {
     lazy var iconBuilder = IconViewModelBuilder()
     
     private lazy var formatter: INewCategoryViewModelFormatter = NewCategoryViewModelFormatter()
+    private var dependencies: Dependencies
     
-    init(model: CategoryModel) {
+    init(dependencies: Dependencies, model: CategoryModel) {
+        self.dependencies = dependencies
         self.model = model
         loadData()
     }
@@ -98,6 +104,29 @@ final class NewCategoryViewModel {
     }
     
     func createCategory() {
+        let categoryModel = CategoryApiModel(name: model.name ?? "", type: model.type?.convertToCategoryType(), color: String(describing: model.colorId ?? 0), iconId: model.iconId)
+        dependencies.categoryService.categoryNetworkServiceCreate(categoryModel) { [weak self] result in
+            switch result {
+            case .success(let model):
+                print(model)
+                DispatchQueue.main.async {
+                    self?.moveNext()
+                }
+            case .failure(let error):
+                print(error)
+                DispatchQueue.main.async {
+                    self?.showError(error: error)
+                }
+            }
+
+        }
+    }
+    
+    private func moveNext() {
         delegate?.newCategoryViewModelCreateCategory(model)
+    }
+    
+    private func showError(error: NetworkError) {
+        self.delegate?.newCategoryViewModel(self, didReceiveError: error)
     }
 }

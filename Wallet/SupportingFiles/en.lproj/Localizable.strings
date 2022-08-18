@@ -57,6 +57,10 @@
 "operation_edit_type" = "Type";
 "operation_edit_category" = "Category";
 "operation_edit_date" = "Date";
+"operation_edit_enter_amount" = "Enter amount";
+"operation_edit_enter_category" = "Choose category";
+"operation_edit_enter_type" = "Choose type";
+"operation_edit_enter_date" = "Choose date";
 
 "operations_empty_label" = "You don't have any transactions yet";
 "operations_create_button" = "Add operation";

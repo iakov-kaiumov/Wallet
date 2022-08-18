@@ -15,12 +15,11 @@ final class CategoryRequestsFactory {
         )
     }
     
-    static func makeGetRequest(personId: Int, categoryType: CategoryApiModel.CategoryType) -> DefaultSimpleRequest<[CategoryApiModel]> {
+    static func makeGetRequest(categoryType: CategoryApiModel.CategoryType) -> DefaultSimpleRequest<[CategoryApiModel]> {
         DefaultSimpleRequest<[CategoryApiModel]>(
             httpMethod: .GET,
             path: basePath,
             queryParameters: [
-                "personId": "\(personId)",
                 "categoryType": categoryType.rawValue
             ]
         )

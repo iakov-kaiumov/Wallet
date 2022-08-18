@@ -20,7 +20,7 @@ protocol OperationViewModelDelegate: AnyObject {
     
     func operationViewModelEnterType(_ currentValue: MoneyOperationType)
     
-    func operationViewModelEnterCategory(_ currentValue: CategoryModel?)
+    func operationViewModelEnterCategory(_ currentValue: CategoryModel?, _ currentType: MoneyOperationType)
     
     func operationViewModelDidFinish()
 }
@@ -34,6 +34,8 @@ final class OperationViewModel {
     weak var delegate: OperationViewModelDelegate?
     
     var onItemChanged: ((_ row: Int) -> Void)?
+    
+    var setButtonInteraction: ((_ isActive: Bool) -> Void)?
     
     var tableItems: [OperationEditTableItem] = []
     
@@ -73,6 +75,7 @@ final class OperationViewModel {
                 value: formatter.formatDate(model)
             )
         ]
+        toggleButton()
         tableItems.indices.forEach { onItemChanged?($0) }
     }
     
@@ -83,7 +86,7 @@ final class OperationViewModel {
         case .type:
             delegate?.operationViewModelEnterType(model.type ?? .INCOME)
         case .category:
-            delegate?.operationViewModelEnterCategory(model.category)
+            delegate?.operationViewModelEnterCategory(model.category, model.type ?? .INCOME)
         default:
             break
         }
@@ -97,20 +100,29 @@ final class OperationViewModel {
         guard let index = itemIndex(for: .amount) else { return }
         model.operationBalance = value
         tableItems[index].value = formatter.formatAmount(model)
+        toggleButton()
         onItemChanged?(index)
     }
     
     func changeType(_ value: MoneyOperationType?) {
         guard let index = itemIndex(for: .type) else { return }
+        if model.type != value {
+            model.category = nil
+            tableItems[index + 1].value = formatter.formatCategory(model)
+        }
         model.type = value
         tableItems[index].value = formatter.formatType(model)
+        toggleButton()
         onItemChanged?(index)
     }
     
     func changeCategory(_ value: CategoryModel?) {
         guard let index = itemIndex(for: .category) else { return }
         model.category = value
+        model.type = value?.type
+        tableItems[index - 1].value = formatter.formatType(model)
         tableItems[index].value = formatter.formatCategory(model)
+        toggleButton()
         onItemChanged?(index)
     }
     
@@ -118,6 +130,21 @@ final class OperationViewModel {
         guard let index = itemIndex(for: .date) else { return }
         model.operationDate = value
         tableItems[index].value = formatter.formatDate(model)
+        toggleButton()
         onItemChanged?(index)
+    }
+    
+    // MARK: - Private
+    
+    private func toggleButton() {
+        guard let _ = model.operationBalance,
+              let _ = model.type,
+              let _ = model.category,
+              let _ = model.operationDate else {
+            setButtonInteraction?(false)
+            return
+        }
+        
+        setButtonInteraction?(true)
     }
 }

@@ -34,6 +34,17 @@ final class NewCategoryCoordinator: Coordinator {
             navigationController.pushViewController(viewController, animated: true)
         }
     }
+    
+    func start(type: MoneyOperationType) {
+        var model = CategoryModel.newCategory()
+        model.type = type
+        newCategoryViewModel = NewCategoryViewModel(dependencies: self.dependencies, model: model)
+        newCategoryViewModel?.delegate = self
+        if let newCategoryViewModel = newCategoryViewModel {
+            let viewController = NewCategoryViewController(viewModel: newCategoryViewModel)
+            navigationController.pushViewController(viewController, animated: true)
+        }
+    }
 }
 
 extension NewCategoryCoordinator: NewCategoryViewModelDelegate {

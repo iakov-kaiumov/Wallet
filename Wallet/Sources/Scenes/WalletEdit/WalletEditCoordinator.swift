@@ -50,6 +50,7 @@ final class WalletEditCoordinator: Coordinator {
         // TODO: - Use wallet id
         let coordinator = WalletDetailsCoordinator(navigationController: navigationController, dependencies: dependencies)
         childCoordinators.append(coordinator)
+        navigationController.viewControllers = []
         coordinator.parent = self
         coordinator.start()
     }

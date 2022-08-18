@@ -43,6 +43,7 @@ final class WalletsViewModel {
     
     // MARK: - Public Methods
     func load() {
+        loadCurrencies()
         loadWallets()
         loadCurrencies()
         loadUserData()

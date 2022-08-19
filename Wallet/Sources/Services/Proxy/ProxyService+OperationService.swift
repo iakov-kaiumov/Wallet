@@ -28,9 +28,15 @@ extension ProxyService: OperationServiceProtocol {
     func operationServiceGetAll(walletID: Int, completion: @escaping (Result<[OperationApiModel], NetworkError>) -> Void) {
         networkService.operationServiceGetAll(walletID: walletID, completion: completion)
     }
-   
+    
     func operationServiceDelete(walletId: Int, operationId: Int, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        networkService.operationServiceDelete(walletId: walletId, operationId: operationId, completion: completion)
+        networkService.operationServiceDelete(walletId: walletId, operationId: operationId) { result in
+            completion(result)
+            
+            self.walletServiceGetAll(completion: {_ in })
+            
+            self.personServiceGet(completion: { _ in })
+        }
     }
     
     private func notifyOperationDelegates(result: Result<[OperationApiModel], NetworkError>) {

@@ -22,7 +22,7 @@ extension ProxyService: GoogleSignInServiceProtocol {
         networkService.signIn(presenting: controller) { [weak self] result in
             switch result {
             case .success(let token):
-                UserDefaults.standard.set(token, forKey: "token")
+                KeychainWrapper.standard.set(token, forKey: "token")
                 DispatchQueue.main.async {
                     self?.networkService.setup()
                 }

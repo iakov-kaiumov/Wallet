@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct OperationModel: Codable {
+struct OperationModel {
     var id: Int
     
     var walletId: Int
@@ -17,6 +17,8 @@ struct OperationModel: Codable {
     var type: MoneyOperationType?
     
     var category: CategoryModel?
+    
+    var currency: CurrencyModel?
     
 }
 

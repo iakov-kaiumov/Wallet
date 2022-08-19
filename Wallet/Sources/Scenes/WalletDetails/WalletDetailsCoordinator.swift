@@ -34,11 +34,11 @@ extension WalletDetailsCoordinator: WalletDetailesViewModelDelegate {
         callBanner(type: .unknownError)
     }
     
-    func walletDetailsViewModelAddOperation(walletID: Int) {
+    func walletDetailsViewModelAddOperation(wallet: WalletModel) {
         let coordinator = OperationEditCoordinator(navigationController: navigationController,
                                                    dependencies: dependencies)
         childCoordinators.append(coordinator)
-        coordinator.start(walletID: walletID)
+        coordinator.start(walletID: wallet.id, currency: wallet.currency)
     }
     
     func walletDetailsViewModelOpenSettings(wallet: WalletModel) {

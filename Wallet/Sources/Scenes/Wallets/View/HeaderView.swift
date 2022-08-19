@@ -33,9 +33,9 @@ final class HeaderView: UIView {
     
     // MARK: - Public methods
     func configure(model: PersonModel) {
-        balanceLabel.text = model.personBalance.displayString(currency: .RUB)
-        incomeLabel.text = model.personIncome.displayString(currency: .RUB)
-        expencesLabel.text = model.personSpendings.displayString(currency: .RUB)
+        balanceLabel.text = model.personBalance?.displayString(currency: .RUB) ?? ""
+        incomeLabel.text = model.personIncome?.displayString(currency: .RUB) ?? ""
+        expencesLabel.text = model.personSpendings?.displayString(currency: .RUB) ?? ""
         
         [balanceLabel, incomeLabel, expencesLabel].forEach {
             $0.showSkeleton(model.isSkeleton)

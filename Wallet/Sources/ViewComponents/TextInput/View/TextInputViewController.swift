@@ -42,7 +42,11 @@ final class TextInputViewController: UIViewController {
     }
     
     @objc private func nextButtonAction(sender: UIButton!) {
-        viewModel.onNewValue(textField.text)
+        if viewModel.validateOptions.contains(.notEmpty) && textField.text?.isEmpty ?? true {
+            textField.showError()
+        } else {
+            viewModel.onNewValue(textField.text)
+        }
     }
     
     // MARK: - Private Methods
@@ -68,7 +72,6 @@ final class TextInputViewController: UIViewController {
         textField.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.top.equalTo(topConstraint).offset(24)
-            $0.height.equalTo(54)
         }
         
         textField.text = viewModel.text

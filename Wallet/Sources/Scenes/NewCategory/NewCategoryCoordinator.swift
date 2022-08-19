@@ -15,7 +15,7 @@ final class NewCategoryCoordinator: Coordinator {
     var navigationController: UINavigationController
     var dependencies: AppDependency
     
-    var delegate: NewCategoryCoordinatorDelegate?
+    weak var delegate: NewCategoryCoordinatorDelegate?
     
     var newCategoryViewModel: NewCategoryViewModel?
     

@@ -18,7 +18,7 @@ final private class MaterialTextFieldLabel: UIView {
         
         self.addSubview(label)
         
-        label.font = .systemFont(ofSize: 12)
+        label.font = .systemFont(ofSize: 13)
         label.textColor = .secondaryLabel
 
         label.snp.makeConstraints {
@@ -49,9 +49,11 @@ final class MaterialTextField: UIView {
         case any, decimal
     }
     
-    private let label: MaterialTextFieldLabel = MaterialTextFieldLabel()
+    private lazy var label: MaterialTextFieldLabel = MaterialTextFieldLabel()
+    
+    private lazy var errorIcon: UIImageView = UIImageView()
 
-    lazy var textField: UITextField = {
+    private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.font = UIFont.systemFont(ofSize: 17)
         textField.autocapitalizationType = .none
@@ -60,7 +62,7 @@ final class MaterialTextField: UIView {
         return textField
     }()
 
-    lazy var border: UIView = {
+    private lazy var border: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
         view.layer.cornerRadius = 3
@@ -119,12 +121,28 @@ final class MaterialTextField: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
+    
+    // MARK: - Pulblic Methods
+    func showError() {
+        errorIcon.isHidden = false
+        border.layer.borderColor = UIColor.systemRed.cgColor
+    }
+    
+    func hideError() {
+        errorIcon.isHidden = true
+        border.layer.borderColor = UIColor.systemGray5.cgColor
+    }
 
     // MARK: - Private Methods
     private func setup() {
-        self.addSubview(border)
-        self.addSubview(label)
-        self.addSubview(textField)
+        setupLabelAndBorder()
+        setupTextField()
+        setupErrorIcon()
+    }
+    
+    private func setupLabelAndBorder() {
+        addSubview(border)
+        addSubview(label)
         
         label.snp.makeConstraints {
             $0.leading.equalToSuperview().inset(13)
@@ -132,17 +150,33 @@ final class MaterialTextField: UIView {
         }
         
         border.snp.makeConstraints {
-            $0.leading.trailing.bottom.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
             $0.top.equalTo(label.snp.centerY)
+            $0.height.equalTo(50)
         }
-        
+    }
+    
+    private func setupTextField() {
+        addSubview(textField)
         textField.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.leading.equalToSuperview().inset(16)
+            $0.trailing.equalToSuperview().inset(50)
             $0.bottom.equalToSuperview()
             $0.top.equalTo(label.snp.centerY)
+            $0.height.equalTo(50)
         }
-        
         textField.delegate = self
+    }
+    
+    private func setupErrorIcon() {
+        addSubview(errorIcon)
+        errorIcon.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(16)
+            $0.width.height.equalTo(24)
+            $0.centerY.equalTo(textField.snp.centerY)
+        }
+        errorIcon.image = R.image.alertImage()
+        errorIcon.isHidden = true
     }
 }
 
@@ -152,6 +186,7 @@ extension MaterialTextField: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
+        hideError()
         if format == .any {
             return true
         }

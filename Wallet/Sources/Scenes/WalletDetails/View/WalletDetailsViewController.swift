@@ -39,7 +39,11 @@ final class WalletDetailesViewController: UIViewController {
             self?.tableHeaderView.configure(with: model)
         }
         viewModel.onDidUpdateOperations = { [weak self] in
-            self?.operationTableView.reloadData()
+            guard let self = self else { return }
+            UIView.transition(with: self.operationTableView,
+                              duration: 0.5,
+                              options: .transitionCrossDissolve,
+                              animations: { self.operationTableView.reloadData() })
         }
         viewModel.onDidDeleteOperaion = { [weak self] indexPath in
             self?.operationTableView.deleteRows(at: [indexPath], with: .automatic)
@@ -139,6 +143,7 @@ final class WalletDetailesViewController: UIViewController {
         emptyLabel.font = .systemFont(ofSize: 16)
         emptyLabel.textColor = .systemGray
         emptyLabel.numberOfLines = 2
+        emptyLabel.alpha = 0.0
     }
     
     private func setupAddOperationButton() {
@@ -203,7 +208,13 @@ extension WalletDetailesViewController: UITableViewDelegate {
 // MARK: - UITableViewDataSource
 extension WalletDetailesViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        emptyLabel.layer.opacity = viewModel.operationSections.isEmpty ? 1.0 : 0.0
+        UIView.animate(withDuration: 0.5,
+                       delay: 0.0,
+                       options: .transitionCrossDissolve,
+                       animations: {
+            self.emptyLabel.alpha = self.viewModel.operationSections.isEmpty ? 1.0 : 0.0
+        })
+        
         tableView.isScrollEnabled = !viewModel.operationSections.isEmpty
         return viewModel.operationSections.count
     }

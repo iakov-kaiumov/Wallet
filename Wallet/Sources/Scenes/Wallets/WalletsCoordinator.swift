@@ -21,7 +21,7 @@ final class WalletsCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     var dependencies: AppDependency
-    var delegate: WalletsCoordinatorDelegate?
+    weak var delegate: WalletsCoordinatorDelegate?
     
     // MARK: - Public Methods
     func start() {

@@ -18,6 +18,10 @@ extension ProxyService: OperationServiceProtocol {
                 return
             }
             self.networkService.operationServiceGetAll(walletID: walletID, completion: self.notifyOperationDelegates)
+            
+            self.walletServiceGetAll(completion: {_ in })
+            
+            self.personServiceGet(completion: { _ in })
         }
     }
     

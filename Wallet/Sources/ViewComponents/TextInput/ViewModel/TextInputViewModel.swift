@@ -15,6 +15,10 @@ protocol TextInputViewModelDelegate: AnyObject {
     func textInputViewModelValueChanged(screen: TextInputScreenType, value: String?)
 }
 
+enum ValidateOptions {
+    case notEmpty
+}
+
 final class TextInputViewModel {
     var screen: TextInputScreenType
     var title: String
@@ -22,6 +26,7 @@ final class TextInputViewModel {
     var buttonTitle: String
     var isModal: Bool
     var keyboardType: UIKeyboardType
+    var validateOptions: [ValidateOptions]
     
     var text: String?
     
@@ -33,7 +38,8 @@ final class TextInputViewModel {
         textInputPrompt: String,
         buttonTitle: String,
         isModal: Bool,
-        keyboardType: UIKeyboardType
+        keyboardType: UIKeyboardType,
+        validateOptions: [ValidateOptions] = []
     ) {
         self.screen = screen
         self.title = title
@@ -41,6 +47,7 @@ final class TextInputViewModel {
         self.buttonTitle = buttonTitle
         self.isModal = isModal
         self.keyboardType = keyboardType
+        self.validateOptions = validateOptions
     }
     
     func closeButtonDidTap() {
@@ -60,7 +67,8 @@ extension TextInputViewModel {
             textInputPrompt: R.string.localizable.wallet_name_prompt(),
             buttonTitle: isModal ? R.string.localizable.default_save_button() : R.string.localizable.default_next_button(),
             isModal: isModal,
-            keyboardType: .default
+            keyboardType: .default,
+            validateOptions: [.notEmpty]
         )
     }
     
@@ -93,7 +101,8 @@ extension TextInputViewModel {
             textInputPrompt: R.string.localizable.wallet_name_prompt(),
             buttonTitle: isModal ? R.string.localizable.default_save_button() : R.string.localizable.default_next_button(),
             isModal: isModal,
-            keyboardType: .default
+            keyboardType: .default,
+            validateOptions: [.notEmpty]
         )
     }
 }

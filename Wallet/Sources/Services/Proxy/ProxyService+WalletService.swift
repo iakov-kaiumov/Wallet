@@ -58,7 +58,7 @@ extension ProxyService: WalletServiceProtocol {
     func walletServiceEdit(_ wallet: WalletApiModelShort, completion: @escaping (Result<WalletApiModelShort, NetworkError>) -> Void) {
         networkService.walletServiceEdit(wallet) { result in
             completion(result)
-            //            self.walletServiceGetAll(completion: self.notifyWalletDelegates)
+            self.walletServiceGetAll(completion: self.notifyWalletDelegates)
         }
     }
     

@@ -41,10 +41,10 @@ extension WalletDetailsCoordinator: WalletDetailesViewModelDelegate {
         coordinator.start(walletID: walletID)
     }
     
-    func walletDetailsViewModelOpenSettings() {
+    func walletDetailsViewModelOpenSettings(wallet: WalletModel) {
         let coordinator = WalletEditCoordinator(navigationController: navigationController,
                                                 dependencies: dependencies)
         childCoordinators.append(coordinator)
-        coordinator.start(isCreatingMode: false)
+        coordinator.start(isCreatingMode: false, wallet: wallet)
     }
 }

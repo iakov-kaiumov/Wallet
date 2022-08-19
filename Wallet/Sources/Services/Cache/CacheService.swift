@@ -7,38 +7,87 @@ import Foundation
 import CoreData
 
 class CacheService {
-    lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "wallet")
-        container.loadPersistentStores(completionHandler: { (_, error) in
+    let writeContext: NSManagedObjectContext
+    private let persistentContainer = NSPersistentContainer(name: "wallet")
+    private let readContext: NSManagedObjectContext
+    
+    init() {
+        persistentContainer.loadPersistentStores { _, error in
             if let error = error as NSError? {
-                // Replace this implementation with code to handle the error appropriately.
-                
-                /*
-                 Typical reasons for an error here include:
-                 * The parent directory does not exist, cannot be created, or disallows writing.
-                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                 * The device is out of space.
-                 * The store could not be migrated to the current model version.
-                 Check the error message to determine what the actual problem was.
-                 */
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
-        })
-        return container
-    }()
+        }
+        readContext = persistentContainer.viewContext
+        writeContext = persistentContainer.newBackgroundContext()
+        writeContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
+    }
     
-    // MARK: - Core Data Saving support
+    func createObject<T: Transient>(_ object: T) throws {
+        object.makePersistent(context: writeContext)
+        try saveWriteContext()
+    }
     
-    private func saveContext () {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
+    func objectWithSuchValueExists<Entity: NSManagedObject>(columnName: String,
+                                                            value: String,
+                                                            objectType: Entity.Type) -> Bool {
+        
+        let fetchRequest = createSafeComparisonFetchRequest(columnName: columnName, value: value, objectType: objectType)
+        guard let objectCount = try? readContext.count(for: fetchRequest) else { return false }
+        return objectCount > 0
+    }
+    
+    func getObjectsByValue<Entity: NSManagedObject>(columnName: String,
+                                                    value: String,
+                                                    objectType: Entity.Type) -> [Entity]? {
+        
+        let fetchRequest = createSafeComparisonFetchRequest(columnName: columnName, value: value, objectType: objectType)
+        return try? readContext.fetch(fetchRequest)
+    }
+    
+    func getAllObjectsOfType<Entity: NSManagedObject>(_ type: Entity.Type) -> [Entity]? {
+        let fetchRequest: NSFetchRequest<Entity> = NSFetchRequest(entityName: String(describing: type))
+        return try? readContext.fetch(fetchRequest)
+    }
+    
+    func deleteObjectsByValue<Entity: NSManagedObject>(columnName: String,
+                                                       value: String,
+                                                       objectType: Entity.Type) throws {
+        
+        guard let objects = getObjectsByValue(columnName: columnName, value: value, objectType: objectType) else {
+            throw CoreDataError.objectDoesNotExist
+        }
+        for object in objects {
+            writeContext.delete(object)
+        }
+        try saveWriteContext()
+    }
+    
+    func deleteAllObjectsOfType<Entity: NSManagedObject>(_ type: Entity.Type) throws {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = type.fetchRequest()
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        try writeContext.execute(deleteRequest)
+    }
+    
+    func createSafeComparisonFetchRequest<Entity: NSManagedObject>(columnName: String,
+                                                                   value: String,
+                                                                   objectType: Entity.Type) -> NSFetchRequest<Entity> {
+        let fetchRequest: NSFetchRequest<Entity> = NSFetchRequest(entityName: String(describing: objectType))
+        fetchRequest.predicate = NSComparisonPredicate(leftExpression: NSExpression(forKeyPath: columnName),
+                                                       rightExpression: NSExpression(forConstantValue: value),
+                                                       modifier: .direct,
+                                                       type: .equalTo,
+                                                       options: .caseInsensitive)
+        return fetchRequest
+    }
+    
+    func saveWriteContext() throws {
+        guard writeContext.hasChanges else { return }
+        
+        do {
+            try writeContext.save()
+        } catch let error {
+            writeContext.rollback()
+            throw error
         }
     }
     

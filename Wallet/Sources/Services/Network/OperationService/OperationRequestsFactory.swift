@@ -22,8 +22,8 @@ final class OperationRequestsFactory {
         )
     }
     
-    static func makeCreateReqeust(walletId: Int, operation: OperationApiModel) -> DefaultBodyRequest<OperationApiModel, OperationApiModel> {
-        DefaultBodyRequest<OperationApiModel, OperationApiModel>(
+    static func makeCreateReqeust(walletId: Int, operation: OperationApiModelToSend) -> DefaultBodyRequest<OperationApiModel, OperationApiModelToSend> {
+        DefaultBodyRequest<OperationApiModel, OperationApiModelToSend>(
             httpMethod: .POST,
             path: "\(basePath)/\(walletId)/operation",
             headers: nil,

@@ -13,3 +13,9 @@ struct OperationApiModel: Codable {
     let balance: Decimal?
     let date: Date?
 }
+struct OperationApiModelToSend: Codable {
+    let type: MoneyOperationType?
+    let balance: Decimal?
+    let categoryId: Int?
+    let date: Date?
+}

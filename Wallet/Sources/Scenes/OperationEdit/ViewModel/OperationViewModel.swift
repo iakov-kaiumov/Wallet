@@ -23,9 +23,12 @@ protocol OperationViewModelDelegate: AnyObject {
     func operationViewModelEnterCategory(_ currentValue: CategoryModel?, _ currentType: MoneyOperationType)
     
     func operationViewModelDidFinish()
+    func operationViewModel(_ viewModel: OperationViewModel, didReceiveError error: Error)
 }
 
 final class OperationViewModel {
+    typealias Dependencies = HasOperationService
+    
     // MARK: - Properties
     var model: OperationModel
     
@@ -34,15 +37,19 @@ final class OperationViewModel {
     weak var delegate: OperationViewModelDelegate?
     
     var onItemChanged: ((_ row: Int) -> Void)?
+    var showProgressView: ((_ isOn: Bool) -> Void)?
     
     var setButtonInteraction: ((_ isActive: Bool) -> Void)?
     
     var tableItems: [OperationEditTableItem] = []
     
     private lazy var formatter: IOperationViewModelFormatter = OperationViewModelFormatter()
+    private lazy var operationApiModelBuilder = OperationApiModelBuilder()
+    private let dependencies: Dependencies
     
     // MARK: - Init
-    init(model: OperationModel) {
+    init(dependencies: Dependencies, model: OperationModel) {
+        self.dependencies = dependencies
         self.model = model
         loadData()
     }
@@ -93,7 +100,24 @@ final class OperationViewModel {
     }
     
     func nextButtonDidTap() {
-        delegate?.operationViewModelDidFinish()
+        self.showProgressView?(true)
+        dependencies.operationNetworkService.operationServiceCreate(operationApiModelBuilder.build(model), walletID: model.walletId) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.showProgressView?(false)
+            }
+            switch result {
+            case .success(let model):
+                print(model)
+                DispatchQueue.main.async {
+                    self?.delegate?.operationViewModelDidFinish()
+                }
+            case .failure(let error):
+                print(error)
+                DispatchQueue.main.async {
+                    self?.showError(error: error)
+                }
+            }
+        }
     }
     
     func changeAmount(_ value: Decimal?) {
@@ -145,5 +169,9 @@ final class OperationViewModel {
         }
         
         setButtonInteraction?(true)
+    }
+
+    private func showError(error: NetworkError) {
+        self.delegate?.operationViewModel(self, didReceiveError: error)
     }
 }

@@ -21,8 +21,4 @@ final class ErrorPopupViewModel {
             self.popupView.show(type: type)
         }
     }
-    
-    func hideErrorPopup() {
-        popupView.hide()
-    }
 }

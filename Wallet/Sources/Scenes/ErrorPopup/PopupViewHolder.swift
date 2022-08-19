@@ -14,6 +14,8 @@ final class PopupViewHolder {
     private var initialViewCenter: CGPoint = CGPoint()
     private let hidingThreshold: CGFloat = 20
     private var isShown: Bool = false
+    private var isHidden: Bool = true
+    private var shownDate: TimeInterval = Date().timeIntervalSince1970
     
     init(parent: UIView) {
         self.parent = parent
@@ -24,6 +26,7 @@ final class PopupViewHolder {
         guard !isShown else {
             return
         }
+        shownDate = Date().timeIntervalSince1970
         isShown = true
         let message = type.title()
         let image = type.icon()
@@ -38,28 +41,26 @@ final class PopupViewHolder {
         
         popupView.configure(message: message, image: image)
         
-        popupView.center.y = -200
+        popupView.alpha = 0.0
         UIView.animate(
             withDuration: 0.33,
             delay: 0.0,
             animations: { [weak self] in
-                self?.popupView.center.y = 0
+                self?.popupView.alpha = 1.0
             },
             completion: nil
         )
-//        popupView.alpha = 0.0
-//        UIView.animate(
-//            withDuration: 0.33,
-//            delay: 0.0,
-//            animations: { [weak self] in
-//                self?.popupView.alpha = 1.0
-//            },
-//            completion: nil
-//        )
+        autoHide()
     }
     
-    func hide() {
-        hide(popupView)
+    func autoHide() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            let now = Date().timeIntervalSince1970
+            if (now - self.shownDate) > 3 {
+                self.hide()
+//                self.shownDate = Date().timeIntervalSince1970
+            }
+        }
     }
     
     // MARK: - Actions
@@ -86,17 +87,26 @@ final class PopupViewHolder {
     }
     
     // MARK: Private methods
+    private func hide() {
+        hide(popupView)
+    }
+    
     private func hide(_ errorView: UIView) {
+        guard isShown else {
+            return
+        }
         UIView.animate(
-            withDuration: 0.7,
+            withDuration: 0.33,
             delay: 0.0,
             options: [.curveEaseInOut],
             animations: {
-                errorView.center.y = -200
+                errorView.center.y -= 200
             },
             completion: { _ in
-//                errorView.removeFromSuperview()
-                self.isShown = false
+                errorView.removeFromSuperview()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.isShown = false
+                }
             }
         )
     }

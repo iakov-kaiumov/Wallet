@@ -61,9 +61,6 @@ final class AppCoordinator: Coordinator {
     
     func callBanner(type: ErrorPopupType) {
         errorPopupViewModel?.showErrorPopup(type: type)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            self.errorPopupViewModel?.hideErrorPopup()
-        }
     }
     
     // MARK: - Private Methods

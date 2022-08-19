@@ -80,6 +80,7 @@
 "newcategory_type" = "Type";
 "newcategory_icon" = "Icon";
 "newcategory_select" = "Color";
+"newcategory_enter_name" = "Choose name";
 
 "category_picker_title" = "Select a category";
 

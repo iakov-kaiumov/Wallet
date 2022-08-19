@@ -48,7 +48,6 @@ final class OperationTableHeaderView: UITableViewHeaderFooterView {
             UIView.defaultTransition(with: limitLabel) { [weak self] in
                 self?.limitLabel.isHidden = !model.isLimitExceeded
             }
-            self.limitLabel.isHidden = !model.isLimitExceeded
         }
     }
     

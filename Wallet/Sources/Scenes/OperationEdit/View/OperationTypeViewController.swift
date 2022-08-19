@@ -48,7 +48,7 @@ final class OperationTypeViewController: UIViewController {
     }
     
     @objc private func nextButtonAction(sender: UIButton!) {
-        viewModel.closeButtonDidTap()
+        viewModel.onTypeChanged()
     }
     
     // MARK: - Private Methods
@@ -128,7 +128,6 @@ extension OperationTypeViewController: UITableViewDataSource {
         }
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         viewModel.chosenType = type
-        viewModel.onTypeChanged()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

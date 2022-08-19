@@ -22,8 +22,14 @@
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="wallletId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDCategory" inverseName="operations" inverseEntity="CDCategory"/>
         <relationship name="wallet" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDWallet" inverseName="operations" inverseEntity="CDWallet"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="CDPerson" representedClassName="CDPerson" syncable="YES" codeGenerationType="class">
         <attribute name="balance" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
@@ -48,7 +54,7 @@
     <elements>
         <element name="CDCategory" positionX="62.0947265625" positionY="181.8399353027344" width="128" height="119"/>
         <element name="CDCurrency" positionX="-199.1742553710938" positionY="-43.35942077636719" width="128" height="134"/>
-        <element name="CDOperation" positionX="-212.6487426757812" positionY="128.5891418457031" width="128" height="133"/>
+        <element name="CDOperation" positionX="-212.6487426757812" positionY="128.5891418457031" width="128" height="134"/>
         <element name="CDPerson" positionX="-455.6641235351562" positionY="196.4401245117188" width="128" height="133"/>
         <element name="CDWallet" positionX="-425.2073364257812" positionY="-131.0423889160156" width="128" height="179"/>
     </elements>

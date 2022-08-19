@@ -4,8 +4,9 @@
 //
 
 import Foundation
+import CoreData
 
-struct OperationModel: Codable {
+struct OperationModel: Codable, Transient {
     var id: Int
     
     var walletId: Int
@@ -17,6 +18,29 @@ struct OperationModel: Codable {
     var type: MoneyOperationType?
     
     var category: CategoryModel?
+    
+    func makeApiModel() -> OperationApiModel {
+        OperationApiModel(id: id,
+                          walletId: walletId,
+                          type: type,
+                          categoryDto: category?.makeApiModel(),
+                          balance: operationBalance,
+                          date: operationDate)
+    }
+    
+    func makePersistent(context: NSManagedObjectContext) -> CDOperation? {
+        let operation = CDOperation(context: context)
+        operation.id = Int64(id)
+        operation.wallletId = Int64(walletId)
+        if let operationBalance = operationBalance {
+            operation.balance = NSDecimalNumber(decimal: operationBalance)
+        }
+        operation.type = type?.rawValue
+        operation.category = category?.makePersistent(context: context)
+        operation.date = operationDate
+        return operation
+        
+    }
     
 }
 
@@ -51,7 +75,7 @@ extension OperationModel {
             id: id,
             walletId: walletId,
             operationBalance: apiModel.balance,
-            operationDate: apiModel.date ?? Date(),
+            operationDate: apiModel.date ,
             type: apiModel.type,
             category: apiModel.categoryDto?.categoryModel
         )

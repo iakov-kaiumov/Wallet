@@ -43,9 +43,12 @@ final class OperationTableHeaderView: UITableViewHeaderFooterView {
         if let model = model {
             incomeChipView.configure(with: model.incomeChipModel)
             expenseChipView.configure(with: model.expenseChipModel)
-            walletAmountLabel.text = model.walletAmount
-            walletNameLabel.text = model.walletName
-            limitLabel.isHidden = !model.isLimitExceeded
+            walletAmountLabel.setText(model.walletAmount)
+            walletNameLabel.setText(model.walletName)
+            UIView.defaultTransition(with: limitLabel) { [weak self] in
+                self?.limitLabel.isHidden = !model.isLimitExceeded
+            }
+            self.limitLabel.isHidden = !model.isLimitExceeded
         }
     }
     

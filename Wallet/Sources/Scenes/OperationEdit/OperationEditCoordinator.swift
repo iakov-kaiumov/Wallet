@@ -30,9 +30,10 @@ final class OperationEditCoordinator: Coordinator {
         navigationController.pushViewController(controller, animated: true)
     }
     
-    func start(walletID: Int) {
+    func start(walletID: Int, currency: CurrencyModel) {
         var model = OperationModel.makeEmptyModel()
         model.walletId = walletID
+        model.currency = currency
         operationViewModel = OperationViewModel(dependencies: dependencies, model: model)
         operationViewModel?.delegate = self
         guard let operationViewModel = operationViewModel else {

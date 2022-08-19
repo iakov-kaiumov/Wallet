@@ -55,7 +55,7 @@ extension ProxyService: OperationServiceProtocol {
         let converted = operations.map { $0.makeApiModel() }
         return converted
     }
-   
+    
     func operationServiceDelete(walletId: Int, operationId: Int, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         networkService.operationServiceDelete(walletId: walletId, operationId: operationId) { result in
             completion(result)

@@ -29,14 +29,16 @@ class SignInService: GoogleSignInServiceProtocol {
         GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
             print(user as Any)
             print(error as Any)
-            let isSignedIn = UserDefaults.standard.string(forKey: "token") != nil
-           // let isSignedIn = error == nil && user != nil
+            let isSignedIn = KeychainWrapper.standard.string(forKey: "token") != nil
+//            let isSignedIn = error == nil && user != nil
             completion(isSignedIn)
         }
     }
     
     func signOut() {
         GIDSignIn.sharedInstance.signOut()
+        
+        KeychainWrapper.standard.removeObject(forKey: "token")
     }
     
     func signIn(presenting controller: UIViewController, completion: @escaping (_ result: Result<String, NetworkError>) -> Void) {

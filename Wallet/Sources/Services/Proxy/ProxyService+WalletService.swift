@@ -68,7 +68,10 @@ extension ProxyService: WalletServiceProtocol {
     }
     
     func walletServiceDelete(_ walletId: Int, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        networkService.walletServiceDelete(walletId, completion: completion)
+        networkService.walletServiceDelete(walletId) { result in
+            completion(result)
+            self.personServiceGet(completion: { _ in })
+        }
     }
     
     private func notifyWalletDelegates(result: Result<[WalletApiModel], NetworkError>) {

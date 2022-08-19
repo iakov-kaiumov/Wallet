@@ -31,6 +31,8 @@ final class WalletsViewModel {
     var onDidUpdateCurrencies: (() -> Void)?
     var onDidUpdateUserData: (() -> Void)?
     var onDidMoveWallet: ((_ at: IndexPath, _ to: IndexPath) -> Void)?
+    var onDidStartLoading: (() -> Void)?
+    var onDidStopLoading: (() -> Void)?
     
     private var dependenices: Dependencies
     
@@ -98,15 +100,17 @@ final class WalletsViewModel {
     }
     
     func onCellDelete(_ indexPath: IndexPath) {
+        onDidStartLoading?()
         let model = getWallet(at: indexPath)
         dependenices.walletService.walletServiceDelete(model.id) { result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
                     self.removeWallet(withId: model.id)
+                case .failure(let error):
+                    self.delegate?.walletsViewModel(self, didReceiveError: error)
                 }
-            case .failure(let error):
-                self.delegate?.walletsViewModel(self, didReceiveError: error)
+                self.onDidStopLoading?()
             }
         }
     }
@@ -120,9 +124,6 @@ final class WalletsViewModel {
         }
         updateShownWallets()
         updateHiddenWallets()
-//        if !isHidden {
-//            updateHiddenWallets()
-//        }
         
         if let newIndexPath = getIndexPath(of: wallet) {
             onDidMoveWallet?(indexPath, newIndexPath)

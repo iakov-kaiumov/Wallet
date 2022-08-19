@@ -27,9 +27,6 @@ final class OnboardingViewModel {
     
     // MARK: - Public Methods
     func loginButtonDidTap(presenting controller: UIViewController) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            self.showProgressView?(true)
-        }
         dependencies.signInService.signIn(presenting: controller) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {

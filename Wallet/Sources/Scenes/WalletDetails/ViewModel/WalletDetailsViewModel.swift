@@ -6,7 +6,7 @@
 import Foundation
 
 protocol WalletDetailesViewModelDelegate: AnyObject {
-    func walletDetailsViewModelAddOperation(walletID: Int)
+    func walletDetailsViewModelAddOperation(wallet: WalletModel)
     
     func walletDetailsViewModelOpenSettings(wallet: WalletModel)
     
@@ -46,7 +46,7 @@ final class WalletDetailesViewModel {
     }
     
     func addOperationButtonDidTap() {
-        delegate?.walletDetailsViewModelAddOperation(walletID: walletModel.id)
+        delegate?.walletDetailsViewModelAddOperation(wallet: walletModel)
     }
     
     func settingButtonDidTap() {
@@ -179,7 +179,7 @@ final class WalletDetailesViewModel {
         for items in groupedItems.reversed() {
             
             let operationModels = items.map {
-                dependencies.operationCellModelBuilder.buildOperationCellModel(from: $0)
+                dependencies.operationCellModelBuilder.buildOperationCellModel(from: $0, currency: walletModel.currency)
             }
             var sectionName = ""
             if let date = items.first?.operationDate {

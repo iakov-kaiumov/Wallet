@@ -15,6 +15,7 @@ final class WalletsViewController: UIViewController {
     private lazy var emptyLabel = UILabel()
     private lazy var signOutButton = UIBarButtonItem()
     private lazy var walletsTableView: UITableView = UITableView(frame: .zero, style: .plain)
+    private lazy var progressView: ProgressView = ProgressView()
     
     private let blurView = UIView()
     private var isBlurApplied = false
@@ -90,6 +91,7 @@ final class WalletsViewController: UIViewController {
         setupWalletsTableView()
         setupCreateWalletButton()
         setupEmptyLabel()
+        setupProgressView()
         
         viewModel.onDidUpdateWallets = { [weak self] in
             guard let self = self else { return }
@@ -110,10 +112,18 @@ final class WalletsViewController: UIViewController {
             self?.walletsTableView.deleteRows(at: [indexPath], with: .automatic)
         }
         viewModel.onDidMoveWallet = moveRow
+        
+        viewModel.onDidStartLoading = { [weak self] in
+            self?.progressView.show()
+        }
+        viewModel.onDidStopLoading = { [weak self] in
+            self?.progressView.hide()
+        }
     }
     
     private func setupSignOutButton() {
         signOutButton.title = R.string.localizable.onboarding_logout_button()
+        signOutButton.image = UIImage(systemName: "rectangle.portrait.and.arrow.right")
         signOutButton.style = .plain
         signOutButton.target = self
         signOutButton.action = #selector(signOutButtonTapped)
@@ -193,6 +203,13 @@ final class WalletsViewController: UIViewController {
         emptyLabel.font = .systemFont(ofSize: 16)
         emptyLabel.textColor = .systemGray
         emptyLabel.numberOfLines = 2
+    }
+    
+    private func setupProgressView() {
+        view.addSubview(progressView)
+        progressView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
     }
     
     private func deleteAllHiddenWallets() {

@@ -59,13 +59,23 @@ final class OnboardingViewController: UIViewController {
     private func setupOnboardingImage() {
         view.addSubview(onboardingImage)
         
-        onboardingImage.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(16)
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(16)
-            $0.height.equalTo(341)
+        guard let image = R.image.onboardingImage() else {
+            return
         }
+        let imageWidth = view.bounds.width - 16 * 2
+        let imageHeight = imageWidth / image.size.width * image.size.height
         
-        onboardingImage.image = R.image.onboardingImage()
+        onboardingImage.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(16)
+            $0.width.equalTo(imageWidth)
+            $0.height.equalTo(imageHeight)
+            
+            $0.centerX.equalToSuperview()
+        }
+        onboardingImage.image = image
+        
+        onboardingImage.layer.cornerRadius = 16
+        onboardingImage.clipsToBounds = true
     }
     
     private func setupTitleLabel() {

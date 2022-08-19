@@ -41,8 +41,12 @@ final class WalletDetailesViewModel {
     
     // MARK: - Public Methods
     func load() {
-        loadWalletInfo()
-        loadOperations()
+        self.setMockupOperation()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.loadWalletInfo()
+            self.loadOperations()
+        }
+        
     }
     
     func addOperationButtonDidTap() {

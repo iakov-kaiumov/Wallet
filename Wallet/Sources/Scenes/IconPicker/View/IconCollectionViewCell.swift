@@ -34,9 +34,9 @@ final class IconCollectionViewCell: UICollectionViewCell {
     func configure(_ model: Model) {
         iconView.configure(model.iconModel)
         if model.isActive {
-            layer.borderColor = model.iconModel.backgroundColor?.cgColor
+            self.layer.borderColor = model.iconModel.backgroundColor?.cgColor
         } else {
-            layer.borderColor = UIColor.clear.cgColor
+            self.layer.borderColor = UIColor.clear.cgColor
         }
     }
     

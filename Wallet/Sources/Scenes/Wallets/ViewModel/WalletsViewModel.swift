@@ -51,10 +51,12 @@ final class WalletsViewModel {
     
     // MARK: - Public Methods
     func load() {
-        loadCurrencies()
-        loadWallets()
-        loadCurrencies()
-        loadUserData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.loadCurrencies()
+            self.loadWallets()
+            self.loadCurrencies()
+            self.loadUserData()
+        }
     }
     
     func getWallet(at indexPath: IndexPath) -> WalletModel {

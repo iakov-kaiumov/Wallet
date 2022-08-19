@@ -211,6 +211,10 @@ final class WalletsViewModel {
 }
 
 extension WalletsViewModel: WalletServiceDelegate {
+    func walletServiceDidConnectToInternet(_ service: WalletServiceProtocol) {
+        load()
+    }
+    
     func walletService(_ service: WalletServiceProtocol, didLoadWallets wallets: [WalletApiModel]) {
         let models = wallets.compactMap { WalletModel.fromApiModel($0) }.sorted(by: {
             $0.name < $1.name

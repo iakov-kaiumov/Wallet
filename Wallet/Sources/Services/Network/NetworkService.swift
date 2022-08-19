@@ -6,13 +6,12 @@
 import Foundation
 
 class NetworkService {
+    let internetChecker = try? Reachability()
+    
     let signInService: SignInService
     var requestProcessor: IRequestProcessor
-    private let requestConstructor: IRequestConstructor = RequestConstructor()
     
     var walletDelegates: DelegatesList<WalletServiceDelegate> = DelegatesList<WalletServiceDelegate>()
-    private let requestConstructor: IRequestConstructor = RequestConstructor()
-    let internetChecker = try? Reachability()
     
     var operationDelegates: DelegatesList<OperationServiceDelegate> = DelegatesList<OperationServiceDelegate>()
     
@@ -28,13 +27,17 @@ class NetworkService {
     }
     
     private static func makeDefaultRequestProcessor() -> IRequestProcessor {
-        let constructor = RequestConstructor()
-        let session = NetworkService.makeDefaultURLSession()
-        let decoder = JSONDecoder()
-        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .formatted(dateFormatter)
+        
+        let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .formatted(dateFormatter)
+        
+        let constructor = RequestConstructor(encoder: encoder)
+        let session = NetworkService.makeDefaultURLSession()
         
         return RequestProcessor(session: session,
                                 requestConstructor: constructor,

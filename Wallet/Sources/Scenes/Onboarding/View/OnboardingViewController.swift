@@ -5,6 +5,7 @@
 
 import UIKit
 import SnapKit
+import AuthenticationServices
 
 final class OnboardingViewController: UIViewController {
     // MARK: - Properties
@@ -12,7 +13,8 @@ final class OnboardingViewController: UIViewController {
     private lazy var onboardingImage: UIImageView = UIImageView()
     private lazy var titleLabel = UILabel()
     private lazy var descriptionLabel = UILabel()
-    private lazy var loginButton = ButtonFactory.makeGrayButton()
+    private lazy var googleSignInButton = UIButton(type: .system)
+    private lazy var appleSignInButton = ASAuthorizationAppleIDButton()
     private lazy var progressView = ProgressView()
     
     // MARK: - Init
@@ -33,7 +35,11 @@ final class OnboardingViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func loginButtonAction() {
-        viewModel.loginButtonDidTap(presenting: self)
+        viewModel.googleButtonDidTap(presenting: self)
+    }
+    
+    @objc private func handleAppleIdRequest() {
+        viewModel.appleButtonDidTap()
     }
     
     // MARK: - Private Methods
@@ -44,7 +50,8 @@ final class OnboardingViewController: UIViewController {
         setupOnboardingImage()
         setupTitleLabel()
         setupDescriptionLabel()
-        setupLoginButton()
+        setupGoogleButton()
+        setupAppleButton()
         setupProgressView()
         
         viewModel.showProgressView = { isOn in
@@ -104,17 +111,39 @@ final class OnboardingViewController: UIViewController {
         descriptionLabel.numberOfLines = 0
     }
     
-    private func setupLoginButton() {
-        view.addSubview(loginButton)
+    private func setupAppleButton() {
+        view.addSubview(appleSignInButton)
         
-        loginButton.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(16)
+        appleSignInButton.addTarget(self, action: #selector(handleAppleIdRequest), for: .touchUpInside)
+        appleSignInButton.cornerRadius = 16
+        appleSignInButton.tintColor = R.color.loginButton()
+        
+        appleSignInButton.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(16)
+            $0.trailing.equalTo(googleSignInButton.snp.leading).offset(-16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
+            $0.height.equalTo(56)
         }
-        let title = R.string.localizable.onboarding_login_button()
-        loginButton.setTitle(title, for: .normal)
+    }
+    
+    private func setupGoogleButton() {
+        view.addSubview(googleSignInButton)
         
-        loginButton.addTarget(self, action: #selector(loginButtonAction), for: .touchUpInside)
+        googleSignInButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(16)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
+            $0.width.equalTo(56)
+            $0.height.equalTo(56)
+        }
+//        let title = R.string.localizable.onboarding_login_button()
+//        googleSignInButton.setTitle(title, for: .normal)
+        googleSignInButton.setImage(R.image.google(), for: .normal)
+        let imageInset: CGFloat = 12
+        googleSignInButton.imageEdgeInsets = UIEdgeInsets(top: imageInset, left: imageInset, bottom: imageInset, right: imageInset)
+        googleSignInButton.backgroundColor = R.color.loginButton()
+        googleSignInButton.layer.cornerRadius = 16
+
+        googleSignInButton.addTarget(self, action: #selector(loginButtonAction), for: .touchUpInside)
     }
     
     private func setupProgressView() {

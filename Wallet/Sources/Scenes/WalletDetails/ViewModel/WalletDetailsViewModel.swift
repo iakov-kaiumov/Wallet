@@ -199,6 +199,10 @@ extension WalletDetailesViewModel: OperationServiceDelegate {
 }
 
 extension WalletDetailesViewModel: WalletServiceDelegate {
+    func walletServiceDidConnectToInternet(_ service: WalletServiceProtocol) {
+        load()
+    }
+    
     func walletService(_ service: WalletServiceProtocol, didLoadWallets wallets: [WalletApiModel]) {
         guard let newApiWallet = wallets.first(where: { $0.id == walletModel.id }),
               let newWalletModel = WalletModel.fromApiModel(newApiWallet) else {

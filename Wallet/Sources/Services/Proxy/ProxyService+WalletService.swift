@@ -6,6 +6,7 @@
 import Foundation
 
 extension ProxyService: WalletServiceProtocol {
+    
     func addDelegate(_ delegate: WalletServiceDelegate) {
         networkService.addDelegate(delegate)
     }
@@ -23,6 +24,12 @@ extension ProxyService: WalletServiceProtocol {
             let wallets = getWalletsFromCache()
             completion(.success(wallets))
             self.notifyWalletDelegates(result: .success(wallets))
+            
+            networkService.internetChecker?.whenReachable = { _ in
+                self.networkService.walletDelegates.forEach { delegate in
+                    delegate.walletServiceDidConnectToInternet(self.networkService)
+                }
+            }
             return
         }
         

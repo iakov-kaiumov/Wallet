@@ -20,6 +20,7 @@ class NetworkService {
     init(signInService: SignInService) {
         self.signInService = signInService
         requestProcessor = NetworkService.makeDefaultRequestProcessor()
+        try? internetChecker?.startNotifier()
     }
     
     func setup() {

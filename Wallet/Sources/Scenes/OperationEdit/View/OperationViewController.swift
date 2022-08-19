@@ -25,6 +25,8 @@ final class OperationViewController: UIViewController {
     }()
     
     private lazy var datePicker: PopupDatePicker = PopupDatePicker()
+    
+    private lazy var progressView = ProgressView()
 
     private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
 
@@ -62,6 +64,15 @@ final class OperationViewController: UIViewController {
         setupTableView()
         setupNextButton()
         setupDatePicker()
+        setupProgressView()
+        
+        viewModel.showProgressView = { isOn in
+            if isOn {
+                self.progressView.show()
+            } else {
+                self.progressView.hide()
+            }
+        }
 
         viewModel.onItemChanged = { [weak self] _ in
             self?.tableView.reloadData()
@@ -131,6 +142,14 @@ final class OperationViewController: UIViewController {
     private func setButtonEnabled(_ isActive: Bool) {
         nextButton.isEnabled = isActive
         nextButton.backgroundColor = isActive ? R.color.loginButton() : R.color.warningGrey()
+    }
+    
+    private func setupProgressView() {
+        view.addSubview(progressView)
+        
+        progressView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
     }
 }
 

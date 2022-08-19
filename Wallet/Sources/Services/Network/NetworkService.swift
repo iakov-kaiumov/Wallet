@@ -12,6 +12,8 @@ class NetworkService {
     private let requestConstructor: IRequestConstructor = RequestConstructor()
     let internetChecker = try? Reachability()
     
+    var operationDelegates: DelegatesList<OperationServiceDelegate> = DelegatesList<OperationServiceDelegate>()
+    
     init(signInService: SignInService) {
         self.signInService = signInService
         requestProcessor = NetworkService.makeDefaultRequestProcessor()

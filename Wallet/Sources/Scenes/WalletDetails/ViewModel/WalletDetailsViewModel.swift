@@ -6,7 +6,7 @@
 import Foundation
 
 protocol WalletDetailesViewModelDelegate: AnyObject {
-    func walletDetailsViewModelAddOperation()
+    func walletDetailsViewModelAddOperation(walletID: Int)
     
     func walletDetailsViewModelOpenSettings()
     
@@ -35,6 +35,7 @@ final class WalletDetailesViewModel {
     init(dependencies: Dependencies, wallet: WalletModel) {
         self.dependencies = dependencies
         self.walletModel = wallet
+        self.dependencies.operationNetworkService.addDelegate(self)
     }
     
     // MARK: - Public Methods
@@ -44,7 +45,7 @@ final class WalletDetailesViewModel {
     }
     
     func addOperationButtonDidTap() {
-        delegate?.walletDetailsViewModelAddOperation()
+        delegate?.walletDetailsViewModelAddOperation(walletID: walletModel.id)
     }
     
     func settingButtonDidTap() {
@@ -110,18 +111,22 @@ final class WalletDetailesViewModel {
         dependencies.operationNetworkService.operationServiceGetAll(walletID: walletModel.id) { result in
             switch result {
             case .success(let models):
-                let operations = models.compactMap { OperationModel.fromApiModel($0) }
-                let sections = self.getSectionedOperations(operations)
-                DispatchQueue.main.async {
-                    self.operationSections = sections
-                    self.onDidUpdateOperations?()
-                }
+                self.transformOperations(models)
             case .failure(let error):
                 DispatchQueue.main.async {
                     self.delegate?.walletDetailsViewModel(self, didReceiveError: error)
                 }
             }
             
+        }
+    }
+    
+    private func transformOperations(_ apiModels: [OperationApiModel]) {
+        let operations = apiModels.compactMap { OperationModel.fromApiModel($0) }
+        let sections = self.getSectionedOperations(operations)
+        DispatchQueue.main.async {
+            self.operationSections = sections
+            self.onDidUpdateOperations?()
         }
     }
     
@@ -179,5 +184,11 @@ final class WalletDetailesViewModel {
         }
         
         return sections
+    }
+}
+
+extension WalletDetailesViewModel: OperationServiceDelegate {
+    func operationService(_ service: OperationServiceProtocol, didLoadOperations operations: [OperationApiModel]) {
+        transformOperations(operations)
     }
 }

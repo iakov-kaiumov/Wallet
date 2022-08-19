@@ -17,6 +17,7 @@ struct WalletModel {
     var formattedBalance: String {
         balance.displayString(currency: currency)
     }
+    var isSkeleton: Bool = false
     
     var isLimitExceeded: Bool {
         guard let limit = limit else {
@@ -26,15 +27,24 @@ struct WalletModel {
         return spendings > limit
     }
     
-    func makeApiModel() -> WalletApiModel {
-        WalletApiModel(id: id,
-                       name: name,
-                       currency: currency.code,
-                       amountLimit: limit,
-                       balance: balance,
-                       income: income,
-                       spendings: spendings,
-                       isHidden: isHidden ? 1 : 0)
+    func makeApiModel() -> WalletApiModelShort {
+        WalletApiModelShort(
+            id: id,
+            name: name,
+            currency: currency.code,
+            amountLimit: limit ?? 0,
+            balance: balance,
+            income: income,
+            spendings: spendings,
+            isHidden: isHidden ? 1 : 0
+        )
+    }
+}
+
+extension WalletModel {
+    static func makeSkeletonModel() -> WalletModel {
+        WalletModel(id: 0, name: "", currency: .RUB, limit: 0, balance: 0,
+                    income: 0, spendings: 0, isHidden: false, isSkeleton: true)
     }
     
     static func makeCleanModel(_ id: Int = 0) -> WalletModel {
@@ -46,7 +56,7 @@ struct WalletModel {
             balance: 0,
             income: 0,
             spendings: 0,
-            isHidden: Bool.random()
+            isHidden: false
         )
         
     }
@@ -63,24 +73,20 @@ struct WalletModel {
             isHidden: Bool.random()
         )
     }
-}
-
-extension WalletModel {
+    
     static func fromApiModel(_ wallet: WalletApiModel) -> WalletModel? {
-        guard
-              let isHidden = wallet.isHidden else {
+        guard let currencyDto = wallet.currencyDto else {
             return nil
         }
-        
         return WalletModel(
             id: wallet.id,
             name: wallet.name,
-            currency: CurrencyModel.RUB,
+            currency: CurrencyModel.fromApiModel(currencyDto),
             limit: wallet.amountLimit,
-            balance: 0,
-            income: 0,
-            spendings: 0,
-            isHidden: isHidden != 0
+            balance: wallet.balance ?? 0,
+            income: wallet.income ?? 0,
+            spendings: wallet.spendings ?? 0,
+            isHidden: wallet.isHidden != 0
         )
     }
 }

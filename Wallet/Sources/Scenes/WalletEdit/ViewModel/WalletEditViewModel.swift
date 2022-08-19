@@ -20,9 +20,11 @@ protocol WalletEditViewModelDelegate: AnyObject {
     
     func walletEditViewModelEnterCurrency(_ currentValue: CurrencyModel)
     
-    func walletEditViewModelEnterLimit(_ currentValue: String?)
+    func walletEditViewModelEnterLimit(_ currentValue: Decimal?)
     
     func walletEditViewModelDidFinish(walletID: Int)
+    
+    func walletsViewModel(_ viewModel: WalletEditViewModel, didReceiveError error: Error)
 }
 
 final class WalletEditViewModel {
@@ -34,6 +36,7 @@ final class WalletEditViewModel {
     
     var onDataChanged: (() -> Void)?
     var onDidStartLoading: (() -> Void)?
+    var onDidStopLoading: (() -> Void)?
     
     var walletModel: WalletModel
     
@@ -59,33 +62,34 @@ final class WalletEditViewModel {
     func cellDidTap(item: WalletEditTableItem) {
         switch item.type {
         case .name:
-            delegate?.walletEditViewModelEnterName(item.value)
+            delegate?.walletEditViewModelEnterName(walletModel.name)
         case .currency:
             delegate?.walletEditViewModelEnterCurrency(walletModel.currency)
         case .limit:
-            delegate?.walletEditViewModelEnterLimit(item.value)
+            delegate?.walletEditViewModelEnterLimit(walletModel.limit)
         }
     }
     
     func mainButtonDidTap() {
         if isCreatingMode {
             onDidStartLoading?()
-            dependencies.walletService.walletServiceCreate(walletModel.makeApiModel()) { result in
-                switch result {
-                case .success(let model):
-                    print("Nice. \(model)")
-                    
-                    DispatchQueue.main.async {
-                        self.delegate?.walletEditViewModelDidFinish(walletID: model.id)
-                    }
-                    
-                case .failure(let error):
-                    print("\(error)")
-                }
-            }
-             
+            dependencies.walletService.walletServiceCreate(walletModel.makeApiModel(), completion: onServerResponse)
+        } else {
+            onDidStartLoading?()
+            dependencies.walletService.walletServiceEdit(walletModel.makeApiModel(), completion: onServerResponse)
         }
- 
+    }
+    
+    private func onServerResponse(result: Result<WalletApiModelShort, NetworkError>) {
+        DispatchQueue.main.async {
+            switch result {
+            case .success(let model):
+                self.delegate?.walletEditViewModelDidFinish(walletID: model.id)
+            case .failure(let error):
+                self.onDidStopLoading?()
+                self.delegate?.walletsViewModel(self, didReceiveError: error)
+            }
+        }
     }
     
     func changeName(_ value: String?) {
@@ -98,21 +102,19 @@ final class WalletEditViewModel {
     }
     
     func changeCurrency(_ value: CurrencyModel?) {
-        guard let index = itemIndex(for: .currency) else { return }
+        guard let currencyIndex = itemIndex(for: .currency) else { return }
+        guard let limitIndex = itemIndex(for: .limit) else { return }
         if let value = value {
             walletModel.currency = value
-            tableItems[index].value = formatter.formatCurrency(walletModel)
+            tableItems[currencyIndex].value = formatter.formatCurrency(walletModel)
+            tableItems[limitIndex].value = formatter.formatLimit(walletModel)
             onDataChanged?()
         }
     }
     
-    func changeLimit(_ value: String?) {
+    func changeLimit(_ value: Decimal?) {
         guard let index = itemIndex(for: .limit) else { return }
-        if let value = value, let number = Double(value) {
-            walletModel.limit = Decimal(number)
-        } else {
-            walletModel.limit = nil
-        }
+        walletModel.limit = value
         tableItems[index].value = formatter.formatLimit(walletModel)
         onDataChanged?()
     }

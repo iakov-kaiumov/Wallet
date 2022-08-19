@@ -11,4 +11,5 @@ struct CurrencyApiModel: Codable {
     let fullDescription: String
     let shortDescription: String
     let value: Double
+    let ascending: Bool
 }

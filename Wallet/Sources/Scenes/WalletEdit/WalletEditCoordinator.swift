@@ -5,6 +5,10 @@
 
 import UIKit
 
+protocol WalletEditCoordinatorDelegate: AnyObject {
+    func updateWallets()
+}
+
 final class WalletEditCoordinator: Coordinator {
     weak var parent: Coordinator?
     
@@ -45,20 +49,15 @@ final class WalletEditCoordinator: Coordinator {
             start()
         }
     }
-    
-    func goToDetails(walletID: Int) {
-        // TODO: - Use wallet id
-        let coordinator = WalletDetailsCoordinator(navigationController: navigationController, dependencies: dependencies)
-        childCoordinators.append(coordinator)
-        navigationController.viewControllers = []
-        coordinator.parent = self
-        coordinator.start()
-    }
 }
 
 extension WalletEditCoordinator: WalletEditViewModelDelegate {
+    func walletsViewModel(_ viewModel: WalletEditViewModel, didReceiveError error: Error) {
+        callBanner(type: .unknownError)
+    }
+    
     func walletEditViewModelDidFinish(walletID: Int) {
-        goToDetails(walletID: walletID)
+        navigationController.popToRootViewController(animated: true)
     }
     
     func walletEditViewModelEnterName(_ currentValue: String?) {
@@ -78,10 +77,10 @@ extension WalletEditCoordinator: WalletEditViewModelDelegate {
         navigationController.present(controller, animated: true)
     }
     
-    func walletEditViewModelEnterLimit(_ currentValue: String?) {
+    func walletEditViewModelEnterLimit(_ currentValue: Decimal?) {
         let limitInputViewModel = TextInputViewModel.makeWalletLimit(isModal: true)
         limitInputViewModel.delegate = self
-        limitInputViewModel.text = currentValue
+        limitInputViewModel.text = currentValue?.displayString() ?? ""
         
         let controller = TextInputViewController(viewModel: limitInputViewModel)
         navigationController.present(controller, animated: true)
@@ -103,7 +102,7 @@ extension WalletEditCoordinator: TextInputViewModelDelegate {
                 self.start()
             }
         case .walletLimit:
-            walletViewModel.changeLimit(value)
+            walletViewModel.changeLimit(value?.toDecimal)
         default:
             break
         }

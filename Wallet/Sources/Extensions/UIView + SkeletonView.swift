@@ -26,6 +26,7 @@ extension UIView {
             $0.leading.equalToSuperview().inset(insets.left)
             $0.trailing.equalToSuperview().inset(insets.right)
         }
+//        skView.alpha = 0.0
     }
     
     func showSkeleton(_ on: Bool) {
@@ -33,7 +34,7 @@ extension UIView {
             return
         }
         UIView.animate(
-            withDuration: 0.5,
+            withDuration: 0.1,
             delay: 0.0,
             options: [.transitionCrossDissolve], animations: {
                 skView.alpha = on ? 1.0 : 0.0
@@ -89,7 +90,7 @@ public class SkeletonView: UIView {
         let animation = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.locations))
         animation.fromValue = [0.0, -1.0, 1.0]
         animation.toValue = [0.0, 1.0, 1.0]
-        animation.duration = 2.0
+        animation.duration = 1.0
         animation.repeatCount = .infinity
         animation.autoreverses = true
         gradientLayer.add(animation, forKey: "animation")

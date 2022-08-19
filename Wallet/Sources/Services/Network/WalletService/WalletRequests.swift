@@ -22,8 +22,8 @@ final class WalletRequestsFactory {
         )
     }
     
-    static func makeCreateReqeust(wallet: WalletApiModel) -> DefaultBodyRequest<WalletApiModel, WalletApiModel> {
-        DefaultBodyRequest<WalletApiModel, WalletApiModel>(
+    static func makeCreateReqeust(wallet: WalletApiModelShort) -> DefaultBodyRequest<WalletApiModelShort, WalletApiModelShort> {
+        DefaultBodyRequest<WalletApiModelShort, WalletApiModelShort>(
             httpMethod: .POST,
             path: basePath,
             queryParameters: [:],
@@ -32,9 +32,9 @@ final class WalletRequestsFactory {
         )
     }
     
-    static func makeUpdateReqeust(walletId: Int, wallet: WalletApiModel) -> DefaultBodyRequest<WalletApiModel, WalletApiModel> {
-        DefaultBodyRequest<WalletApiModel, WalletApiModel>(
-            httpMethod: .POST,
+    static func makeUpdateReqeust(walletId: Int, wallet: WalletApiModelShort) -> DefaultBodyRequest<WalletApiModelShort, WalletApiModelShort> {
+        DefaultBodyRequest<WalletApiModelShort, WalletApiModelShort>(
+            httpMethod: .PUT,
             path: "\(basePath)/\(walletId)",
             queryParameters: [:],
             headers: nil,
@@ -42,8 +42,8 @@ final class WalletRequestsFactory {
         )
     }
     
-    static func makeDeleteRequest(walletId: Int) -> DefaultSimpleRequest<WalletApiModel> {
-        DefaultSimpleRequest<WalletApiModel>(
+    static func makeDeleteRequest(walletId: Int) -> DefaultSimpleRequest<EmptyBody> {
+        DefaultSimpleRequest<EmptyBody>(
             httpMethod: .DELETE,
             path: "\(basePath)/\(walletId)"
         )

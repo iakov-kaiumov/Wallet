@@ -33,9 +33,13 @@ final class HeaderView: UIView {
     
     // MARK: - Public methods
     func configure(model: PersonModel) {
-        balanceLabel.text = model.personBalance?.displayString()
-        incomeLabel.text = model.personIncome?.displayString()
-        expencesLabel.text = model.personSpendings?.displayString()
+        balanceLabel.text = model.personBalance?.displayString(currency: .RUB) ?? ""
+        incomeLabel.text = model.personIncome?.displayString(currency: .RUB) ?? ""
+        expencesLabel.text = model.personSpendings?.displayString(currency: .RUB) ?? ""
+        
+        [balanceLabel, incomeLabel, expencesLabel].forEach {
+            $0.showSkeleton(model.isSkeleton)
+        }
     }
     
     // MARK: - Private Methods
@@ -47,6 +51,10 @@ final class HeaderView: UIView {
         setupBalanceTitleLabel()
         setupBalanceLabel()
         setupMoneyStack()
+        
+        [balanceLabel, incomeLabel, expencesLabel].forEach {
+            $0.setupSkeleton(cornerRadius: 8)
+        }
         
         self.backgroundColor = R.color.accentPurple()
     }

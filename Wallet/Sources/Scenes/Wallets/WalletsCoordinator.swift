@@ -40,15 +40,13 @@ final class WalletsCoordinator: Coordinator {
                                                    dependencies: dependencies)
         childCoordinators.append(coordinator)
         coordinator.parent = self
-        coordinator.start()
+        coordinator.start(wallet: wallet)
     }
 }
 
 // MARK: - WalletsViewModelDelegate
 extension WalletsCoordinator: WalletsViewModelDelegate {
     func walletsViewModel(_ viewModel: WalletsViewModel, didReceiveError error: Error) {
-        // TODO: - Log Error
-        print(error)
         callBanner(type: .unknownError)
     }
     
@@ -59,6 +57,7 @@ extension WalletsCoordinator: WalletsViewModelDelegate {
     func walletsViewModelDidAskToCreateWallet() {
         let coordinator = WalletEditCoordinator(navigationController: navigationController, dependencies: dependencies)
         childCoordinators.append(coordinator)
+        coordinator.parent = self
         coordinator.start(isCreatingMode: true)
     }
     

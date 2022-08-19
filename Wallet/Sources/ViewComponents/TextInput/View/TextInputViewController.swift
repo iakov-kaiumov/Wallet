@@ -75,7 +75,7 @@ final class TextInputViewController: UIViewController {
         textField.prompt = viewModel.textInputPrompt
         textField.keyboardType = viewModel.keyboardType
         if viewModel.keyboardType == .numberPad {
-            textField.allowedCharacters = CharacterSet.decimalDigits
+            textField.format = .decimal
         }
     }
     

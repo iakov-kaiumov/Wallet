@@ -13,4 +13,8 @@ extension String {
     var decodeUrl: String {
         return self.removingPercentEncoding ?? self
     }
+    
+    var toDecimal: Decimal? {
+        Decimal(string: self.filter("0123456789.".contains))
+    }
 }

@@ -6,7 +6,7 @@
 import Foundation
 import CoreData
 
-struct PersonModel: Codable, Transient {
+struct PersonModel: Transient {
     var id: Int
     
     var email: String?
@@ -16,6 +16,8 @@ struct PersonModel: Codable, Transient {
     var personIncome: Decimal?
     
     var personSpendings: Decimal?
+    
+    var isSkeleton: Bool = false
     
     func makePersistent(context: NSManagedObjectContext) -> CDPerson? {
         guard let email = email,
@@ -30,14 +32,37 @@ struct PersonModel: Codable, Transient {
         person.spendings = NSDecimalNumber(decimal: personSpendings)
         return person
     }
-    
+}
+
+extension PersonModel {
     static func makeTestModel() -> PersonModel {
-        return PersonModel(
+        PersonModel(
             id: 0,
             email: "test@example.com",
-            personBalance: Decimal(Double.random(in: 10000...100000)),
-            personIncome: Decimal(Double.random(in: 10000...100000)),
-            personSpendings: Decimal(Double.random(in: 10000...100000))
+            personBalance: 100_000,
+            personIncome: 100_000,
+            personSpendings: 100_000
+        )
+    }
+    
+    static var skeletonModel: PersonModel {
+        PersonModel(
+            id: 0,
+            email: "",
+            personBalance: 100_000,
+            personIncome: 100_000,
+            personSpendings: 100_000,
+            isSkeleton: true
+        )
+    }
+    
+    static func fromApiModel(_ apiModel: PersonApiModel) -> PersonModel {
+        PersonModel(
+            id: apiModel.id ?? 0,
+            email: apiModel.email,
+            personBalance: apiModel.balance ?? 0,
+            personIncome: apiModel.income ?? 0,
+            personSpendings: apiModel.spendings ?? 0
         )
     }
 }

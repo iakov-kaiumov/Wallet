@@ -125,7 +125,6 @@ final class NewCategoryViewModel {
                     self?.showError(error: error)
                 }
             }
-
         }
     }
     

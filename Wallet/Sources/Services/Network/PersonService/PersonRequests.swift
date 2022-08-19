@@ -8,8 +8,8 @@ import Foundation
 final class PersonRequestsFactory {
     private static let basePath = "/person"
     
-    static func makeGetRequest(_ id: Int) -> DefaultSimpleRequest<PersonApiModel> {
-        DefaultSimpleRequest<PersonApiModel>(httpMethod: .GET, path: "\(basePath)/\(id)")
+    static func makeGetRequest() -> DefaultSimpleRequest<PersonApiModel> {
+        DefaultSimpleRequest<PersonApiModel>(httpMethod: .GET, path: basePath)
     }
     
     static func makeCreateReqeust(person: PersonApiModel) -> DefaultBodyRequest<PersonApiModel, PersonApiModel> {
@@ -22,10 +22,7 @@ final class PersonRequestsFactory {
         )
     }
     
-    static func makeDeleteRequest(_ id: Int) -> DefaultSimpleRequest<PersonApiModel> {
-        DefaultSimpleRequest<PersonApiModel>(
-            httpMethod: .DELETE,
-            path: "\(basePath)/\(id)"
-        )
+    static func makeDeleteRequest() -> DefaultSimpleRequest<PersonApiModel> {
+        DefaultSimpleRequest<PersonApiModel>(httpMethod: .DELETE, path: basePath)
     }
 }

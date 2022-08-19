@@ -14,7 +14,7 @@ protocol WalletsViewModelDelegate: AnyObject {
 }
 
 final class WalletsViewModel {
-    typealias Dependencies = HasWalletService & HasCurrenciesService
+    typealias Dependencies = HasWalletService & HasCurrenciesService & HasPersonService
     // MARK: - Properties
     weak var delegate: WalletsViewModelDelegate?
     var wallets: [WalletModel] = []
@@ -23,41 +23,42 @@ final class WalletsViewModel {
     var userData: PersonModel
     var currencyData: [CurrencyModel]
     var isHidden: Bool = false
+    
     var onHide: (() -> Void)?
     var onShow: (() -> Void)?
-    
-    var reloadData: (() -> Void)?
-    var reloadCurrencyData: (() -> Void)?
+    var onDidDeleteWallet: ((IndexPath) -> Void)?
+    var onDidUpdateWallets: (() -> Void)?
+    var onDidUpdateCurrencies: (() -> Void)?
+    var onDidUpdateUserData: (() -> Void)?
     
     private var dependenices: Dependencies
     
     // MARK: - Init
     init(dependencies: Dependencies) {
+        
         self.dependenices = dependencies
-        userData = PersonModel.makeTestModel()
-        currencyData = (0..<3).map { _ in CurrencyModel.makeSkeletonModel() }
-        load()
+        self.userData = PersonModel.skeletonModel
+        self.currencyData = (0..<3).map { _ in CurrencyModel.makeSkeletonModel() }
+        self.wallets = (0..<3).map { _ in WalletModel.makeSkeletonModel() }
+        self.shownWallets = wallets
+        
+        dependencies.walletService.addDelegate(self)
     }
     
     // MARK: - Public Methods
     func load() {
         loadCurrencies()
         loadWallets()
+        loadCurrencies()
+        loadUserData()
     }
     
-    func selectWalletWithIndex(_ index: Int, section: Int) {
-        var wallets: [WalletModel]
-        if section == 0 {
-            wallets = shownWallets
-        } else if section == 2 {
-            wallets = hiddenWallets
+    func getWallet(at indexPath: IndexPath) -> WalletModel {
+        if indexPath.section == 0 {
+            return shownWallets[indexPath.row]
         } else {
-            return
+            return hiddenWallets[indexPath.row]
         }
-        
-        guard wallets.count > index else { return }
-        
-        delegate?.walletsViewModel(self, didSelectWallet: wallets[index])
     }
     
     func makeShowMoreCellModel() -> ShowMoreCell.Model {
@@ -80,19 +81,31 @@ final class WalletsViewModel {
                 updateHiddenWallets()
                 onShow?()
             }
-            return
+        } else {
+            delegate?.walletsViewModel(self, didSelectWallet: getWallet(at: indexPath))
         }
     }
     
     func onCellDelete(_ indexPath: IndexPath) {
-        
+        let model = getWallet(at: indexPath)
+        dependenices.walletService.walletServiceDelete(model.id) { result in
+            switch result {
+            case .success:
+                DispatchQueue.main.async {
+                    self.removeWallet(withId: model.id)
+                }
+            case .failure(let error):
+                self.delegate?.walletsViewModel(self, didReceiveError: error)
+            }
+        }
     }
     
     func onCellHide(_ indexPath: IndexPath) {
-        let wallet = findWalletByIndexPath(indexPath: indexPath)
+        let wallet = getWallet(at: indexPath)
         
         for i in 0..<wallets.count where wallets[i].id == wallet.id {
             wallets[i].isHidden.toggle()
+            editWallet(wallets[i])
         }
         updateShownWallets()
         
@@ -102,7 +115,7 @@ final class WalletsViewModel {
     }
     
     func onCellEdit(_ indexPath: IndexPath) {
-        let wallet = findWalletByIndexPath(indexPath: indexPath)
+        let wallet = getWallet(at: indexPath)
         delegate?.walletsViewModelEditWallet(wallet: wallet)
     }
     
@@ -115,16 +128,22 @@ final class WalletsViewModel {
     }
     
     // MARK: - Private Methods
+    private func removeWallet(withId id: Int) {
+        if let row = shownWallets.firstIndex(where: { $0.id == id}) {
+            shownWallets.remove(at: row)
+            onDidDeleteWallet?(IndexPath(row: row, section: 0))
+        }
+        if let row = hiddenWallets.firstIndex(where: { $0.id == id}) {
+            hiddenWallets.remove(at: row)
+            onDidDeleteWallet?(IndexPath(row: row, section: 2))
+        }
+    }
+    
     private func loadWallets() {
         dependenices.walletService.walletServiceGetAll { result in
             switch result {
-            case .success(let walletModels):
-                self.wallets = walletModels.compactMap { WalletModel.fromApiModel($0) }
-                DispatchQueue.main.async {
-                    self.updateShownWallets()
-                    self.updateHiddenWallets()
-                    self.reloadData?()
-                }
+            case .success:
+                break
             case .failure(let error):
                 self.delegate?.walletsViewModel(self, didReceiveError: error)
             }
@@ -137,14 +156,40 @@ final class WalletsViewModel {
             case .success(let data):
                 DispatchQueue.main.async {
                     self.currencyData = data.map { CurrencyModel.fromApiModel($0) }
-                    self.reloadCurrencyData?()
+                    self.onDidUpdateCurrencies?()
                 }
             case .failure(let error):
                 self.delegate?.walletsViewModel(self, didReceiveError: error)
             }
         }
     }
-
+    
+    private func loadUserData() {
+        dependenices.personNetworkService.personServiceGet { result in
+            switch result {
+            case .success(let person):
+                let userData = PersonModel.fromApiModel(person)
+                DispatchQueue.main.async {
+                    self.userData = userData
+                    self.onDidUpdateUserData?()
+                }
+            case .failure(let error):
+                self.delegate?.walletsViewModel(self, didReceiveError: error)
+            }
+        }
+    }
+    
+    private func editWallet(_ model: WalletModel) {
+        dependenices.walletService.walletServiceEdit(model.makeApiModel()) { result in
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
     private func updateHiddenWallets() {
         hiddenWallets = wallets.filter { $0.isHidden }
     }
@@ -152,12 +197,16 @@ final class WalletsViewModel {
     private func updateShownWallets() {
         shownWallets = wallets.filter { !$0.isHidden }
     }
+}
     
-    private func findWalletByIndexPath(indexPath: IndexPath) -> WalletModel {
-        if indexPath.section == 0 {
-            return shownWallets[indexPath.row]
-        } else {
-            return hiddenWallets[indexPath.row]
+extension WalletsViewModel: WalletServiceDelegate {
+    func walletService(_ service: WalletServiceProtocol, didLoadWallets wallets: [WalletApiModel]) {
+        let models = wallets.compactMap { WalletModel.fromApiModel($0) }
+        DispatchQueue.main.async {
+            self.wallets = models
+            self.updateShownWallets()
+            self.updateHiddenWallets()
+            self.onDidUpdateWallets?()
         }
     }
 }

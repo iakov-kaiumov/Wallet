@@ -22,7 +22,7 @@ extension CurrencyModel {
             symbol: apiModel.symbol,
             fullDescription: apiModel.fullDescription,
             shortDescription: apiModel.shortDescription,
-            value: apiModel.value, isAscending: false
+            value: apiModel.value, isAscending: apiModel.ascending
         )
     }
     
@@ -36,7 +36,7 @@ extension CurrencyModel {
     
     static var RUB: CurrencyModel {
         CurrencyModel(
-            code: "RUB", symbol: "P",
+            code: "RUB", symbol: "₽",
             fullDescription: "Российский рубль (RUB)",
             shortDescription: "Российский рубль",
             value: 1.0, isAscending: false

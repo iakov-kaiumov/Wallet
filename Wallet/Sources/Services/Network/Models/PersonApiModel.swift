@@ -5,7 +5,7 @@
 import Foundation
 
 struct PersonApiModel: Codable {
-    init(id: Int64? = nil, email: String? = nil, balance: Decimal? = nil, income: Decimal? = nil, spendings: Decimal? = nil) {
+    init(id: Int? = nil, email: String? = nil, balance: Decimal? = nil, income: Decimal? = nil, spendings: Decimal? = nil) {
         self.id = id
         self.email = email
         self.balance = balance
@@ -13,7 +13,7 @@ struct PersonApiModel: Codable {
         self.spendings = spendings
     }
     
-    let id: Int64?
+    let id: Int?
     let email: String?
     let balance: Decimal?
     let income: Decimal?
@@ -25,7 +25,7 @@ struct PersonApiModel: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try? container.decodeIfPresent(Int64.self,
+        id = try? container.decodeIfPresent(Int.self,
                                             forKey: .id)
         email = try? container.decodeIfPresent(String.self,
                                                forKey: .email)

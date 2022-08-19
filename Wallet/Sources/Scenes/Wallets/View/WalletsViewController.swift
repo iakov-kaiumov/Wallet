@@ -32,9 +32,6 @@ final class WalletsViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.reloadData = { [weak self] in
-            self?.walletsTableView.reloadData()
-        }
         setup()
         viewModel.load()
     }
@@ -94,12 +91,19 @@ final class WalletsViewController: UIViewController {
         setupCreateWalletButton()
         setupEmptyLabel()
         
-        viewModel.reloadData = { [weak self] in
+        viewModel.onDidUpdateWallets = { [weak self] in
             self?.walletsTableView.reloadData()
         }
-        viewModel.reloadCurrencyData = { [weak self] in
+        viewModel.onDidUpdateCurrencies = { [weak self] in
             guard let self = self else { return }
             self.currenciesView.configure(currencies: self.viewModel.currencyData)
+        }
+        viewModel.onDidUpdateUserData = { [weak self] in
+            guard let self = self else { return }
+            self.headerView.configure(model: self.viewModel.userData)
+        }
+        viewModel.onDidDeleteWallet = { [weak self] indexPath in
+            self?.walletsTableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
     
@@ -235,9 +239,6 @@ extension WalletsViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section != 1 {
-            viewModel.selectWalletWithIndex(indexPath.row, section: indexPath.section)
-        }
         tableView.deselectRow(at: indexPath, animated: true)
         
         viewModel.onCellTapped(indexPath)
@@ -307,15 +308,7 @@ extension WalletsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath)
-            
-            if let cell = cell as? WalletCell {
-                cell.configure(model: viewModel.shownWallets[indexPath.row])
-            }
-            
-            return cell
-        } else if indexPath.section == 1 {
+        if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: ShowMoreCell.identifier, for: indexPath)
             
             if let cell = cell as? ShowMoreCell {
@@ -323,15 +316,20 @@ extension WalletsViewController: UITableViewDataSource {
             }
             
             return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath)
-            
-            if let cell = cell as? WalletCell {
-                cell.configure(model: viewModel.hiddenWallets[indexPath.row])
-            }
-            
-            return cell
         }
-
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.reuseIdentifier, for: indexPath)
+        
+        if let cell = cell as? WalletCell {
+            let model = viewModel.getWallet(at: indexPath)
+            cell.configure(model: model)
+            
+            if model.isSkeleton {
+                cell.setupSkeleton(insets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16), cornerRadius: 16)
+            }
+            cell.showSkeleton(model.isSkeleton)
+        }
+        
+        return cell
     }
 }

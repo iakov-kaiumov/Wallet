@@ -8,34 +8,29 @@ import Foundation
 protocol OperationServiceProtocol: AnyObject {
     func operationServiceCreate(_ operation: OperationApiModel,
                                 walletID: Int,
-                                completion: @escaping (Result<OperationModel, NetworkError>) -> Void)
+                                completion: @escaping (Result<OperationApiModel, NetworkError>) -> Void)
     
-    func operationServiceGetAll(walletID: Int, completion: @escaping (Result<[OperationModel], NetworkError>) -> Void)
+    func operationServiceGetAll(walletID: Int, completion: @escaping (Result<[OperationApiModel], NetworkError>) -> Void)
+    
+    func operationServiceDelete(walletId: Int,
+                                operationId: Int,
+                                completion: @escaping (Result<Data, NetworkError>) -> Void)
 }
 
 extension NetworkService: OperationServiceProtocol {
-    func operationServiceCreate(_ operation: OperationApiModel, walletID: Int, completion: @escaping (Result<OperationModel, NetworkError>) -> Void) {
-        let request = OperationRequestsFactory.makeCreateReqeust(walletId: walletID, operation: operation)
-        requestProcessor.fetch(request) { result in
-            switch result {
-            case .success(let model):
-                print(model)
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+    func operationServiceDelete(walletId: Int, operationId: Int, completion: @escaping (Result<Data, NetworkError>) -> Void) {
+        let request = OperationRequestsFactory.makeDeleteRequest(walletId: walletId, operationId: operationId)
+        requestProcessor.fetchData(request, completion: completion)
     }
     
-    func operationServiceGetAll(walletID: Int, completion: @escaping (Result<[OperationModel], NetworkError>) -> Void) {
+    func operationServiceCreate(_ operation: OperationApiModel, walletID: Int, completion: @escaping (Result<OperationApiModel, NetworkError>) -> Void) {
+        let request = OperationRequestsFactory.makeCreateReqeust(walletId: walletID, operation: operation)
+        requestProcessor.fetch(request, completion: completion)
+    }
+    
+    func operationServiceGetAll(walletID: Int, completion: @escaping (Result<[OperationApiModel], NetworkError>) -> Void) {
         let request = OperationRequestsFactory.makeGetAllRequest(walletId: walletID)
-        requestProcessor.fetch(request) { result in
-            switch result {
-            case .success(let model):
-                print(model)
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+        requestProcessor.fetch(request, completion: completion)
     }
     
 }

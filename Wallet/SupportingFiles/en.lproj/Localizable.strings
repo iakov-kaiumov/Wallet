@@ -88,3 +88,7 @@
 "icon_picker_section_color" = "Select color";
 "icon_picker_section_icon" = "Select icon";
 "icon_picker_save_button" = "Save";
+
+"date_tommorow" = "Tommorow";
+"date_today" = "Today";
+"date_yesterday" = "Yesterday";

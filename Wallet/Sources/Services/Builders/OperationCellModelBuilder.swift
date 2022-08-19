@@ -16,20 +16,30 @@ final class OperationCellModelBuilder: OperationCellModelBuilderProtocol {
         guard let category = operationModel.category,
               let categoryType = category.type,
               let money = operationModel.operationBalance,
-              let operationDate = operationModel.operationDate,
               let categoryTitle = category.name else {
             return OperationCellView.Model.makeTestModel()
         }
         let operationType = categoryType.displayName()
         let moneySpend = categoryType == .SPENDING ? "-" + money.displayString(currency: .RUB) : money.displayString(currency: .RUB)
-        let timestamp = DateFormatter.hoursMinutes.string(from: operationDate)
-        // TODO: - Get icon
-        let icon = R.image.settingsButton()
-        return OperationCellView.Model(title: categoryTitle,
+        
+        let timestamp = DateFormatter.hoursMinutes.string(from: operationModel.operationDate)
+        
+        var iconModel: IconView.IconModel?
+        if let colorId = operationModel.category?.colorId,
+           let iconId = operationModel.category?.iconId {
+            let color = UIColor(named: "Color-" + String(colorId))
+            let icon = UIImage(named: "Icon-" + String(iconId))
+            
+            iconModel = IconView.IconModel(icon: icon, backgroundColor: color)
+        }
+        
+        return OperationCellView.Model(id: operationModel.id,
+                                       walletId: operationModel.walletId,
+                                       title: categoryTitle,
                                        operationType: operationType,
                                        moneySpend: moneySpend,
                                        timestamp: timestamp,
-                                       icon: icon)
+                                       icon: iconModel)
     }
     
     func buildSkeletonCellModel() -> OperationCellView.Model {

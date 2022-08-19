@@ -8,8 +8,8 @@ import CoreData
 
 class CacheService {
     let writeContext: NSManagedObjectContext
+    let readContext: NSManagedObjectContext
     private let persistentContainer = NSPersistentContainer(name: "wallet")
-    private let readContext: NSManagedObjectContext
     
     init() {
         persistentContainer.loadPersistentStores { _, error in
@@ -38,11 +38,13 @@ class CacheService {
     
     func getObjectsByValue<Entity: NSManagedObject>(columnName: String,
                                                     value: String,
-                                                    objectType: Entity.Type) -> [Entity] {
+                                                    objectType: Entity.Type,
+                                                    context: NSManagedObjectContext
+    ) -> [Entity] {
         
         let fetchRequest = createSafeComparisonFetchRequest(columnName: columnName, value: value, objectType: objectType)
         do {
-            return try readContext.fetch(fetchRequest)
+            return try context.fetch(fetchRequest)
         } catch {
             return []
         }
@@ -61,7 +63,7 @@ class CacheService {
                                                        value: String,
                                                        objectType: Entity.Type) throws {
         
-        let objects = getObjectsByValue(columnName: columnName, value: value, objectType: objectType)
+        let objects = getObjectsByValue(columnName: columnName, value: value, objectType: objectType, context: writeContext)
         for object in objects {
             writeContext.delete(object)
         }

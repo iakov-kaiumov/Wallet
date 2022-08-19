@@ -59,7 +59,7 @@ extension ProxyService: OperationServiceProtocol {
     func operationServiceDelete(walletId: Int, operationId: Int, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         networkService.operationServiceDelete(walletId: walletId, operationId: operationId) { result in
             completion(result)
-            
+            try? self.cacheService.deleteOperation(operationId)
             self.walletServiceGetAll(completion: { _ in })
             self.personServiceGet(completion: { _ in })
         }

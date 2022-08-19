@@ -16,7 +16,7 @@ final class IconPickerViewModel {
         var isActive: Bool
     }
     
-    var delegate: IconPickerViewModelDelegate?
+    weak var delegate: IconPickerViewModelDelegate?
     var selectedColor: Int = 0
     var selectedIcon: Int = 0
     

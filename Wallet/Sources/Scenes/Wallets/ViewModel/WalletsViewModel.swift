@@ -44,6 +44,7 @@ final class WalletsViewModel {
         self.shownWallets = wallets
         
         dependencies.walletService.addDelegate(self)
+        dependencies.personNetworkService.addDelegate(self)
     }
     
     // MARK: - Public Methods
@@ -181,12 +182,8 @@ final class WalletsViewModel {
     private func loadUserData() {
         dependenices.personNetworkService.personServiceGet { result in
             switch result {
-            case .success(let person):
-                let userData = PersonModel.fromApiModel(person)
-                DispatchQueue.main.async {
-                    self.userData = userData
-                    self.onDidUpdateUserData?()
-                }
+            case .success:
+                break
             case .failure(let error):
                 self.delegate?.walletsViewModel(self, didReceiveError: error)
             }
@@ -223,6 +220,16 @@ extension WalletsViewModel: WalletServiceDelegate {
             self.updateShownWallets()
             self.updateHiddenWallets()
             self.onDidUpdateWallets?()
+        }
+    }
+}
+
+extension WalletsViewModel: PersonServiceDelegate {
+    func personService(_ service: PersonServiceProtocol, didLoadPersonInfo person: PersonApiModel) {
+        let userData = PersonModel.fromApiModel(person)
+        DispatchQueue.main.async {
+            self.userData = userData
+            self.onDidUpdateUserData?()
         }
     }
 }

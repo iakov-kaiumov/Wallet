@@ -16,7 +16,7 @@ final class OnboardingCoordinator: Coordinator {
     var navigationController: UINavigationController
     var dependencies: AppDependency
     
-    var delegate: OnboardingCoordinatorDelegate?
+    weak var delegate: OnboardingCoordinatorDelegate?
     
     init(navigationController: UINavigationController,
          dependencies: AppDependency = AppDependency()) {

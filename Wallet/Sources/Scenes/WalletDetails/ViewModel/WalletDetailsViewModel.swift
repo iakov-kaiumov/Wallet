@@ -15,7 +15,7 @@ protocol WalletDetailesViewModelDelegate: AnyObject {
 
 final class WalletDetailesViewModel {
     // MARK: - Properties
-    typealias Dependencies = HasSpendChipModelBuilder & HasOperationCellModelBuilder & HasOperationService
+    typealias Dependencies = HasSpendChipModelBuilder & HasOperationCellModelBuilder & HasOperationService & HasWalletService
     
     var walletModel: WalletModel
     
@@ -36,6 +36,7 @@ final class WalletDetailesViewModel {
         self.dependencies = dependencies
         self.walletModel = wallet
         self.dependencies.operationNetworkService.addDelegate(self)
+        self.dependencies.walletService.addDelegate(self)
     }
     
     // MARK: - Public Methods
@@ -194,5 +195,18 @@ final class WalletDetailesViewModel {
 extension WalletDetailesViewModel: OperationServiceDelegate {
     func operationService(_ service: OperationServiceProtocol, didLoadOperations operations: [OperationApiModel]) {
         transformOperations(operations)
+    }
+}
+
+extension WalletDetailesViewModel: WalletServiceDelegate {
+    func walletService(_ service: WalletServiceProtocol, didLoadWallets wallets: [WalletApiModel]) {
+        guard let newApiWallet = wallets.first(where: { $0.id == walletModel.id }),
+              let newWalletModel = WalletModel.fromApiModel(newApiWallet) else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.walletModel = newWalletModel
+            self.loadWalletInfo()
+        }
     }
 }

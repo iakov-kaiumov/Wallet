@@ -38,10 +38,14 @@ class CacheService {
     
     func getObjectsByValue<Entity: NSManagedObject>(columnName: String,
                                                     value: String,
-                                                    objectType: Entity.Type) -> [Entity]? {
+                                                    objectType: Entity.Type) -> [Entity] {
         
         let fetchRequest = createSafeComparisonFetchRequest(columnName: columnName, value: value, objectType: objectType)
-        return try? readContext.fetch(fetchRequest)
+        do {
+            return try readContext.fetch(fetchRequest)
+        } catch {
+            return []
+        }
     }
     
     func getAllObjectsOfType<Entity: NSManagedObject>(_ type: Entity.Type) -> [Entity] {
@@ -57,9 +61,7 @@ class CacheService {
                                                        value: String,
                                                        objectType: Entity.Type) throws {
         
-        guard let objects = getObjectsByValue(columnName: columnName, value: value, objectType: objectType) else {
-            throw CoreDataError.objectDoesNotExist
-        }
+        let objects = getObjectsByValue(columnName: columnName, value: value, objectType: objectType)
         for object in objects {
             writeContext.delete(object)
         }

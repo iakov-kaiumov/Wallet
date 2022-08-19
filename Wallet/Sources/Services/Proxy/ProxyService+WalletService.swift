@@ -30,13 +30,7 @@ extension ProxyService: WalletServiceProtocol {
         networkService.walletServiceGetAll { result in
             switch result {
             case .success(let models):
-                do {
-                    let convertedModels = models.compactMap { WalletModel.fromApiModel($0) }
-                    try self.cacheService.setAllWallets(convertedModels)
-                    try self.cacheService.saveWriteContext()
-                } catch {
-                    completion(.failure(.noData))
-                }
+                print(models)
             case .failure(let error):
                 print(error)
                 let wallets = self.getWalletsFromCache()
@@ -56,6 +50,10 @@ extension ProxyService: WalletServiceProtocol {
     }
     
     func walletServiceEdit(_ wallet: WalletApiModelShort, completion: @escaping (Result<WalletApiModelShort, NetworkError>) -> Void) {
+        guard networkService.internetChecker?.connection != .unavailable else {
+            self.notifyWalletDelegates(result: .failure(.urlError))
+            return
+        }
         networkService.walletServiceEdit(wallet) { result in
             completion(result)
             self.walletServiceGetAll(completion: self.notifyWalletDelegates)
@@ -72,6 +70,11 @@ extension ProxyService: WalletServiceProtocol {
     private func notifyWalletDelegates(result: Result<[WalletApiModel], NetworkError>) {
         switch result {
         case .success(let wallets):
+            let convertedModels = wallets.compactMap { WalletModel.fromApiModel($0) }
+            try? self.cacheService.deleteAllObjectsOfType(CDWallet.self)
+            try? self.cacheService.setAllWallets(convertedModels)
+            try? self.cacheService.saveWriteContext()
+            
             self.networkService.walletDelegates.forEach {
                 $0.walletService(self, didLoadWallets: wallets)
             }

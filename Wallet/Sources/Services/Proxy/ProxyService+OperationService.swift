@@ -28,7 +28,7 @@ extension ProxyService: OperationServiceProtocol {
     func operationServiceGetAll(walletID: Int, completion: @escaping (Result<[OperationApiModel], NetworkError>) -> Void) {
         guard networkService.internetChecker?.connection != .unavailable else {
             let operations = getOperations(walletId: walletID)
-            completion(.success(operations))
+            completion(.failure(.noData))
             self.notifyOperationDelegates(result: .success(operations))
             return
         }
@@ -40,7 +40,7 @@ extension ProxyService: OperationServiceProtocol {
             case .failure(let error):
                 print(error)
                 let operations = self.getOperations(walletId: walletID)
-                completion(.success(operations))
+                completion(.failure(.noData))
                 self.notifyOperationDelegates(result: .success(operations))
                 return
             }

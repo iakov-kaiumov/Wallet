@@ -7,6 +7,7 @@ import Foundation
 
 protocol WalletServiceDelegate: AnyObject {
     func walletService(_ service: WalletServiceProtocol, didLoadWallets wallets: [WalletApiModel])
+    func walletServiceDidConnectToInternet(_ service: WalletServiceProtocol)
 }
 
 protocol WalletServiceProtocol: AnyObject {

@@ -26,6 +26,8 @@ protocol OperationViewModelDelegate: AnyObject {
 }
 
 final class OperationViewModel {
+    typealias Dependencies = HasOperationService
+    
     // MARK: - Properties
     var model: OperationModel
     
@@ -40,9 +42,12 @@ final class OperationViewModel {
     var tableItems: [OperationEditTableItem] = []
     
     private lazy var formatter: IOperationViewModelFormatter = OperationViewModelFormatter()
+    private lazy var operationApiModelBuilder = OperationApiModelBuilder()
+    private let dependencies: Dependencies
     
     // MARK: - Init
-    init(model: OperationModel) {
+    init(dependencies: Dependencies, model: OperationModel) {
+        self.dependencies = dependencies
         self.model = model
         loadData()
     }
@@ -93,7 +98,20 @@ final class OperationViewModel {
     }
     
     func nextButtonDidTap() {
-        delegate?.operationViewModelDidFinish()
+        let apiModel = operationApiModelBuilder.build(model)
+        print(apiModel)
+        dependencies.operationNetworkService.operationServiceCreate(apiModel, walletID: model.walletId) { [weak self] result in
+            print(result)
+            switch result {
+            case .success(let model):
+                print(model)
+            case .failure(let error):
+                print(error)
+            }
+            DispatchQueue.main.async {
+                self?.delegate?.operationViewModelDidFinish()
+            }
+        }
     }
     
     func changeAmount(_ value: Decimal?) {

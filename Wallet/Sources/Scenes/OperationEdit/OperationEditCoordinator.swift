@@ -21,7 +21,19 @@ final class OperationEditCoordinator: Coordinator {
     
     func start() {
         let model = OperationModel.makeEmptyModel()
-        operationViewModel = OperationViewModel(model: model)
+        operationViewModel = OperationViewModel(dependencies: dependencies, model: model)
+        operationViewModel?.delegate = self
+        guard let operationViewModel = operationViewModel else {
+            return
+        }
+        let controller = OperationViewController(viewModel: operationViewModel)
+        navigationController.pushViewController(controller, animated: true)
+    }
+    
+    func start(walletID: Int) {
+        var model = OperationModel.makeEmptyModel()
+        model.walletId = walletID
+        operationViewModel = OperationViewModel(dependencies: dependencies, model: model)
         operationViewModel?.delegate = self
         guard let operationViewModel = operationViewModel else {
             return

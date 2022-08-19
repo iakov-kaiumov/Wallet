@@ -5,8 +5,14 @@
 
 import Foundation
 
+protocol OperationServiceDelegate: AnyObject {
+    func operationService(_ service: OperationServiceProtocol, didLoadOperations operations: [OperationApiModel])
+}
+
 protocol OperationServiceProtocol: AnyObject {
-    func operationServiceCreate(_ operation: OperationApiModel,
+    func addDelegate(_ delegate: OperationServiceDelegate)
+    
+    func operationServiceCreate(_ operation: OperationApiModelToSend,
                                 walletID: Int,
                                 completion: @escaping (Result<OperationApiModel, NetworkError>) -> Void)
     
@@ -18,12 +24,16 @@ protocol OperationServiceProtocol: AnyObject {
 }
 
 extension NetworkService: OperationServiceProtocol {
+    func addDelegate(_ delegate: OperationServiceDelegate) {
+        operationDelegates.addDelegate(delegate)
+    }
+    
     func operationServiceDelete(walletId: Int, operationId: Int, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         let request = OperationRequestsFactory.makeDeleteRequest(walletId: walletId, operationId: operationId)
         requestProcessor.fetchData(request, completion: completion)
     }
     
-    func operationServiceCreate(_ operation: OperationApiModel, walletID: Int, completion: @escaping (Result<OperationApiModel, NetworkError>) -> Void) {
+    func operationServiceCreate(_ operation: OperationApiModelToSend, walletID: Int, completion: @escaping (Result<OperationApiModel, NetworkError>) -> Void) {
         let request = OperationRequestsFactory.makeCreateReqeust(walletId: walletID, operation: operation)
         requestProcessor.fetch(request, completion: completion)
     }

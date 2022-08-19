@@ -6,8 +6,19 @@
 import Foundation
 
 extension ProxyService: OperationServiceProtocol {
-    func operationServiceCreate(_ operation: OperationApiModel, walletID: Int, completion: @escaping (Result<OperationApiModel, NetworkError>) -> Void) {
-        networkService.operationServiceCreate(operation, walletID: walletID, completion: completion)
+    func addDelegate(_ delegate: OperationServiceDelegate) {
+        networkService.addDelegate(delegate)
+    }
+    
+    func operationServiceCreate(_ operation: OperationApiModelToSend, walletID: Int, completion: @escaping (Result<OperationApiModel, NetworkError>) -> Void) {
+        networkService.operationServiceCreate(operation, walletID: walletID) { [weak self] result in
+            completion(result)
+            
+            guard let self = self else {
+                return
+            }
+            self.networkService.operationServiceGetAll(walletID: walletID, completion: self.notifyOperationDelegates)
+        }
     }
     
     func operationServiceGetAll(walletID: Int, completion: @escaping (Result<[OperationApiModel], NetworkError>) -> Void) {
@@ -16,5 +27,16 @@ extension ProxyService: OperationServiceProtocol {
    
     func operationServiceDelete(walletId: Int, operationId: Int, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         networkService.operationServiceDelete(walletId: walletId, operationId: operationId, completion: completion)
+    }
+    
+    private func notifyOperationDelegates(result: Result<[OperationApiModel], NetworkError>) {
+        switch result {
+        case .success(let operations):
+            self.networkService.operationDelegates.forEach {
+                $0.operationService(self, didLoadOperations: operations)
+            }
+        case .failure:
+            break
+        }
     }
 }

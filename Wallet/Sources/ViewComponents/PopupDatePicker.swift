@@ -55,6 +55,7 @@ class PopupDatePicker: UIView {
         } else {
             // use default
         }
+        datePicker.maximumDate = Date()
         
         datePicker.addTarget(self, action: #selector(didChangeDate(_:)), for: .valueChanged)
         

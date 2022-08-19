@@ -97,8 +97,8 @@ extension TextInputViewModel {
     static func makeCategoryName(isModal: Bool = false) -> TextInputViewModel {
         TextInputViewModel(
             screen: .categoryName,
-            title: R.string.localizable.wallet_name_title(),
-            textInputPrompt: R.string.localizable.wallet_name_prompt(),
+            title: R.string.localizable.newcategory_enter_name(),
+            textInputPrompt: R.string.localizable.newcategory_enter_name(),
             buttonTitle: isModal ? R.string.localizable.default_save_button() : R.string.localizable.default_next_button(),
             isModal: isModal,
             keyboardType: .default,

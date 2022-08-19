@@ -53,7 +53,7 @@ struct CategoryModel: Codable, Transient {
     static func newCategory() -> CategoryModel {
         CategoryModel(
             id: 0,
-            name: "Новая категория",
+            name: "",
             type: .INCOME,
             colorId: Int.random(in: 0...5),
             iconId: Int.random(in: 0...15)

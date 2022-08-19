@@ -13,7 +13,6 @@ protocol WalletCacheServiceProtocol: AnyObject {
 extension CacheService: WalletCacheServiceProtocol {
     func getAllWallets() -> [WalletModel] {
         let wallets = getAllObjectsOfType(WalletModel.PersistentEntity.self)
-        print(wallets)
         return wallets.compactMap { $0.makeTransient() }
     }
     

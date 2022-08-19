@@ -44,6 +44,10 @@ final class OperationEditCoordinator: Coordinator {
 }
 
 extension OperationEditCoordinator: OperationViewModelDelegate {
+    func operationViewModel(_ viewModel: OperationViewModel, didReceiveError error: Error) {
+        callBanner(type: .unknownError)
+    }
+    
     func operationViewModelEnterAmount(_ currentValue: Decimal?) {
         let viewModel = TextInputViewModel.makeOperationAmount(isModal: true)
         viewModel.delegate = self

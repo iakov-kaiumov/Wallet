@@ -23,6 +23,7 @@ protocol OperationViewModelDelegate: AnyObject {
     func operationViewModelEnterCategory(_ currentValue: CategoryModel?, _ currentType: MoneyOperationType)
     
     func operationViewModelDidFinish()
+    func operationViewModel(_ viewModel: OperationViewModel, didReceiveError error: Error)
 }
 
 final class OperationViewModel {
@@ -36,6 +37,7 @@ final class OperationViewModel {
     weak var delegate: OperationViewModelDelegate?
     
     var onItemChanged: ((_ row: Int) -> Void)?
+    var showProgressView: ((_ isOn: Bool) -> Void)?
     
     var setButtonInteraction: ((_ isActive: Bool) -> Void)?
     
@@ -98,18 +100,22 @@ final class OperationViewModel {
     }
     
     func nextButtonDidTap() {
-        let apiModel = operationApiModelBuilder.build(model)
-        print(apiModel)
-        dependencies.operationNetworkService.operationServiceCreate(apiModel, walletID: model.walletId) { [weak self] result in
-            print(result)
+        self.showProgressView?(true)
+        dependencies.operationNetworkService.operationServiceCreate(operationApiModelBuilder.build(model), walletID: model.walletId) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.showProgressView?(false)
+            }
             switch result {
             case .success(let model):
                 print(model)
+                DispatchQueue.main.async {
+                    self?.delegate?.operationViewModelDidFinish()
+                }
             case .failure(let error):
                 print(error)
-            }
-            DispatchQueue.main.async {
-                self?.delegate?.operationViewModelDidFinish()
+                DispatchQueue.main.async {
+                    self?.showError(error: error)
+                }
             }
         }
     }
@@ -163,5 +169,9 @@ final class OperationViewModel {
         }
         
         setButtonInteraction?(true)
+    }
+
+    private func showError(error: NetworkError) {
+        self.delegate?.operationViewModel(self, didReceiveError: error)
     }
 }

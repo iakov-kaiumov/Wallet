@@ -8,7 +8,7 @@ import UIKit
 extension UILabel {
     func setText(_ text: String, animated: Bool = true) {
         if animated {
-            self.defaultTransition {
+            UIView.defaultTransition(with: self) {
                 self.text = text
             }
         } else {
@@ -18,9 +18,9 @@ extension UILabel {
 }
 
 extension UIView {
-    func defaultTransition(_ animations: @escaping () -> Void) {
+    static func defaultTransition(with view: UIView, animations: @escaping () -> Void) {
         UIView.transition(
-            with: self,
+            with: view,
             duration: 0.33,
             options: .transitionCrossDissolve,
             animations: animations

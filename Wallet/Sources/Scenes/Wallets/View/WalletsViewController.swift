@@ -123,6 +123,7 @@ final class WalletsViewController: UIViewController {
     
     private func setupSignOutButton() {
         signOutButton.title = R.string.localizable.onboarding_logout_button()
+        signOutButton.image = UIImage(systemName: "rectangle.portrait.and.arrow.right")
         signOutButton.style = .plain
         signOutButton.target = self
         signOutButton.action = #selector(signOutButtonTapped)

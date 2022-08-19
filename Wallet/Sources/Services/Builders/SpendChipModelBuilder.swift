@@ -45,14 +45,14 @@ final class SpendChipModelBuilder: SpendChipBuilderProtocol {
                                               isLimitExceeded: Bool) -> NSAttributedString {
         let spentMoneyAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 16, weight: .semibold),
-            .foregroundColor: R.color.background() as Any
+            .foregroundColor: UIColor.white as Any
         ]
         let spentMoneyText = NSMutableAttributedString(string: spentMoney,
                                                        attributes: spentMoneyAttributes)
         
         let limitMoneyAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 11, weight: .semibold),
-            .foregroundColor: isLimitExceeded ? R.color.warningRed() as Any : R.color.background() as Any
+            .foregroundColor: isLimitExceeded ? R.color.warningRed() as Any : UIColor.white as Any
         ]
         
         let limitMoneyText = NSMutableAttributedString(string: limitMoney,

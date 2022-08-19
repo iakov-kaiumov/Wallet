@@ -15,12 +15,18 @@ final class AppCoordinator: Coordinator {
     
     var errorPopupViewModel: ErrorPopupViewModel?
     
+    private let internetChecker = try? Reachability()
+    
     // MARK: - Init
     init(navigationController: UINavigationController,
          dependencies: AppDependency = AppDependency()) {
         self.navigationController = navigationController
         self.dependencies = dependencies
         setupNavigationBar()
+        internetChecker?.whenUnreachable = { _ in
+            self.callBanner(type: .noInternet)
+        }
+        try? internetChecker?.startNotifier()
     }
     
     convenience init(scene: UIWindowScene) {

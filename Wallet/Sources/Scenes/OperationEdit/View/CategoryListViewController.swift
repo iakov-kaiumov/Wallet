@@ -10,6 +10,8 @@ final class CategoryListViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: CategoryViewModel
     
+    private lazy var blurView = UIView()
+    private var isBlurApplied = false
     private lazy var nextButton: UIButton = ButtonFactory.makeGrayButton()
     private lazy var progressView = ProgressView()
     private lazy var tableView: UITableView = {
@@ -42,6 +44,15 @@ final class CategoryListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if !isBlurApplied {
+            blurView.applyBlur()
+            isBlurApplied = true
+        }
+        
     }
     
     // MARK: - Actions
@@ -80,12 +91,20 @@ final class CategoryListViewController: UIViewController {
     
     private func setupNextButton() {
         view.addSubview(nextButton)
+        view.addSubview(blurView)
+        
+        blurView.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+            $0.top.equalTo(nextButton.snp.top).offset(-16)
+        }
+        
         nextButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(16)
         }
         nextButton.setTitle(R.string.localizable.default_save_button(), for: .normal)
         nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+        view.bringSubviewToFront(nextButton)
     }
     
     private func setupProgressView() {

@@ -109,7 +109,7 @@ final class TextInputViewController: UIViewController {
     @objc private func keyboardWillShow(notification: NSNotification) {
         animateWithKeyboard(notification: notification) { keyboardFrame in
             self.nextButton.snp.updateConstraints {
-                $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(keyboardFrame.height)
+                $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(keyboardFrame.height + 4)
             }
         }
     }

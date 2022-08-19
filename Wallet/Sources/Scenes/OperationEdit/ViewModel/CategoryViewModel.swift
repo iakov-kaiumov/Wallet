@@ -52,6 +52,7 @@ final class CategoryViewModel {
             case .failure(let error):
                 DispatchQueue.main.async {
                     self?.showError(error: error)
+                    self?.showProgressView?(false)
                 }
             }
         }

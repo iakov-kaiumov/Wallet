@@ -58,6 +58,7 @@ extension ProxyService: WalletServiceProtocol {
     
     func walletServiceEdit(_ wallet: WalletApiModelShort, completion: @escaping (Result<WalletApiModelShort, NetworkError>) -> Void) {
         guard networkService.internetChecker?.connection != .unavailable else {
+            completion(.failure(.urlError))
             self.notifyWalletDelegates(result: .failure(.urlError))
             return
         }

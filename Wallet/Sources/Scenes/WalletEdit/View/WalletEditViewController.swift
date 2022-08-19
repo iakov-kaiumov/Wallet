@@ -48,7 +48,7 @@ final class WalletEditViewController: UIViewController {
         viewModel.onDidStartLoading = { [weak self] in
             self?.progressView.show()
         }
-        viewModel.onDidStopLoading = {  [weak self] in
+        viewModel.onDidStopLoading = { [weak self] in
             self?.progressView.hide()
         }
         setup()

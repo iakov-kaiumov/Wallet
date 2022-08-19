@@ -33,9 +33,9 @@ final class HeaderView: UIView {
     
     // MARK: - Public methods
     func configure(model: PersonModel) {
-        balanceLabel.text = String(format: "%.2f ₽", model.personBalance ?? 0)
-        incomeLabel.text = String(format: "%.2f ₽", model.personIncome ?? 0)
-        expencesLabel.text = String(format: "%.2f ₽", model.personSpendings ?? 0)
+        balanceLabel.text = model.personBalance?.displayString()
+        incomeLabel.text = model.personIncome?.displayString()
+        expencesLabel.text = model.personSpendings?.displayString()
     }
     
     // MARK: - Private Methods

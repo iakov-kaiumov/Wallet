@@ -11,7 +11,8 @@ struct OperationApiModel: Codable {
     /** Категория операции */
     let categoryDto: CategoryApiModel?
     let balance: Decimal?
-    let date: Date?
+    let date: Date
+    
 }
 struct OperationApiModelToSend: Codable {
     let type: MoneyOperationType?

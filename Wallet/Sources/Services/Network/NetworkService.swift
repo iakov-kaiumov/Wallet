@@ -52,7 +52,7 @@ class NetworkService {
             "accept": "application/json",
             "Content-Type": "application/json"
         ]
-        if let token = UserDefaults.standard.string(forKey: "token") {
+        if let token = KeychainWrapper.standard.string(forKey: "token") {
             configuration.httpAdditionalHeaders?["email"] = token
         }
         let session = URLSession(configuration: configuration)

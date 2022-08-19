@@ -80,6 +80,7 @@
 "newcategory_type" = "Тип";
 "newcategory_icon" = "Иконка";
 "newcategory_select" = "Задать цвет";
+"newcategory_enter_name" = "Придумайте название";
 
 "category_picker_title" = "Выберите категорию";
 

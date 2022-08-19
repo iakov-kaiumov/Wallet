@@ -6,7 +6,7 @@
 import Foundation
 import CoreData
 
-struct OperationModel: Codable, Transient {
+struct OperationModel: Transient {
     var id: Int
     
     var walletId: Int
@@ -18,6 +18,8 @@ struct OperationModel: Codable, Transient {
     var type: MoneyOperationType?
     
     var category: CategoryModel?
+    
+    var currency: CurrencyModel?
     
     func makeApiModel() -> OperationApiModel {
         OperationApiModel(id: id,
@@ -41,7 +43,6 @@ struct OperationModel: Codable, Transient {
         return operation
         
     }
-    
 }
 
 extension OperationModel {

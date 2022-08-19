@@ -113,8 +113,8 @@ final class NewCategoryViewModel {
         dependencies.categoryService.categoryNetworkServiceCreate(categoryModel) { [weak self] result in
             switch result {
             case .success(let model):
-                print(model)
                 DispatchQueue.main.async {
+                    self?.model.id = model.id
                     self?.showProgressView?(false)
                     self?.moveNext()
                 }

@@ -7,7 +7,7 @@ import Foundation
 
 // MARK: Has Protocols
 protocol HasSignInService {
-    var signInService: GoogleSignInServiceProtocol { get }
+    var signInService: SignInServiceProtocol { get }
 }
 
 protocol HasWalletService {
@@ -57,7 +57,7 @@ final class AppDependency {
 
 // MARK: - HasSignInService
 extension AppDependency: HasSignInService {
-    var signInService: GoogleSignInServiceProtocol {
+    var signInService: SignInServiceProtocol {
         proxyService
     }
 }

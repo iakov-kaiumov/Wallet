@@ -56,7 +56,7 @@ final class MaterialTextField: UIView {
     private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.font = UIFont.systemFont(ofSize: 17)
-        textField.autocapitalizationType = .none
+        textField.autocapitalizationType = .sentences
         textField.autocorrectionType = .no
 
         return textField

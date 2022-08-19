@@ -57,7 +57,11 @@ extension WalletEditCoordinator: WalletEditViewModelDelegate {
     }
     
     func walletEditViewModelDidFinish(walletID: Int) {
-        navigationController.popToRootViewController(animated: true)
+        if walletViewModel.isCreatingMode {
+            navigationController.popToRootViewController(animated: true)
+        } else {
+            navigationController.popViewController(animated: true)
+        }
     }
     
     func walletEditViewModelEnterName(_ currentValue: String?) {

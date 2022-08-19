@@ -37,6 +37,7 @@ final class WalletDetailesViewController: UIViewController {
         viewModel.onDidUpdateWalletInfo = { [weak self] in
             guard let model = self?.viewModel.walletInfoModel else { return }
             self?.tableHeaderView.configure(with: model)
+            self?.layoutHeader()
         }
         viewModel.onDidUpdateOperations = { [weak self] in
             guard let self = self else { return }
@@ -65,11 +66,15 @@ final class WalletDetailesViewController: UIViewController {
             isBlurApplied = true
         }
         
+        layoutHeader()
+    }
+    
+    private func layoutHeader() {
         if let headerView = operationTableView.tableHeaderView {
 
             let height = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height + 8
             var headerFrame = headerView.frame
-
+            
             // Comparison necessary to avoid infinite loop
             if height != headerFrame.size.height {
                 headerFrame.size.height = height

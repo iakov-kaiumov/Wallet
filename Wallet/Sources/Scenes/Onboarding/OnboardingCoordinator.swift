@@ -37,4 +37,8 @@ extension OnboardingCoordinator: OnboardingViewModelDelegate {
     func onboardingViewModelSuccessfulSignIn() {
         delegate?.onboardingCoordinatorSuccessfulSignIn()
     }
+    
+    func onboardingViewModel(_ viewModel: OnboardingViewModel, didReceiveError error: Error) {
+        callBanner(type: .unknownError)
+    }
 }

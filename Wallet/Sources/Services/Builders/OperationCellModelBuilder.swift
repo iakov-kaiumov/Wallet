@@ -6,13 +6,13 @@
 import UIKit
 
 protocol OperationCellModelBuilderProtocol {
-    func buildOperationCellModel(from operationModel: OperationModel) -> OperationCellView.Model
+    func buildOperationCellModel(from operationModel: OperationModel, currency: CurrencyModel) -> OperationCellView.Model
     
     func buildSkeletonCellModel() -> OperationCellView.Model
 }
 
 final class OperationCellModelBuilder: OperationCellModelBuilderProtocol {
-    func buildOperationCellModel(from operationModel: OperationModel) -> OperationCellView.Model {
+    func buildOperationCellModel(from operationModel: OperationModel, currency: CurrencyModel) -> OperationCellView.Model {
         guard let category = operationModel.category,
               let categoryType = category.type,
               let money = operationModel.operationBalance,
@@ -20,7 +20,7 @@ final class OperationCellModelBuilder: OperationCellModelBuilderProtocol {
             return OperationCellView.Model.makeTestModel()
         }
         let operationType = categoryType.displayName()
-        let moneySpend = categoryType == .SPENDING ? "-" + money.displayString(currency: .RUB) : money.displayString(currency: .RUB)
+        let moneySpend = categoryType == .SPENDING ? "-" + money.displayString(currency: currency) : money.displayString(currency: currency)
         
         let timestamp = DateFormatter.hoursMinutes.string(from: operationModel.operationDate)
         

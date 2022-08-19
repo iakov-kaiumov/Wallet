@@ -13,6 +13,7 @@ final class PopupViewHolder {
     private lazy var popupView: PopupView = PopupView()
     private var initialViewCenter: CGPoint = CGPoint()
     private let hidingThreshold: CGFloat = 20
+    private var isShown: Bool = false
     
     init(parent: UIView) {
         self.parent = parent
@@ -20,6 +21,10 @@ final class PopupViewHolder {
     
     // MARK: Public methods
     func show(type: ErrorPopupType) {
+        guard !isShown else {
+            return
+        }
+        isShown = true
         let message = type.title()
         let image = type.icon()
         parent.addSubview(popupView)
@@ -33,15 +38,24 @@ final class PopupViewHolder {
         
         popupView.configure(message: message, image: image)
         
-        popupView.alpha = 0.0
+        popupView.center.y = -200
         UIView.animate(
             withDuration: 0.33,
             delay: 0.0,
             animations: { [weak self] in
-                self?.popupView.alpha = 1.0
+                self?.popupView.center.y = 0
             },
             completion: nil
         )
+//        popupView.alpha = 0.0
+//        UIView.animate(
+//            withDuration: 0.33,
+//            delay: 0.0,
+//            animations: { [weak self] in
+//                self?.popupView.alpha = 1.0
+//            },
+//            completion: nil
+//        )
     }
     
     func hide() {
@@ -78,10 +92,11 @@ final class PopupViewHolder {
             delay: 0.0,
             options: [.curveEaseInOut],
             animations: {
-                errorView.center.y -= 200
+                errorView.center.y = -200
             },
             completion: { _ in
-                errorView.removeFromSuperview()
+//                errorView.removeFromSuperview()
+                self.isShown = false
             }
         )
     }

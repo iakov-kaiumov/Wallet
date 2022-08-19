@@ -5,7 +5,7 @@
 
 import UIKit
 
-extension NetworkService: GoogleSignInServiceProtocol {
+extension NetworkService: SignInServiceProtocol {
     func handle(_ url: URL) -> Bool {
         signInService.handle(url)
     }
@@ -22,7 +22,7 @@ extension NetworkService: GoogleSignInServiceProtocol {
         signInService.signIn(presenting: controller) { result in
             switch result {
             case .success(let idToken):
-                self.signInServer(with: idToken) { result in
+                self.signInWithServer(idToken: idToken) { result in
                     completion(result)
                 }
             case .failure(let error):
@@ -32,6 +32,24 @@ extension NetworkService: GoogleSignInServiceProtocol {
         }
     }
     
+    func signInWithServer(idToken: String, completion: @escaping (Result<String, NetworkError>) -> Void) {
+        let person = PersonApiModel(email: idToken)
+        let request = PersonRequestsFactory.makeCreateReqeust(person: person)
+        requestProcessor.fetch(request) { result in
+            switch result {
+            case .success(let model):
+                if let email = model.email {
+                    completion(.success(email))
+                } else {
+                    completion(.failure(.noData))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    /*
     private func signInServer(with idToken: String, completion: @escaping (Result<String, NetworkError>) -> Void) {
         
         let person = PersonApiModel(email: idToken)
@@ -49,5 +67,5 @@ extension NetworkService: GoogleSignInServiceProtocol {
             }
         }
     }
-      
+     */
 }

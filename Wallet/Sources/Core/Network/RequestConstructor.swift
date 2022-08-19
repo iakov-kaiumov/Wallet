@@ -27,7 +27,12 @@ final class RequestConstructor: IRequestConstructor {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = request.httpMethod.rawValue
         if let body = request.body {
-            urlRequest.httpBody = try? JSONEncoder().encode(body)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .formatted(dateFormatter)
+            
+            urlRequest.httpBody = try? encoder.encode(body)
         }
         request.headers?.forEach { urlRequest.setValue($0.value, forHTTPHeaderField: $0.key) }
         return urlRequest

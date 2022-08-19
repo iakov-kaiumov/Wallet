@@ -88,6 +88,7 @@ final class OperationCellView: UITableViewCell {
     }
     
     private func setupMoneyLabel() {
+        moneyLabel.text = "-"
         moneyLabel.font = .systemFont(ofSize: 17)
         moneyLabel.textColor = R.color.mainText()
         moneyLabel.snp.makeConstraints {
@@ -108,6 +109,7 @@ final class OperationCellView: UITableViewCell {
     }
     
     private func setupTitleLabel() {
+        titleLabel.text = "-"
         titleLabel.font = .systemFont(ofSize: 17)
         titleLabel.textColor = R.color.mainText()
         titleLabel.snp.makeConstraints {
@@ -119,6 +121,7 @@ final class OperationCellView: UITableViewCell {
     
     private func setupOperationTypeLabel() {
         contentView.addSubview(operationTypeLabel)
+        operationTypeLabel.text = "-"
         operationTypeLabel.font = .systemFont(ofSize: 13)
         operationTypeLabel.textColor = R.color.secondaryText()
         operationTypeLabel.snp.makeConstraints {

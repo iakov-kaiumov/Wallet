@@ -8,7 +8,7 @@ import Foundation
 protocol WalletDetailesViewModelDelegate: AnyObject {
     func walletDetailsViewModelAddOperation()
     
-    func walletDetailsViewModelOpenSettings()
+    func walletDetailsViewModelOpenSettings(wallet: WalletModel)
     
     func walletDetailsViewModel(_ viewModel: WalletDetailesViewModel, didReceiveError error: Error)
 }
@@ -48,7 +48,7 @@ final class WalletDetailesViewModel {
     }
     
     func settingButtonDidTap() {
-        delegate?.walletDetailsViewModelOpenSettings()
+        delegate?.walletDetailsViewModelOpenSettings(wallet: walletModel)
     }
     
     func deleteOperation(at indexPath: IndexPath) {
@@ -74,16 +74,20 @@ final class WalletDetailesViewModel {
     
     // MARK: - Private Methods
     private func loadWalletInfo() {
-        let incomeChipModel = dependencies.spendChipModelBuilder.buildIncomeSpendChipModel(income: walletModel.income)
+        let incomeChipModel = dependencies.spendChipModelBuilder.buildIncomeSpendChipModel(
+            income: walletModel.income,
+            currency: walletModel.currency
+        )
         
         let expenseChipModel = dependencies.spendChipModelBuilder.buildExpenseSpendChipModel(
             spending: walletModel.spendings,
-            limit: walletModel.limit
+            limit: walletModel.limit,
+            currency: walletModel.currency
         )
         
         self.walletInfoModel = OperationTableHeaderView.Model(
             walletName: walletModel.name,
-            walletAmount: walletModel.balance.displayString(currency: .RUB),
+            walletAmount: walletModel.balance.displayString(currency: walletModel.currency),
             incomeChipModel: incomeChipModel,
             expenseChipModel: expenseChipModel,
             isLimitExceeded: walletModel.isLimitExceeded

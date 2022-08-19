@@ -92,7 +92,11 @@ final class WalletsViewController: UIViewController {
         setupEmptyLabel()
         
         viewModel.onDidUpdateWallets = { [weak self] in
-            self?.walletsTableView.reloadData()
+            guard let self = self else { return }
+            UIView.transition(with: self.walletsTableView,
+                              duration: 0.5,
+                              options: .transitionCrossDissolve,
+                              animations: { self.walletsTableView.reloadData() })
         }
         viewModel.onDidUpdateCurrencies = { [weak self] in
             guard let self = self else { return }
@@ -105,6 +109,7 @@ final class WalletsViewController: UIViewController {
         viewModel.onDidDeleteWallet = { [weak self] indexPath in
             self?.walletsTableView.deleteRows(at: [indexPath], with: .automatic)
         }
+        viewModel.onDidMoveWallet = moveRow
     }
     
     private func setupSignOutButton() {
@@ -206,25 +211,21 @@ final class WalletsViewController: UIViewController {
         walletsTableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
     }
     
-    private func moveRows(indexPath: IndexPath) {
+    private func moveRow(at: IndexPath, to: IndexPath) {
         walletsTableView.beginUpdates()
+        
         if viewModel.isHidden {
-            walletsTableView.deleteRows(at: [indexPath], with: .fade)
+            walletsTableView.deleteRows(at: [at], with: .fade)
         } else {
-            var section: Int
-            if indexPath.section == 0 {
-                section = 2
-            } else {
-                section = 0
-            }
-            let row = walletsTableView.numberOfRows(inSection: section)
-            walletsTableView.moveRow(at: indexPath, to: IndexPath(row: row, section: section))
+            walletsTableView.moveRow(at: at, to: to)
         }
+        
         if walletsTableView.numberOfRows(inSection: 1) == 1 && !viewModel.haveHiddenWallets() {
             walletsTableView.deleteRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
         } else if walletsTableView.numberOfRows(inSection: 1) == 0 && viewModel.haveHiddenWallets() {
             walletsTableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
         }
+        
         walletsTableView.endUpdates()
     }
 }
@@ -253,7 +254,7 @@ extension WalletsViewController: UITableViewDelegate {
         // Hide/show action
         let hide = UIContextualAction(style: .normal, title: "") { [weak self] (_, _, completionHandler) in
             self?.viewModel.onCellHide(indexPath)
-            self?.moveRows(indexPath: indexPath)
+//            self?.moveRows(indexPath: indexPath)
             completionHandler(true)
         }
         
@@ -296,7 +297,7 @@ extension WalletsViewController: UITableViewDataSource {
         case 1:
             return viewModel.haveHiddenWallets() ? 1 : 0
         case 2:
-            return viewModel.hiddenWallets.count
+            return viewModel.isHidden ? 0 : viewModel.hiddenWallets.count
         default:
             return 0
         }

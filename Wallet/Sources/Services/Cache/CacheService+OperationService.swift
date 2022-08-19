@@ -15,7 +15,8 @@ extension CacheService: OperationCacheServiceProtocol {
     func getOperations(for walletId: Int) -> [OperationModel] {
         let operations = getObjectsByValue(columnName: #keyPath(CDOperation.wallletId),
                                            value: String(walletId),
-                                           objectType: CDOperation.self)
+                                           objectType: CDOperation.self,
+                                           context: readContext)
         let converted = operations.compactMap { $0.makeTransient() }
         return converted
     }

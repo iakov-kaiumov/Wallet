@@ -38,6 +38,7 @@ extension WalletDetailsCoordinator: WalletDetailesViewModelDelegate {
         let coordinator = OperationEditCoordinator(navigationController: navigationController,
                                                    dependencies: dependencies)
         childCoordinators.append(coordinator)
+        coordinator.parent = self
         coordinator.start(walletID: wallet.id, currency: wallet.currency)
     }
     

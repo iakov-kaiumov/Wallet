@@ -8,6 +8,7 @@ import Foundation
 protocol OperationCacheServiceProtocol: AnyObject {
     func getOperations(for walletId: Int) -> [OperationModel]
     func setOperations(_ operations: [OperationModel], for walletId: Int) throws
+    func deleteOperation(_ operationId: Int) throws
 }
 
 extension CacheService: OperationCacheServiceProtocol {
@@ -24,5 +25,11 @@ extension CacheService: OperationCacheServiceProtocol {
             _ = model.makePersistent(context: writeContext)
         }
         try? saveWriteContext()
+    }
+    
+    func deleteOperation(_ operationId: Int) throws {
+        try? deleteObjectsByValue(columnName: "id",
+                                  value: String(operationId),
+                                  objectType: CDOperation.self)
     }
 }

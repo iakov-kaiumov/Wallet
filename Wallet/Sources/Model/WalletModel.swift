@@ -4,8 +4,9 @@
 //
 
 import Foundation
+import CoreData
 
-struct WalletModel {
+struct WalletModel: Transient {
     var id: Int
     var name: String
     var currency: CurrencyModel
@@ -27,6 +28,21 @@ struct WalletModel {
         return spendings > limit
     }
     
+    func makePersistent(context: NSManagedObjectContext) -> CDWallet? {
+        let wallet = CDWallet(context: context)
+        wallet.id = Int64(id)
+        wallet.name = name
+        wallet.currency = currency.makePersistent(context: context)
+        if let limit = limit {
+            wallet.amountLimit = NSDecimalNumber(decimal: limit)
+        }
+        wallet.balance = NSDecimalNumber(decimal: balance)
+        wallet.income = NSDecimalNumber(decimal: income)
+        wallet.spendings = NSDecimalNumber(decimal: spendings)
+        wallet.isHidden = isHidden
+        return wallet
+    }
+    
     func makeApiModel() -> WalletApiModelShort {
         WalletApiModelShort(
             id: id,
@@ -39,6 +55,18 @@ struct WalletModel {
             isHidden: isHidden ? 1 : 0
         )
     }
+
+    func makeFullApiModel() -> WalletApiModel {
+        WalletApiModel(id: id,
+                       name: name,
+                       amountLimit: limit,
+                       balance: balance,
+                       income: income,
+                       spendings: spendings,
+                       isHidden: isHidden ? 1 : 0,
+                       currencyDto: currency.makeApiModel())
+    }
+    
 }
 
 extension WalletModel {

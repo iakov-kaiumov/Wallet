@@ -27,7 +27,10 @@ class SignInService: GoogleSignInServiceProtocol {
     
     func checkSignInStatus(_ completion: @escaping (_ isSignedIn: Bool) -> Void) {
         GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
-            let isSignedIn = error == nil && user != nil
+            print(user as Any)
+            print(error as Any)
+            let isSignedIn = UserDefaults.standard.string(forKey: "token") != nil
+           // let isSignedIn = error == nil && user != nil
             completion(isSignedIn)
         }
     }

@@ -79,7 +79,7 @@ final class SpendChipView: UIView {
         titleLabel.text = "-"
         titleLabel.font = .systemFont(ofSize: 13)
         titleLabel.layer.opacity = 0.6
-        titleLabel.textColor = R.color.background()
+        titleLabel.textColor = .white
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16)
             $0.leading.equalTo(indicatorView.snp.trailing).offset(8)
@@ -91,7 +91,7 @@ final class SpendChipView: UIView {
         addSubview(spendMoneyLabel)
         spendMoneyLabel.text = "-"
         spendMoneyLabel.font = .systemFont(ofSize: 16, weight: .semibold)
-        spendMoneyLabel.textColor = R.color.background()
+        spendMoneyLabel.textColor = .white
         spendMoneyLabel.numberOfLines = 2
         spendMoneyLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).inset(-12)

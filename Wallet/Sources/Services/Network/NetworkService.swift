@@ -8,8 +8,9 @@ import Foundation
 class NetworkService {
     let signInService: SignInService
     var requestProcessor: IRequestProcessor
-    private let requestConstructor: IRequestConstructor = RequestConstructor()
     var walletDelegates: DelegatesList<WalletServiceDelegate> = DelegatesList<WalletServiceDelegate>()
+    private let requestConstructor: IRequestConstructor = RequestConstructor()
+    let internetChecker = try? Reachability()
     
     var operationDelegates: DelegatesList<OperationServiceDelegate> = DelegatesList<OperationServiceDelegate>()
     
@@ -38,6 +39,7 @@ class NetworkService {
     
     private static func makeDefaultURLSession() -> URLSession {
         let configuration: URLSessionConfiguration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 10
         configuration.httpAdditionalHeaders = [
             "accept": "application/json",
             "Content-Type": "application/json"

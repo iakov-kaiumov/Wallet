@@ -12,7 +12,7 @@ protocol PersonCacheServiceProtocol: AnyObject {
 
 extension CacheService: PersonCacheServiceProtocol {
     func getPerson() -> PersonModel? {
-        guard let persistentPerson = getAllObjectsOfType(PersonModel.PersistentEntity.self)?.first,
+        guard let persistentPerson = getAllObjectsOfType(PersonModel.PersistentEntity.self).first,
               let transientPerson = persistentPerson.makeTransient() else { return nil }
         return transientPerson
     }

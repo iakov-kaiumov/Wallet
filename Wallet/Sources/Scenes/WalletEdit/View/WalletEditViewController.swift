@@ -47,9 +47,11 @@ final class WalletEditViewController: UIViewController {
         }
         viewModel.onDidStartLoading = { [weak self] in
             self?.progressView.show()
+            self?.nextButton.isUserInteractionEnabled = false
         }
         viewModel.onDidStopLoading = { [weak self] in
             self?.progressView.hide()
+            self?.nextButton.isUserInteractionEnabled = true
         }
         setup()
     }
@@ -77,7 +79,7 @@ final class WalletEditViewController: UIViewController {
     private func setupProgressView() {
         view.addSubview(progressView)
         progressView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.center.equalToSuperview()
         }
     }
 

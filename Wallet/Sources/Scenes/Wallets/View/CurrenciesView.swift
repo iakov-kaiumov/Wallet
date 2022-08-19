@@ -67,7 +67,7 @@ final class CurrenciesView: UIView {
         
         let currencyValueLabel = UILabel()
         currencyValueLabel.font = .systemFont(ofSize: 13, weight: .light)
-        currencyValueLabel.text = String(format: "%.2f", currency.value)
+        currencyValueLabel.text = String(format: "%.2f", NSDecimalNumber(decimal: currency.value).doubleValue)
         
         let arrow = UIImageView(image: currency.isAscending ? R.image.greenArrow() : R.image.redArrow())
         

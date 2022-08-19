@@ -10,6 +10,6 @@ struct CurrencyApiModel: Codable {
     let symbol: String
     let fullDescription: String
     let shortDescription: String
-    let value: Double
+    let value: Decimal
     let ascending: Bool
 }

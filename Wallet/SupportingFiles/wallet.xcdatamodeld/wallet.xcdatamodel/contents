@@ -11,9 +11,10 @@
     <entity name="CDCurrency" representedClassName="CDCurrency" syncable="YES" codeGenerationType="class">
         <attribute name="code" optional="YES" attributeType="String"/>
         <attribute name="full_description" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="isAscending" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="short_description" optional="YES" attributeType="String"/>
         <attribute name="symbol" optional="YES" attributeType="String"/>
+        <attribute name="value" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
         <relationship name="wallets" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDWallet" inverseName="currency" inverseEntity="CDWallet"/>
     </entity>
     <entity name="CDOperation" representedClassName="CDOperation" syncable="YES" codeGenerationType="class">
@@ -37,6 +38,7 @@
         <attribute name="balance" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="income" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
+        <attribute name="isHidden" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="spendings" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
         <relationship name="currency" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDCurrency" inverseName="wallets" inverseEntity="CDCurrency"/>
@@ -45,9 +47,9 @@
     </entity>
     <elements>
         <element name="CDCategory" positionX="62.0947265625" positionY="181.8399353027344" width="128" height="119"/>
-        <element name="CDCurrency" positionX="-199.1742553710938" positionY="-43.35942077636719" width="128" height="133"/>
+        <element name="CDCurrency" positionX="-199.1742553710938" positionY="-43.35942077636719" width="128" height="134"/>
         <element name="CDOperation" positionX="-212.6487426757812" positionY="128.5891418457031" width="128" height="133"/>
         <element name="CDPerson" positionX="-455.6641235351562" positionY="196.4401245117188" width="128" height="133"/>
-        <element name="CDWallet" positionX="-425.2073364257812" positionY="-131.0423889160156" width="128" height="178"/>
+        <element name="CDWallet" positionX="-425.2073364257812" positionY="-131.0423889160156" width="128" height="179"/>
     </elements>
 </model>

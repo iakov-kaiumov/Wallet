@@ -44,9 +44,13 @@ class CacheService {
         return try? readContext.fetch(fetchRequest)
     }
     
-    func getAllObjectsOfType<Entity: NSManagedObject>(_ type: Entity.Type) -> [Entity]? {
+    func getAllObjectsOfType<Entity: NSManagedObject>(_ type: Entity.Type) -> [Entity] {
         let fetchRequest: NSFetchRequest<Entity> = NSFetchRequest(entityName: String(describing: type))
-        return try? readContext.fetch(fetchRequest)
+        do {
+            return try readContext.fetch(fetchRequest)
+        } catch {
+            return []
+        }
     }
     
     func deleteObjectsByValue<Entity: NSManagedObject>(columnName: String,

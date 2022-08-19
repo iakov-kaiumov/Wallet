@@ -3,16 +3,37 @@
 //  Wallet
 
 import Foundation
+import CoreData
 
-struct CurrencyModel {
+struct CurrencyModel: Transient {
     let code: String
     let symbol: String
     let fullDescription: String
     let shortDescription: String
-    let value: Double
+    let value: Decimal
     
     var isAscending: Bool
     var isSkeleton: Bool = false
+    
+    func makePersistent(context: NSManagedObjectContext) -> CDCurrency? {
+        let currency = CDCurrency(context: context)
+        currency.code = code
+        currency.symbol = symbol
+        currency.full_description = fullDescription
+        currency.short_description = shortDescription
+        currency.value = NSDecimalNumber(decimal: value)
+        currency.isAscending = isAscending
+        return currency
+    }
+    
+    func makeApiModel() -> CurrencyApiModel {
+        CurrencyApiModel(code: code,
+                         symbol: symbol,
+                         fullDescription: fullDescription,
+                         shortDescription: shortDescription,
+                         value: value,
+                         ascending: isAscending)
+    }
 }
 
 extension CurrencyModel {
@@ -22,7 +43,8 @@ extension CurrencyModel {
             symbol: apiModel.symbol,
             fullDescription: apiModel.fullDescription,
             shortDescription: apiModel.shortDescription,
-            value: apiModel.value, isAscending: apiModel.ascending
+            value: apiModel.value,
+            isAscending: apiModel.ascending
         )
     }
     

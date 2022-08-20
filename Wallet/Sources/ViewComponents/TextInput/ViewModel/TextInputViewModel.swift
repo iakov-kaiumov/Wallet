@@ -6,7 +6,7 @@
 import UIKit
 
 enum TextInputScreenType: String {
-    case walletName, walletLimit, operationAmount, categoryName
+    case walletName, walletNameIntermediate, walletLimit, operationAmount, categoryName
 }
 
 protocol TextInputViewModelDelegate: AnyObject {
@@ -62,7 +62,7 @@ final class TextInputViewModel {
 extension TextInputViewModel {
     static func makeWalletName(isModal: Bool = false) -> TextInputViewModel {
         TextInputViewModel(
-            screen: .walletName,
+            screen: isModal ? .walletName : .walletNameIntermediate,
             title: R.string.localizable.wallet_name_title(),
             textInputPrompt: R.string.localizable.wallet_name_prompt(),
             buttonTitle: isModal ? R.string.localizable.default_save_button() : R.string.localizable.default_next_button(),

@@ -42,7 +42,12 @@ class WalletCell: UITableViewCell {
     func configure(model: WalletModel) {
         walletTitleLabel.text = model.name
         walletBalanceLabel.text = model.formattedBalance
-        redLabel.layer.opacity = model.isLimitExceeded ? 1.0 : 0.0
+        
+        var isLimitExceeded = false
+        if let limit = model.limit, limit > 0 {
+            isLimitExceeded = model.spendings > limit
+        }
+        redLabel.layer.opacity = isLimitExceeded ? 1.0 : 0.0 // model.isLimitExceeded ? 1.0 : 0.0
     }
     
     // MARK: - Private Methods

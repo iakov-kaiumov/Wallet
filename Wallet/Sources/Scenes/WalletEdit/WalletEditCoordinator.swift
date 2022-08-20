@@ -18,8 +18,6 @@ final class WalletEditCoordinator: Coordinator {
     
     private var walletViewModel: WalletEditViewModel
     
-    private var isFirstStart: Bool = true
-    
     init(navigationController: UINavigationController,
          dependencies: AppDependency = AppDependency()) {
         self.navigationController = navigationController
@@ -100,11 +98,9 @@ extension WalletEditCoordinator: TextInputViewModelDelegate {
         switch screen {
         case .walletName:
             walletViewModel.changeName(value)
-            
-            if walletViewModel.isCreatingMode && isFirstStart {
-                isFirstStart = false
-                self.start()
-            }
+        case .walletNameIntermediate:
+            walletViewModel.changeName(value)
+            self.start()
         case .walletLimit:
             walletViewModel.changeLimit(value?.toDecimal)
         default:

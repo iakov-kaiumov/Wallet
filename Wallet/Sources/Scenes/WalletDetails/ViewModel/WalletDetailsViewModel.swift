@@ -91,12 +91,17 @@ final class WalletDetailesViewModel {
             currency: walletModel.currency
         )
         
+        var isLimitExceeded = false
+        if let limit = walletModel.limit, limit > 0 {
+            isLimitExceeded = walletModel.spendings > limit
+        }
+        
         self.walletInfoModel = OperationTableHeaderView.Model(
             walletName: walletModel.name,
             walletAmount: walletModel.balance.displayString(currency: walletModel.currency),
             incomeChipModel: incomeChipModel,
             expenseChipModel: expenseChipModel,
-            isLimitExceeded: walletModel.isLimitExceeded
+            isLimitExceeded: isLimitExceeded
         )
         self.onDidUpdateWalletInfo?()
     }

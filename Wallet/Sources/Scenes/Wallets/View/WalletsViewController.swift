@@ -110,6 +110,7 @@ final class WalletsViewController: UIViewController {
         }
         viewModel.onDidDeleteWallet = { [weak self] indexPath in
             self?.walletsTableView.deleteRows(at: [indexPath], with: .automatic)
+            
         }
         viewModel.onDidMoveWallet = moveRow
         
@@ -306,7 +307,12 @@ extension WalletsViewController: UITableViewDelegate {
 
 extension WalletsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        emptyLabel.layer.opacity = viewModel.wallets.isEmpty ? 1.0 : 0.0
+        if viewModel.shownWallets.count == 0,
+           viewModel.hiddenWallets.count == 0 {
+            emptyLabel.layer.opacity = 1
+        } else {
+            emptyLabel.layer.opacity = 0
+        }
         walletsTableView.isScrollEnabled = viewModel.shownWallets.count + viewModel.hiddenWallets.count > 0
         switch section {
         case 0:

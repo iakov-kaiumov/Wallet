@@ -18,7 +18,7 @@ sh setup.command
 # Preview
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/iakov-kaiumov/Wallet/develop/AppStore/Images/screen1.png" width="33%" />
-  <img src="https://raw.githubusercontent.com/iakov-kaiumov/Wallet/develop/AppStore/Images/screen2.png" width="33%" /> 
-  <img src="https://raw.githubusercontent.com/iakov-kaiumov/Wallet/develop/AppStore/Images/screen3.png" width="33%" />
+  <img src="https://raw.githubusercontent.com/iakov-kaiumov/Wallet/develop/AppStore/Images/screen1.png" width="31%" />
+  <img src="https://raw.githubusercontent.com/iakov-kaiumov/Wallet/develop/AppStore/Images/screen2.png" width="31%" /> 
+  <img src="https://raw.githubusercontent.com/iakov-kaiumov/Wallet/develop/AppStore/Images/screen3.png" width="31%" />
 </p>

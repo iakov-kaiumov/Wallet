@@ -1,22 +1,24 @@
-# Wallet
+# Wallet - Open source iOS Application
 
-## Автоматизация
-Для работы c проектом необходимо запустить команду "sh setup.command" в корневой папке.
+This is an open source financial application for iOS (iOS 13+ supported). It allows the user to record and monitor income and expenses.
 
-## Запуск проекта
-Перед запуском проекта проверь что у тебя следующие версии
-> Ruby 2.7.5 (рекомендуется использовать rbenv)\
-> Bundler 2.3.15
+# Installation
 
-Ставим Ruby зависимости
+
+Clone or fork this repository:
 ```
-bundle install
+git clone https://github.com/iakov-kaiumov/Wallet.git
 ```
 
-Ставим Cocoapods зависимости
+Run setup command to build .xcodeproj file and install dependencies using CocoaPods
 ```
-bundle exec pod install
+sh setup.command
 ```
 
-## Макеты
-https://www.figma.com/file/CZIOsnWIjasf6rkzlfdo6J/КошелОК?node-id=0%3A1
+# Preview
+
+<p float="left">
+  <img src="https://raw.githubusercontent.com/iakov-kaiumov/Wallet/develop/AppStore/Images/screen1.png" width="33%" />
+  <img src="https://raw.githubusercontent.com/iakov-kaiumov/Wallet/develop/AppStore/Images/screen2.png" width="33%" /> 
+  <img src="https://raw.githubusercontent.com/iakov-kaiumov/Wallet/develop/AppStore/Images/screen3.png" width="33%" />
+</p>
